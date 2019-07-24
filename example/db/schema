@@ -1,0 +1,13 @@
+CREATE TABLE settings(
+  id INTEGER primary key,
+  json TEXT not null
+);
+CREATE TABLE files(
+  id INTEGER primary key autoincrement,
+  hash BLOB not null,
+  content BLOB not null
+);
+CREATE TABLE filelink(
+  pth VARCHAR(200) primary key,
+  fileid INTEGER not null
+);

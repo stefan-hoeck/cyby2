@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25"
+   height="25"
+   version="1.1"
+   viewBox="0 0 6.6146 6.6146"
+   id="svg8"
+   sodipodi:docname="case_sensitive_false.svg"
+   inkscape:version="0.92.2 2405546, 2018-03-11">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1171"
+     id="namedview10"
+     showgrid="true"
+     inkscape:object-nodes="false"
+     inkscape:snap-nodes="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:zoom="26.700352"
+     inkscape:cx="6.5246881"
+     inkscape:cy="10.170151"
+     inkscape:window-x="0"
+     inkscape:window-y="29"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8">
+    <inkscape:grid
+       type="xygrid"
+       id="grid821" />
+  </sodipodi:namedview>
+  <text
+     transform="scale(.88652 1.128)"
+     x="0.85836762"
+     y="4.6241536"
+     fill="#000000"
+     font-family="'DejaVu Sans'"
+     font-size="4.7343px"
+     letter-spacing="0px"
+     stroke-width=".26458px"
+     word-spacing="0px"
+     style="line-height:3.35504723px"
+     xml:space="preserve"
+     id="text4"><tspan
+       x="0.85836762"
+       y="4.6241536"
+       stroke-width=".26458px"
+       id="tspan2">Aa</tspan></text>
+  <path
+     sodipodi:nodetypes="ccccccccccccc"
+     style="fill:#c83232;stroke:#641919;stroke-width:0.079375"
+     inkscape:connector-curvature="0"
+     id="path2"
+     d="M 1.3790466,1.6200782 3.0662683,3.3072999 1.3790466,4.9945216 1.6200782,5.2355533 3.3072999,3.5483315 4.9945216,5.2355533 5.2355533,4.9945216 3.5483315,3.3072999 5.2355533,1.6200782 4.9945216,1.3790466 3.3072999,3.0662683 1.6200782,1.3790466 Z" />
+</svg>

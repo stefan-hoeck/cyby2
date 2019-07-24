@@ -1,0 +1,3 @@
+
+{"Add":{"ed":{"id":2,"alias":"admin","firstName":"admin","lastName":"","email":"","password":"$2a$10$avnB2HLWKHTaHU81Cf2qC.jeqedQTqpG.wrTY97XMfJE4gDlx6O4i","level":1000,"created":1563946485540,"modified":{"timestamp":1563946485540,"id":1}}}}
+{"Add":{"ed":{"id":3,"alias":"user","firstName":"user","lastName":"","email":"","password":"$2a$10$zyj4oA/hjGPUVDFM2rMXiuSjBX0tqw9hWuW6D.te0PygcRr0mwKpq","level":10,"created":1563946611263,"modified":{"timestamp":1563946611263,"id":2}}}}

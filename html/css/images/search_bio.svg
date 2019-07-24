@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25"
+   height="25"
+   version="1.1"
+   viewBox="0 0 6.6146 6.6146"
+   id="svg8"
+   sodipodi:docname="search_bio.svg"
+   inkscape:version="0.92.2 2405546, 2018-03-11">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12">
+    <path
+       transform="scale(10,-10) translate(26,-26)"
+       id="p"
+       d="M 2.8117,-1.046 A 3 3 0 0 1 .5,2.958 V 4.5119 A 10.5 10.5 0 0 1 2,25.3078 V 25.8661 A 15 15 0 0 0 14.7975,8.5433 15 15 0 0 0 23.4007,-11.201 L 22.9172,-10.9218 A 10.5 10.5 0 0 1 4.1574,-1.8229 z M 6.2265,7.825 A 10 10 0 0 1 -6.2265,7.825 9.5 9.5 0 0 0 -8.4021,10.5667 13.5 13.5 0 0 0 8.4021,10.5667 10 10 0 0 0 6.2265,7.825 z" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1280"
+     inkscape:window-height="1024"
+     id="namedview10"
+     showgrid="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-nodes="false"
+     inkscape:zoom="26.700352"
+     inkscape:cx="-0.87283424"
+     inkscape:cy="11.290949"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8"
+     inkscape:snap-global="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid899" />
+  </sodipodi:namedview>
+  <g
+     id="g897"
+     transform="translate(0.03972888,0.03972888)">
+    <circle
+       id="circle883"
+       r="3.0163"
+       cy="3.3073001"
+       cx="-3.3073001"
+       transform="rotate(-90)"
+       style="fill:none;stroke:#000046;stroke-width:0.13229001;stroke-opacity:1" />
+  </g>
+  <g
+     id="g907">
+    <g
+       style="stroke-width:0.50200503;fill:#ff7200;fill-opacity:1;stroke:#000000;stroke-miterlimit:4;stroke-dasharray:none"
+       transform="matrix(0.01024837,0,0,0.01084217,0.64272485,0.57410515)"
+       id="g901">
+      <use
+         style="stroke-width:0.50200503;fill:#ff7200;fill-opacity:1;stroke:#000000;stroke-miterlimit:4;stroke-dasharray:none"
+         height="100%"
+         width="100%"
+         y="0"
+         x="0"
+         xlink:href="#p"
+         id="use885" />
+      <use
+         style="stroke-width:0.50200503;fill:#ff7200;fill-opacity:1;stroke:#000000;stroke-miterlimit:4;stroke-dasharray:none"
+         height="100%"
+         width="100%"
+         y="0"
+         x="0"
+         xlink:href="#p"
+         transform="rotate(120,260,260)"
+         id="use887" />
+      <use
+         style="stroke-width:0.50200503;fill:#ff7200;fill-opacity:1;stroke:#000000;stroke-miterlimit:4;stroke-dasharray:none"
+         height="100%"
+         width="100%"
+         y="0"
+         x="0"
+         xlink:href="#p"
+         transform="rotate(-120,260,260)"
+         id="use889" />
+    </g>
+  </g>
+</svg>

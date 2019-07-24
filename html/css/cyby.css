@@ -1,0 +1,1459 @@
+/**                                                                    **\
+**  Copyright (c) 2018-2019 Center for Organic and Medicinal Chemistry  **
+**                Zurich University of Applied Sciences                 **
+**                Wädenswil, Switzerland                                **
+\**                                                                    **/
+
+/* ----------------------------------------------------------
+    Fonts
+ ---------------------------------------------------------- */
+
+@font-face {
+  font-family: "dejavus";
+  src: url("fonts/DejaVuSans.woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "dejavus";
+  src: url("fonts/DejaVuSans-Oblique.woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "dejavus";
+  src: url("fonts/DejaVuSans-Bold.woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "dejavus";
+  src: url("fonts/DejaVuSans-BoldOblique.woff");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "dejavum";
+  src: url("fonts/DejaVuSansMono.woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "dejavum";
+  src: url("fonts/DejaVuSansMono-Oblique.woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "dejavum";
+  src: url("fonts/DejaVuSansMono-Bold.woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "dejavum";
+  src: url("fonts/DejaVuSansMono-BoldOblique.woff");
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+/* ----------------------------------------------------------
+    Global Settings and Resets
+ ---------------------------------------------------------- */
+
+  html {
+    background-color         : #e0e0e0;
+    font-family              : "dejavus";
+    font-size                : 10px;
+    height                   : 100%;
+  }
+
+  body {
+    display                  : flex;
+    flex-direction           : row;
+    height                   : 100%;
+    max-height               : 100%;
+    max-width                : 100%;
+    width                    : 100%;
+  }
+
+  a {
+    text-decoration          : none;
+    color                    : #3a3ac3;
+  }
+
+  a:hover {
+    color                    : #6a6af3;
+  }
+
+  a:active {
+    color                    : #6a6af3;
+  }
+
+  #content {
+    flex                     : 1;
+    display                  : flex;
+    flex-direction           : row;
+    height                   : 100%;
+    max-height               : 100%;
+    max-height               : 100%;
+    max-width                : 100%;
+    width                    : 100%;
+    padding                  : 5px 0;
+  }
+
+  * {
+    box-sizing               : border-box;
+    border                   : none;
+    margin                   : 0;
+    padding                  : 0;
+  }
+
+  h1,h2,h3,h4,h5,h6 {
+    font-size                : 1rem;
+    font-weight              : normal;
+  }
+
+  ul {
+    list-style               : none;
+  }
+
+
+/* ----------------------------------------------------------
+    Main Components
+ ---------------------------------------------------------- */
+
+  .comp {
+    display                  : flex;
+  }
+
+  .comp.login {
+    align-items              : center;
+    flex-direction           : column;
+    padding                  : 30px;
+    width                    : 100%;
+  }
+
+  .comp.logintxt {
+    align-items              : center;
+    flex-direction           : column;
+    min-height               : 200px;
+  }
+
+  .comp.maincontent {
+    flex-direction           : column;
+    height                   : 100%;
+    max-height               : 100%;
+    margin                   : 0;
+    overflow                 : hidden;
+  }
+
+  .comp.sideview {
+    flex-direction           : column;
+    height                   : 100%;
+    max-height               : 100%;
+    margin                   : 0;
+    overflow                 : hidden;
+  }
+
+  .comp.sideview-upper {
+    flex                     : 8;
+    flex-direction           : column;
+    overflow                 : hidden;
+  }
+
+  .comp.main {
+    border                   : 4px solid navy;
+    border-radius            : 8px;
+    flex-direction           : column;
+    margin-left              : 5px;
+    overflow                 : hidden;
+  }
+
+  .comp.main.explorer {
+    margin-right             : 5px;
+  }
+
+  .explorer-titel-fill {
+    flex                     : 1;
+  }
+
+  .query-fill {
+    flex                     : 1;
+  }
+
+  .comp.main.queries {
+    margin-right             : 5px;
+    margin-top               : 5px;
+  }
+
+  .comp.main.loginlog {
+    flex                     : none;
+    margin-bottom            : 5px;
+  }
+
+  .comp.main.log {
+    flex                     : 2;
+    margin-top               : 5px;
+  }
+
+  .comp.main.nav {
+    flex                     : 3;
+  }
+
+  .structure-edit {
+    flex                     : 3;
+  }
+
+
+/* ----------------------------------------------------------
+   Titles
+ ---------------------------------------------------------- */
+
+  .title.border {
+    align-items              : center;
+    background-color         : #d0d0ff;
+    border                   : none;
+    border-radius            : 8px;
+    display                  : flex;
+    flex-direction           : row;
+    flex                     : 0;
+    font-size                : 1rem;
+    font-weight              : normal;
+    min-height               : 27px;
+    margin                   : 0;
+    padding                  : 0 5px;
+    width                    : 100%;
+  }
+
+  .title.con-detail {
+    display                  : inline-block;
+    font-weight              : bold;
+    margin-right             : 10px;
+    overflow                 : hidden;
+    text-overflow            : ellipsis;
+  }
+
+  .title.con-row {
+    font-size                : 1.2rem;
+  }
+
+  .title.nav-detail {
+    display                  : inline;
+    font-size                : 1.1rem;
+    font-weight              : bold;
+    margin-right             : 3px;
+    overflow                 : hidden;
+    text-overflow            : ellipsis;
+    width                    : 70px;
+  }
+
+  .title.nav-item {
+    flex                     : 1;
+    font-size                : 1.2rem;
+  }
+
+  .title.nav-section {
+    flex                     : 1;
+    font-size                : 1.3rem;
+    font-weight              : bold;
+  }
+
+  .copyright {
+    font-size                : 1.5rem;
+    color                    : #3a3ac3;
+  }
+
+
+
+/* ----------------------------------------------------------
+    Inner Containers of main Components
+ ---------------------------------------------------------- */
+
+  .inner {
+    flex                     : 1;
+    overflow                 : auto;
+    padding                  : 5px;
+  }
+
+  .inner.explorer {
+    padding                  : 0;
+    overflow-y               : scroll;
+    overflow-x               : auto;
+  }
+
+  .inner.queries {
+    flex                     : 1;
+    max-width                : 1200px;
+  }
+
+/* ----------------------------------------------------------
+    Flex Rows
+ ---------------------------------------------------------- */
+
+  .row {
+    align-items              : center;
+    display                  : flex;
+    flex-direction           : row;
+    margin                   : 5px 0;
+  }
+
+  .row.navedit {
+    align-items              : start;
+    border-top               : 1px dotted navy;
+    margin                   : 10px 0;
+    padding-right            : 5px;
+    padding-top              : 3px;
+  }
+
+  .row.log {
+    align-items              : start;
+  }
+
+  .row.nav-details {
+    align-items              : start;
+  }
+
+  .row.con-details {
+    align-items              : start;
+  }
+
+  .row.export-detail {
+    flex                     : 2;
+    margin                   : 0 0 0 5px;
+  }
+
+  .row.query-detail {
+    flex                     : 1;
+    margin                   : 0 5px 0 0;
+  }
+
+  .row.explorer-sub {
+    margin                   : 0;
+    text-align               : center;
+    border-bottom            : 1px solid grey;
+    align-items              : stretch;
+  }
+
+  .row.sub-grid {
+    margin                   : 0;
+    border-bottom            : 1px solid grey;
+    align-items              : stretch;
+  }
+
+  .row.explorer-con-header {
+    align-items              : center;
+    border-top               : 1px solid grey;
+    padding                  : 10px;
+    margin                   : 0;
+  }
+
+  .row.explorer-con {
+    align-items: stretch;
+    margin: 0;
+    text-align: start;
+  }
+
+  .row.explorer-dets {
+    flex : 1;
+    overflow: auto;
+    text-align: center;
+  }
+
+  .row.explorer-header {
+    margin                   : 0;
+    align-items              : stretch;
+    overflow-y               : scroll;
+    border-bottom            : 1px solid grey;
+    min-height               : 50px;
+  }
+
+  .row.grid-header {
+    min-height               : 30px;
+    border-bottom            : 1px solid grey;
+    margin-bottom            : 10px;
+  }
+
+  .row.login {
+    min-width          : 400px;
+  }
+
+  .row.combos-adder {
+    align-items        : start;
+    justify-content    : flex-end;
+    margin-top         : 0;
+    margin-bottom      : 5px;
+  }
+
+  .row.edit-dynamic {
+    align-items        : start;
+    justify-content    : flex-end;
+    margin-top         : 0;
+    margin-bottom      : 5px;
+  }
+
+  .row.query {
+    align-items        : start;
+    justify-content    : flex-end;
+  }
+
+  .row.query-subs {
+    align-items        : center;
+    justify-content    : flex-end;
+    margin             : 0;
+  }
+
+  .row.info {
+    align-items        : start;
+  }
+
+  .row.format {
+    align-items        : start;
+  }
+
+  .row.format-add {
+    align-items        : center;
+    padding            : 5px 0;
+  }
+
+  .row.columntitle {
+    align-items        : start;
+    flex               : 1;
+    height             : 45px;
+    margin             : 0;
+  }
+
+  .row.columnicons {
+    flex-direction     : column;
+    margin             : 0;
+  }
+
+
+/* ----------------------------------------------------------
+    List Items
+ ---------------------------------------------------------- */
+
+  .list {
+    overflow                 : auto;
+    width                    : 100%
+  }
+
+  .list.login {
+    flex                     : none;
+    height                   : 50px;
+    max-width                : 30%;
+  }
+
+  .list.format {
+    flex                     : 3;
+    max-width                : 90%;
+    padding                  : 0 5px;
+  }
+
+  .list.nav {
+    padding-left             : 25px;
+  }
+
+  .list.query {
+    flex                     : 1;
+  }
+
+  .list.queryparen {
+    flex                     : 1;
+    padding-left             : 15px;
+  }
+
+  .list.nav-details {
+    padding-left             : 25px;
+  }
+
+  .list.container-details-block {
+    flex                     : 1;
+    border-right             : 1px solid lightgrey;
+    border-top               : 1px solid grey;
+    padding-left             : 5px;
+    min-width                : 200px;
+  }
+
+  .list.container-details {
+    width : 100%;
+  }
+
+  .list.nav-create-container {
+    padding-left             : 25px;
+    max-width                : 700px;
+  }
+
+  .listeditcontainer {
+    flex                     : 3;
+  }
+
+  .neleditcontainer {
+    flex                     : 3;
+  }
+
+  .list.subtable {
+    overflow                 : auto
+  }
+
+  .columnedit {
+    max-width                : 500px;
+    overflow                 : auto;
+  }
+
+/* ----------------------------------------------------------
+    List Cells
+ ---------------------------------------------------------- */
+
+  /* List cell */
+  .cell {
+    font-size                : 1.1rem;
+    margin                   : 0 0 5px 0;
+  }
+
+  .cell.nav-details {
+    display                  : inline-block;
+    flex                     : 3;
+    margin                   : 0;
+  }
+
+  .cell.con-details {
+    display                  : inline-block;
+    flex                     : 3;
+    margin                   : 0;
+  }
+
+  .cell.log.debug::before {
+    color                    : blue;
+    content                  : "[debug] ";
+    display                  : inline-block;
+    width                    : 60px;
+  }
+
+  .cell.log.error::before {
+    color                    : red;
+    content                  : "[error] ";
+    display                  : inline-block;
+    width                    : 60px;
+  }
+
+  .cell.log.info::before {
+    color                    : green;
+    content                  : "[info] ";
+    display                  : inline-block;
+    width                    : 60px;
+  }
+
+  .cell.log.warning::before {
+    color                    : orange;
+    content                  : "[warning] ";
+    display                  : inline-block;
+    width                    : 60px;
+  }
+
+  .cell.bordertext {
+    flex                     : 1;
+    font-size                : 1rem;
+    margin                   : 0 5px 0 0;
+  }
+
+
+/* ----------------------------------------------------------
+    Clickable Icons
+ ---------------------------------------------------------- */
+
+  .icon {
+    background-size          : 20px 20px;
+    display                  : inline-block;
+    height                   : 20px;
+    width                    : 20px;
+  }
+
+  .doc.icon {
+    background-size          : 40px 40px;
+    height                   : 40px;
+    width                    : 40px;
+  }
+
+  .icon.collapsed {
+    background-image         : url("images/collapsed.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.collapsed:hover {
+    background-image         : url("images/collapsed_hover.svg");
+  }
+
+  .icon.edit {
+    background-image         : url("images/edit.svg");
+    margin-left              : 5px;
+    margin-bottom            : 5px;
+  }
+
+  .icon.edit:hover {
+    background-image         : url("images/edit_hover.svg");
+  }
+
+  .icon.expanded {
+    background-image         : url("images/expanded.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.expanded:hover {
+    background-image         : url("images/expanded_hover.svg");
+  }
+
+  .icon.sortinc {
+    background-image         : url("images/sort_inc.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.sortinc:hover {
+    background-image         : url("images/sort_inc_hover.svg");
+  }
+
+  .icon.sortdec {
+    background-image         : url("images/sort_dec.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.sortdec:hover {
+    background-image         : url("images/sort_dec_hover.svg");
+  }
+
+  .icon.sortnone {
+    background-image         : url("images/sort_none.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.sortnone:hover {
+    background-image         : url("images/sort_none_hover.svg");
+  }
+
+  .icon.up {
+    background-image         : url("images/up.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.up:hover {
+    background-image         : url("images/up_hover.svg");
+  }
+
+  .icon.down {
+    background-image         : url("images/down.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.down:hover {
+    background-image         : url("images/down_hover.svg");
+  }
+
+  .icon.info {
+    background-image         : url("images/info.svg");
+  }
+
+  .icon.info:hover {
+    background-image         : url("images/info_hover.svg");
+  }
+
+  .icon.left {
+    background-image         : url("images/left.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.left:hover {
+    background-image         : url("images/left_hover.svg");
+  }
+
+  .icon.right {
+    background-image         : url("images/right.svg");
+    margin-right             : 5px;
+  }
+
+  .icon.right:hover {
+    background-image         : url("images/right_hover.svg");
+  }
+
+  .icon.addsub {
+    background-image         : url("images/add.svg");
+    margin-right             : 10px;
+  }
+
+  .icon.addcolumn {
+    background-image         : url("images/add.svg");
+    display                  : none;
+  }
+
+  .cell:hover .icon.addcolumn {
+    background-size          : 13px 13px;
+    margin-bottom            : 2px;
+    display                  : inline-block;
+    height                   : 13px;
+    width                    : 13px;
+  }
+
+  .cell:hover .icon.addcolumn:hover {
+    background-image         : url("images/add_hover.svg");
+  }
+
+  .icon.delcolumn {
+    background-image         : url("images/cancel.svg");
+    display                  : none;
+  }
+
+  .cell:hover .icon.delcolumn {
+    background-size          : 13px 13px;
+    margin-bottom            : 2px;
+    display                  : inline-block;
+    height                   : 13px;
+    width                    : 13px;
+  }
+
+  .cell:hover .icon.delcolumn:hover {
+    background-image         : url("images/cancel_hover.svg");
+  }
+
+  .icon.editformat {
+    background-image         : url("images/edit.svg");
+    display                  : none;
+  }
+
+  .cell:hover .icon.editformat {
+    background-size          : 13px 13px;
+    margin-bottom            : 2px;
+    display                  : inline-block;
+    height                   : 13px;
+    width                    : 13px;
+  }
+
+  .cell:hover .icon.editformat:hover {
+    background-image         : url("images/edit_hover.svg");
+  }
+
+  .icon.add {
+    background-image         : url("images/add.svg");
+    margin-left              : 5px;
+  }
+
+  .icon.add:hover {
+    background-image         : url("images/add_hover.svg");
+  }
+
+  .icon.addhidden {
+    background-image         : url("images/add.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.addhidden:hover {
+    background-image         : url("images/add_hover.svg");
+  }
+
+/*  .icon.addhidden {
+    display                  : none;
+  }
+
+  .row:hover .icon.addhidden {
+    background-image         : url("images/add.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.addhidden:hover {
+    background-image         : url("images/add_hover.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  } */
+
+  .icon.search_bio {
+    background-image         : url("images/search_bio.svg");
+    display                  : none;
+  }
+
+  .row:hover .icon.search_bio {
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.search_bio:hover {
+    background-image         : url("images/search_bio_hover.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.clone {
+    background-image         : url("images/clone.svg");
+    margin-top               : 10px;
+    display                  : inline-block;
+  }
+
+  .icon.clone:hover {
+    background-image         : url("images/clone_hover.svg");
+    margin-top               : 10px;
+    display                  : inline-block;
+  }
+
+  .icon.search_conall {
+    background-image         : url("images/search_conall.svg");
+    display                  : none;
+  }
+
+  .row:hover .icon.search_conall {
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.search_conall:hover {
+    margin-left              : 5px;
+    background-image         : url("images/search_conall_hover.svg");
+    display                  : inline-block;
+  }
+
+  .icon.search_connonempty {
+    background-image         : url("images/search_connonempty.svg");
+    display                  : none;
+  }
+
+  .row:hover .icon.search_connonempty {
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.search_connonempty:hover {
+    background-image         : url("images/search_connonempty_hover.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.search_sub {
+    background-image         : url("images/search_sub.svg");
+    display                  : none;
+  }
+
+  .row:hover .icon.search_sub {
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.search_sub:hover {
+    background-image         : url("images/search_sub_hover.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.true {
+    background-image         : url("images/true.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.false {
+    background-image         : url("images/false.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.confirm {
+    background-image         : url("images/ok.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    margin-right              : 5px;
+    width                    : 30px;
+  }
+
+  .icon.confirm:hover {
+    background-image         : url("images/ok_hover.svg");
+  }
+
+  .icon.cancel {
+    background-image         : url("images/cancel.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    margin-left              : 5px;
+    width                    : 30px;
+  }
+
+  .icon.cancel:hover {
+    background-image         : url("images/cancel_hover.svg");
+  }
+
+  .icon.delete {
+    background-image         : url("images/cancel.svg");
+    margin-left              : 5px;
+  }
+
+  .icon.delete:hover {
+    background-image         : url("images/cancel_hover.svg");
+  }
+
+  .icon.delete.query {
+  }
+
+  .icon.deletehidden {
+    display                  : none;
+  }
+
+  .row:hover .icon.deletehidden {
+    background-image         : url("images/cancel.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .row:hover .icon.deletehidden:hover {
+    background-image         : url("images/cancel_hover.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.parens {
+    background-image         : url("images/parens.svg");
+    margin-left              : 5px;
+  }
+
+  .icon.reload {
+    display                  : none;
+  }
+
+  .row:hover .icon.reload {
+    background-image         : url("images/reload.svg");
+    margin-left              : 5px;
+    display                  : inline-block;
+  }
+
+  .icon.casesensitive {
+    background-image         : url("images/case_sensitive_true.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.caseinsensitive {
+    background-image         : url("images/case_sensitive_false.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.editingenabled {
+    background-image         : url("images/edit_true.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+    margin-right             : 10px;
+  }
+
+  .icon.editingdisabled {
+    background-image         : url("images/edit_false.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+    margin-right             : 10px;
+  }
+
+  .icon.excludeempty {
+    background-image         : url("images/include_empty_false.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.includeempty {
+    background-image         : url("images/include_empty_true.svg");
+    background-size          : 30px 30px;
+    height                   : 30px;
+    width                    : 30px;
+  }
+
+  .icon.flask {
+    background-image         : url("images/flask.svg");
+    background-size          : 60px 60px;
+    height                   : 60px;
+    width                    : 60px;
+  }
+
+  .icon.flask.empty {
+    background-image         : url("images/flask_empty.svg");
+  }
+
+  .icon.flask.lent {
+    background-image         : url("images/flask_lent.svg");
+  }
+
+  .icon.plus {
+    margin-right             : 10px;
+    background-image         : url("images/plus.svg");
+  }
+
+  .icon.minus {
+    margin-right             : 10px;
+    margin-left              : 10px;
+    background-image         : url("images/minus.svg");
+  }
+
+
+/* ----------------------------------------------------------
+    Widgets
+ ---------------------------------------------------------- */
+
+  .checkboxcont {
+    flex                     : 3;
+  }
+
+  .widget {
+    border                   : 1px solid #808080;
+    border-radius            : 4px;
+    padding                  : 5px;
+  }
+
+
+
+  .widget.btn {
+    background-color: white;
+    background-image: linear-gradient(to bottom, #0000ff00, #0000ff30);
+  }
+
+  .widget.btn:active {
+    border          : 1px solid navy;
+    box-shadow      : 0 0 1px 2px navy;
+  }
+  
+  .widget.btn.runquery {
+    font-size                : 1.1rem;
+    padding                  : 2px;
+    margin                   : 0 5px 0 0;
+  }
+  
+  .widget.btn.savequery {
+    font-size                : 1.1rem;
+    padding                  : 2px;
+    margin                   : 0 5px 0 0;
+  }
+  
+  .widget.btn.deletequery {
+    font-size                : 1.1rem;
+    padding                  : 2px;
+    margin                   : 0 5px 0 0;
+  }
+  
+  .widget.btn.border {
+    font-size                : 1rem;
+    height                   : 21px;
+    margin-right             : 5px;
+    padding                  : 2px;
+  }
+
+  .widget.btn.login {
+    font-size                : 1.3rem;
+    padding                  : 7px;
+  }
+
+  .widget.btn.logout {
+    padding                  : 2px;
+    font-size                : 1rem;
+    height                   : 21px;
+  }
+
+
+
+  .widget.input {
+    background-color         : white;
+    flex                     : 3;
+    font-size                : 1rem;
+    min-width                : 50px;
+    padding                  : 2px;
+    margin                   : 0;
+  }
+
+  .widget.input.checkbox {
+    flex                     : none;
+    width                    : 16px;
+  }
+
+  .widget.input:invalid {
+    border: 1px solid hsl(0,80%,50%); 
+    box-shadow: 0 0 1px 2px hsl(0,80%,70%); 
+  }
+
+  .widget.input:focus {
+    border: 1px solid navy;
+    box-shadow: 0 0 1px 2px navy;
+  }
+
+  .widget.input:focus:invalid {
+    border: 1px solid hsl(0, 80%, 70%); 
+    box-shadow: 0 0 1px 2px hsl(0, 80%, 90%); 
+  }
+
+  .widget.input.login {
+    font-size                : 1.3rem;
+    padding                  : 7px;
+  }
+
+  .widget.input.queryname {
+    flex                     : none;
+    font-size                : 1rem;
+    max-width                : 100px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.input.text.query {
+    flex                     : 1;
+    height                   : 21px;
+    max-width                : 100%;
+  }
+
+  .widget.input.quicksearch {
+    flex                     : none;
+    width                    : 150px;
+    max-width                : 150px;
+    margin-right             : 5px;
+  }
+
+  .widget.input.format {
+    margin-right             : 5px;
+  }
+
+  .widget.input.color.format {
+    flex                     : none;
+    width                    : 30px;
+  }
+
+
+
+  .widget.select {
+    flex                     : 3;
+    font-size                : 1rem;
+    height                   : 21px;
+    min-width                : 50px;
+    padding                  : 2px;
+  }
+
+  .widget.select.loadquery {
+    flex                     : none;
+    width                    : 100px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.field.export {
+    flex                     : 1;
+  }
+
+  .widget.select.field2.export {
+    flex                     : 1;
+  }
+
+  .widget.select.field.query {
+    flex                     : none;
+    width                    : 80px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.field2.query {
+    flex                     : 1;
+    margin                   : 0;
+  }
+
+
+  .widget.select.grid-columns {
+    flex                     : none;
+  }
+
+  .widget.select.query {
+    flex                     : 1;
+  }
+
+  .widget.select.link {
+    width                    : 100%;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.link.query {
+    flex                     : 1;
+    margin                   : 0;
+  }
+
+  .widget.select.link.edit {
+    flex                     : 1;
+    margin                   : 0;
+  }
+  
+  .widget.select.stats {
+    flex                     : none;
+  }
+
+  .widget.select.stats.query {
+    margin-left              : 5px;
+  }
+
+  .widget.select.querychoice {
+    flex                     : none;
+    width                    : 170px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.comparator {
+    flex                     : none;
+    width                    : 50px;
+  }
+
+  .widget.select.negator {
+    flex                     : none;
+    width                    : 50px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.stringprefix {
+    flex                     : none;
+    width                    : 160px;
+    margin                   : 0 5px 0 0;
+  }
+
+  .widget.select.queryprefix {
+    flex                     : none;
+    width                    : 40px;
+    margin                   : 0 5px 0 0;
+  }
+
+
+
+
+  .widget.select.storage {
+    width                    : 100%;
+    margin                   : 0;
+  }
+
+  .stoedit.inner {
+    width                    : 100%;
+    padding                  : 0;
+    margin                   : 0;
+    margin-top               : 5px;
+  }
+
+  .stoedit.outer {
+    flex                     : 3;
+    margin                   : 5px 5px 5px 0;
+  }
+
+  .stoquery.inner {
+    width                    : 100%;
+    padding                  : 0;
+    margin                   : 0;
+    margin-top               : 5px;
+  }
+
+  .stoquery.outer {
+    flex                     : 1;
+    margin                   : 0;
+  }
+
+
+/* ----------------------------------------------------------
+    Labels
+ ---------------------------------------------------------- */
+
+  .label {
+    border                   : none;
+    display                  : inline-block;
+    flex                     : 1;
+    font-size                : 1.1rem;
+    font-weight              : bold;
+    margin-right             : 5px;
+    overflow                 : hidden;
+    text-overflow            : ellipsis;
+    vertical-align           : middle;
+    white-space              : nowrap;
+  }
+
+  .label.login {
+    font-size                : 1.3rem;
+  }
+
+  .label.gridcolumns {
+    flex                     : none;
+  }
+
+  .label.symbol {
+  }
+
+
+/* ----------------------------------------------------------
+    Utility classes
+ ---------------------------------------------------------- */
+
+  [data-selected] {
+    background-color         : lightyellow;
+  }
+
+  [data-hidden] {
+    display                  : none !important;
+  }
+
+
+/*---------------------------------------------------------
+    Explorer
+---------------------------------------------------------*/
+
+.structureicons {
+  display                  : flex;
+  flex-direction           : column;
+}
+
+.cell.sub {
+  flex                     : 1;
+  border-left              : 1px solid grey;
+  font-size                : 1.1rem;
+  margin                   : 0;
+  padding                  : 5px;
+  overflow-x               : hidden;
+  overflow-y               : auto;
+  text-overflow            : ellipsis;
+}
+
+.cell.sub.structure {
+  display                  : flex;
+  flex-direction           : row;
+  flex                     : none;
+  border-left              : none;
+}
+
+.cell.sub-grid {
+  flex                     : none;
+  border-left              : 1px solid grey;
+  margin                   : 0;
+  padding                  : 5px;
+}
+
+.cell.sub.structure svg {
+  background-color: white;
+}
+
+.cell.sub-grid svg {
+  background-color: white;
+}
+
+
+.cell.sub.projects {
+  flex                     : 2;
+}
+
+.cell.sub.name {
+  flex                     : 2;
+}
+
+.cell.sub.files {
+  flex                     : 2;
+}
+
+.cell.sub-header {
+  display                  : flex;
+  flex                     : 1;
+  flex-direction           : row;
+  border-left              : 1px solid grey;
+  font-size                : 1.1rem;
+  font-weight              : bold;
+  margin                   : 0;
+  padding                  : 5px;
+  overflow-x               : hidden;
+  overflow-y               : auto;
+  text-overflow            : ellipsis;
+}
+
+.cell.sub-header.structure {
+  flex                     : none;
+  border-left              : none;
+}
+
+
+.cell.sub-header.projects {
+  flex                     : 2;
+}
+
+.cell.sub-header.name {
+  flex                     : 2;
+}
+
+.cell.sub-header.files {
+  flex                     : 2;
+}
+
+.cell.subentry {
+  border-bottom            : 2px solid navy;
+  margin                   : 0;
+  width                    : 100%;
+}
+
+.cell.container-icon {
+  display                  : flex;
+  flex-direction           : column;
+  align-items              : center;
+  width                    : 70px;
+  padding                  : 5px;
+  border-right             : 1px solid lightgrey;
+  border-top               : 1px solid grey;
+}
+
+.cell.container-rest {
+  flex                     : 1;
+}
+
+/*---------------------------------------------------------
+    Query
+---------------------------------------------------------*/
+
+.query-paren-txt {
+  display                  : inline-block;
+  flex                     : 1;
+  font-size                : 3.0rem;
+}
+
+.querycompcontainer {
+  width                    : 50px;
+  margin-right             : 5px;
+}
+
+.querydetails {
+  display                  : flex;
+  flex-direction           : row;
+  flex                     : 1;
+  margin                   : 0;
+}
+
+
+/* ----------------------------------------------------------
+    Change Log
+ ---------------------------------------------------------- */
+
+.infodate {
+  width                    : 70px;
+}
+
+.infoentry {
+  flex                    : 1;
+}
+
+
+/* ----------------------------------------------------------
+    Misc
+ ---------------------------------------------------------- */
+
+.cybylogo {
+  max-width               : 100%;
+  max-height              :  50%;
+  height                  : auto;
+  width                   : auto;
+}
+
+.doclinkcont {
+  font-size                : 2.0rem;
+  margin                   : 10px 0 40px 0;
+}
