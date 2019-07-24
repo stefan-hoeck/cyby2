@@ -152,8 +152,7 @@ Finally, create a directory where CyBy<sup>2</sup>'s database should
 reside, and put the example data there:
 
 ```
-  $ sudo mkdir /path/to/cyby/data
-  $ sudo chown paul /path/to/cyby/data
+  $ mkdir /path/to/cyby/data
   $ cp -v example/db/* /path/to/cyby/data
 ```
 
@@ -185,7 +184,7 @@ and a user account with username "user" and password "password".
 About the Authors
 -----------------
 
-CyBy<sup>2</sup> was developped by the Stefan Höck
+CyBy<sup>2</sup> was developped by Stefan Höck
 and Rainer Riedl at the Center for Organic and
 Medicinal Chemistry at the Zurich University of Applied Sciences.
 
