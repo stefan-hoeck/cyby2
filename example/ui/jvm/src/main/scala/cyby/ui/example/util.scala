@@ -15,29 +15,30 @@ import cyby.dat.format.{Color, Gradient}
 import cyby.export.{Sdf}
 import cyby.ui.{WidgetType ⇒ WT, CompType ⇒ CT}
 
+import msf.js.{Node, nodes}
 import shapeless.HNil
 
 trait util extends DispZShared with DocEnv {
     
-  def subField(p: SubField ⇒ Boolean, f: SubField, mod: WT ⇒ WT): String =
+  def subField(p: SubField ⇒ Boolean, f: SubField, mod: WT ⇒ WT): Node =
     selectEnumP(p)(mod(WT.Field2Sel), _ locName loc, f)
     
-  def conField(p: ConField ⇒ Boolean, f: ConField, mod: WT ⇒ WT): String =
+  def conField(p: ConField ⇒ Boolean, f: ConField, mod: WT ⇒ WT): Node =
     selectEnumP(p)(mod(WT.Field2Sel), _ locName loc, f)
     
-  def bioField(p: BioField ⇒ Boolean, f: BioField, mod: WT ⇒ WT): String =
+  def bioField(p: BioField ⇒ Boolean, f: BioField, mod: WT ⇒ WT): Node =
     selectEnumP(p)(mod(WT.Field2Sel), _ locName loc, f)
     
-  def dataType(p: DataType ⇒ Boolean, d: DataType, mod: WT ⇒ WT): String =
+  def dataType(p: DataType ⇒ Boolean, d: DataType, mod: WT ⇒ WT): Node =
     selectEnumP(p)(mod(WT.FieldSel), _ locName loc, d)
     
-  def dataTypeQ(d: DataType): String = dataType(_.canQuery, d, WT.Query)
+  def dataTypeQ(d: DataType): Node = dataType(_.canQuery, d, WT.Query)
     
-  def dataTypeE(d: DataType): String = dataType(_.canExport, d, WT.Export)
+  def dataTypeE(d: DataType): Node = dataType(_.canExport, d, WT.Export)
     
-  def subQ(s: SubField): String = subField(_.canQuery, s, WT.Query)
+  def subQ(s: SubField): Node = subField(_.canQuery, s, WT.Query)
     
-  def conQ(c: ConField): String = conField(_.canQuery, c, WT.Query)
+  def conQ(c: ConField): Node = conField(_.canQuery, c, WT.Query)
   
   def expDescP(
     ef:    ExportField,
@@ -47,29 +48,29 @@ trait util extends DispZShared with DocEnv {
     bioP:  BioField ⇒ Boolean,
     mod:   WT ⇒ WT,
     ct:    CompType,
-  ): String = {
+  ): Node = {
     def dt(d: DataType) = dataType(expP, d, mod)
   
-    def stats(m: Met.Id, s: StatsType): String =
-      metMod(mets.find(_.id === m).get, mod) ++ statsType(s, mod)
+    def stats(m: Met.Id, s: StatsType): Node =
+      nodes(metMod(mets.find(_.id === m).get, mod), statsType(s, mod))
 
-    def wrap(s: String) = Txt.div(Txt.cls := ct.c)(s)
+    def wrap(s: Node) = Txt.div(Txt.cls := ct.c)(s)
 
     ef match {
-      case ExportSub(f)     ⇒ dt(SubT)   ++ wrap(subField(subP, f, mod))
-      case ExportCon(f)     ⇒ dt(ConT)   ++ wrap(conField(conP, f, mod))
-      case ExportBio(f)     ⇒ dt(BioT)   ++ wrap(bioField(bioP, f, mod))
-      case ExportStats(m,t) ⇒ dt(StatsT) ++ wrap(stats(m,t))
+      case ExportSub(f)     ⇒ nodes(dt(SubT),   wrap(subField(subP, f, mod)))
+      case ExportCon(f)     ⇒ nodes(dt(ConT),   wrap(conField(conP, f, mod)))
+      case ExportBio(f)     ⇒ nodes(dt(BioT),   wrap(bioField(bioP, f, mod)))
+      case ExportStats(m,t) ⇒ nodes(dt(StatsT), wrap(stats(m,t)))
     }
   }
 
-  def exportF(f: ExportField): String = expDescP(f, _.canExport,
+  def exportF(f: ExportField): Node = expDescP(f, _.canExport,
     _.canExport, _.canExport, _.canExport, WT.Export, CT.ExportDetailRow)
 
-  def queryF(f: ExportField): String = expDescP(f, _.canQuery,
+  def queryF(f: ExportField): Node = expDescP(f, _.canQuery,
     _.canQuery, _.canQuery, _.canQuery, WT.Query, CT.QueryDetailRow)
 
-  def columnF(f: ExportField, mode: ExpMode): String = mode match {
+  def columnF(f: ExportField, mode: ExpMode): Node = mode match {
     case MethodTable ⇒ expDescP(f, _.inStatsTable, _.inColumn,
       _.inColumn, _.inColumn, WT.Export, CT.ExportDetailRow)
     case _ ⇒ expDescP(f, _.inSubTable, _.inColumn, _.inColumn,

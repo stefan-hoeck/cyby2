@@ -8,6 +8,8 @@ package cyby
 package ui
 package example
 
+import msf.js.{Node, raw}
+
 import cyby.ui.{DocType ⇒ DT}
 
 object Main extends util with DocEnv {
@@ -74,11 +76,11 @@ object Main extends util with DocEnv {
   def doc = div(cls := DT.Outer.c)(
     div(cls := DT.Inner.c)(
       div(cls := DT.Header.c)(
-        h1(cls := DT.Title.c)(s"${cyby}: Documentation"),
+        h1(cls := DT.Title.c)(raw(s"${cyby}: Documentation")),
       ),
       txtMain(cls := DT.Main.c)(
         aside(cls := DT.Toc.c)(
-          h1(cls := DT.TocTitle.c)("Content"),
+          h1(cls := DT.TocTitle.c)(raw("Content")),
           tocRef1(UId.ExplorerDoc, "Explorer"),
             tocRef2(UId.TableViewDoc, "TableView"),
               tocRef3(UId.ColumnsDoc, "Customizing Columns"),
@@ -122,11 +124,11 @@ object Main extends util with DocEnv {
     )
   )
 
-  def intro: String =
+  def intro: Node =
     div(cls := DT.SectionIntro.c)(
       div(cls := DT.SectionContent.c)(
         div(cls := DT.Paragraph.c)(
-          s"""
+          raw(s"""
           ${cyby} is a structure based data management tool developed in
           Rainer Riedl's group at ZHAW. It is being used
           both as an electronic lab inventory with powerful querying capabilities,
@@ -135,10 +137,10 @@ object Main extends util with DocEnv {
           static files containing spectroscopic data as well as synthetic
           procedures, turning the application into a convenient alternative
           to a full-fledged electronic lab journal.
-          """
+          """)
         ),
         div(cls := DT.Paragraph.c)(
-          s"""
+          raw(s"""
           This document describes in detail the main functionalities of ${cyby}.
           It is generated from the same code base used to compile
           ${cyby}'s web frontend. As such, the format and content of the many
@@ -147,7 +149,7 @@ object Main extends util with DocEnv {
           updates made to the core application. Still, if information in this document
           is erroneous, outdated or unclear, please get in touch with
           Stefan Höck (hock@zhaw.ch), the main developer of ${cyby}.
-          """
+          """)
         )
       )
     )

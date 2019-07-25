@@ -15,7 +15,7 @@ import cyby.query.{Q, Chain, Prim, ReadPred ⇒ RP, QuickSearch}
 import cyby.query.Comp.And
 
 import msf.writer.unWriter
-import msf.js.{Handler, UIEvent, HttpRequest}
+import msf.js.{Handler, UIEvent, HttpRequest, Node}
 
 case class ExplorerZ(
   hht:   Handler[HttpRequest],
@@ -126,7 +126,7 @@ case class ExplorerZ(
 
     def getId(s: Sub.Cli) = s.id
 
-    override def dispSub(e: Env)(s: Sub.Cli): String = outer.dispSub(e)(s)
+    override def dispSub(e: Env)(s: Sub.Cli): Node = outer.dispSub(e)(s)
 
     def exportRes(r: Result): Option[String] = r match {
       case ExportRes(p) ⇒ some(p)
@@ -248,14 +248,14 @@ case class ExplorerZ(
       case _              ⇒ None
     }
   
-    override def dispSub(e: Env)(s: BioStats): String = dispStats(e)(s)
+    override def dispSub(e: Env)(s: BioStats): Node = dispStats(e)(s)
   
     def exportRes(r: Result): Option[String] = r match {
       case ExportRes(p) ⇒ some(p)
       case _            ⇒ None
     }
 
-    def metCell(c: ExportStats, expSt: ExpSt)(s: BioStats): String =
+    def metCell(c: ExportStats, expSt: ExpSt)(s: BioStats): Node =
       Txt.statsCell(c, c.stat, s.stats get c.mid, expSt)
   }
 }

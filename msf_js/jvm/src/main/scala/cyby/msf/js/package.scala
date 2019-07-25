@@ -7,5 +7,5 @@
 package cyby
 package msf
 
-package object js extends cyby.msf.js.util
+package object js extends cyby.msf.js.util with cyby.msf.js.shared
 

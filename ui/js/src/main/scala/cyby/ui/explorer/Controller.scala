@@ -16,7 +16,7 @@ import cyby.dat.{Added, Updated, Deleted, Found, EditRes, ToMol, UserSettings, N
 import cyby.query.{Q, Prim, Chain, QuickSearch}
 import cyby.ui.{IconType ⇒ IT, CompType ⇒ CT, WidgetType ⇒ WT, TitleType ⇒ TT}
 
-import msf.js.{Handler, UIEvent, InputType ⇒ IPT, SelectEntry}
+import msf.js.{Handler, UIEvent, InputType ⇒ IPT, SelectEntry, Node, nodes}
 import UIEvent.{Scroll, KeyPress, Click, DblClick}
 import select.Model
 
@@ -118,7 +118,7 @@ trait Explorer extends DomEnv {
     /**
       * Displays a single substance in HTML format.
       */
-    def dispSub(e: Env)(s: Sub): String
+    def dispSub(e: Env)(s: Sub): Node
 
     /**
       * Checks, whether a Result loaded from the server actually
@@ -174,7 +174,7 @@ trait Explorer extends DomEnv {
       ss  = subs(e.st) drop qst.displayed take e.expMode.dispCount
       _   <- modS(stLens.displayed.modify(_)(_ + ss.size))
       _   <- at(SubTableId)(withinH(ul(cls := Comp(CompType.SubTable)))(
-               innerHtml(Txt.subItems[Sub](e, dispSub, mkId)(ss) mkString "")
+               innerHtml(nodes(Txt.subItems[Sub](e, dispSub, mkId)(ss): _*))
              ))
       _   <- dispMore
     } yield ()
@@ -191,7 +191,7 @@ trait Explorer extends DomEnv {
     private def adjSize: Eff[Unit] = askE >>= { e ⇒ Eff.delayedTry{
       val w = getElementById(SubTableId.id).clientWidth
 
-      getElementById(ExplorerStyle.id).innerHTML = Txt.expStyle(e, w)
+      getElementById(ExplorerStyle.id).innerHTML = Txt.expStyle(e, w).toString
     }}
 
     /**

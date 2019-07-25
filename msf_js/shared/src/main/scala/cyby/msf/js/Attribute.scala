@@ -9,7 +9,6 @@ package msf
 package js
 
 trait Attributes[ID,Cls] {
-  type Attribute = (String,String)
 
   def idToString(i: ID): String
 

@@ -11,6 +11,8 @@ package example
 import cats.implicits._
 import cyby.dat.example._
 
+import msf.js.{Node, nodes}
+
 import UId.{Item ⇒ _, _}
 
 trait DispZ extends cyby.ui.display.Disp with CoreZ with DispZShared {
@@ -34,16 +36,16 @@ trait DispZ extends cyby.ui.display.Disp with CoreZ with DispZShared {
 
     def dispSt: Eff[Unit] = (askE >>= {de ⇒
       at(NavView)(set innerHtml navSections(de)) *>
-      at(ExplorerId)(set innerHtml Txt.explorer(de.mode)("","","",""))
+      at(ExplorerId)(set innerHtml Txt.explorer(de.mode)(nodes(),nodes(),nodes(),nodes()))
     }) *> dispPros *> dispStos *> dispSups *> dispMets *> dispUses
 
     def disp[A](dt: DataType, as: St ⇒ List[A])
-      (html: DispEnv ⇒ A ⇒ String): Eff[Unit] =
+      (html: DispEnv ⇒ A ⇒ Node): Eff[Unit] =
       askE.flatMap { de ⇒
-        at(DataList(dt,RootP))(set innerHtml as(de.st).map(html(de)).mkString(""))
+        at(DataList(dt,RootP))(set innerHtml nodes(as(de.st).map(html(de)): _*))
       }
 
-    def htmlIni(d: DispEnv): String = outer htmlIni d
+    def htmlIni(d: DispEnv): Node = outer htmlIni d
   }
 }
 

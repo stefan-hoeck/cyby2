@@ -10,26 +10,28 @@ package example
 
 import cyby.ui.{DocType ⇒ DT}
 
+import msf.js.{nodes, raw}
+
 object Export extends util {
   import Txt._
 
   def doc = section(id := UId.ExportDoc, cls := DT.Section.c)(
-    h1(cls := DT.H1.c)("Exporting Data"),
+    h1(cls := DT.H1.c)(raw("Exporting Data")),
     div(cls := DT.SectionContent.c)(
       div(cls := DT.SectionContent.c)(
         div(cls := DT.Paragraph.c)(
-          s"""
+          raw(s"""
           The actual hit set of a ${cyby} query can be exported
           to several different file formats. Users get to exactly
           choose the pieces of information to be exported. In
           addition, users can choose to only export the selected
           compounds instead of the whole hit set.
-          """
+          """)
         )
       ),
-      h2(id := UId.ExportSetDoc, cls := DT.H2.c)("Choosing What to Export"),
+      h2(id := UId.ExportSetDoc, cls := DT.H2.c)(raw("Choosing What to Export")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         The first thing to understand is, that the data being exported
         corresponds always to the hit set of the most recent query,
         no matter whether you used the
@@ -44,20 +46,20 @@ object Export extends util {
         is the number of compounds that will be exported. You therefore
         do not need to load thousands of compounds into your browser's memory
         in order to export them all.
-        """
+        """)
       ),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Sometimes you may want some additional control over the compounds
         to be exported. In this case you can use the
         ${link(UId.GridViewDoc, "grid view")} to select a subset
         of compounds. In the export section you can then choose to
         only export selected compounds.
-        """
+        """)
       ),
-      h2(id := UId.ExportSettingsDoc, cls := DT.H2.c)("Export Settings"),
+      h2(id := UId.ExportSettingsDoc, cls := DT.H2.c)(raw("Export Settings")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         In the title bar of the explorer, click the "Export" button
         to open an addtional screen to configure the content and format of
         the exported file. Select the desired file format and whether
@@ -65,34 +67,34 @@ object Export extends util {
         use the blue "plus" icon to add additional fields and the red
         crosses to remove fields. Once you are done, click the green
         check mark to start the file download.
-        """
+        """)
       ),
-      example(explorerDoc(NotEditing)(export(expSt.settings, exportF), "", "", "")),
-      h2(id := UId.FileFormatsDoc, cls := DT.H2.c)("Supported File Formats"),
+      example(explorerDoc(NotEditing)(export(expSt.settings, exportF), nodes(), nodes(), nodes())),
+      h2(id := UId.FileFormatsDoc, cls := DT.H2.c)(raw("Supported File Formats")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Below is a list of supported file formats. All of them are
         clear text formats, editable with your editor of choice
         if necessary.
-        """
+        """)
       ),
       div(cls := DT.DescList.c)(
         div(cls := DT.DescRow.c)(
-          div(cls := DT.DescName.c)("SDF"),
+          div(cls := DT.DescName.c)(raw("SDF")),
           div(cls := DT.DescContent.c)(
-            s"""
+            raw(s"""
             This is a chemical file format, which can be read by
             most chemical drawing applications like ChemDraw or
             ChemAxon's MarvinSketch and MarvinView. Several compounds
             annotated with additional data fields
             can be stored in a single .sdf file.
-            """
+            """)
           )
         ),
         div(cls := DT.DescRow.c)(
-          div(cls := DT.DescName.c)("Text"),
+          div(cls := DT.DescName.c)(raw("Text")),
           div(cls := DT.DescContent.c)(
-            s"""
+            raw(s"""
             Probably the most universably useable file format.
             It contains one entry per line, and columns are delimited
             by tabs. If you want to inlude molecular structures,
@@ -101,13 +103,13 @@ object Export extends util {
             applications like LibreOffice Calc or MS Excel,
             and is the one best suited for further processing
             by algorithms of your own writing.
-            """
+            """)
           )
         ),
         div(cls := DT.DescRow.c)(
-          div(cls := DT.DescName.c)("ODF"),
+          div(cls := DT.DescName.c)(raw("ODF")),
           div(cls := DT.DescContent.c)(
-            s"""
+            raw(s"""
             If you want to process exported data in your
             spreadsheet application of choice (LibreOffice Calc
             or MS Excel or the like), this is probably the format
@@ -116,7 +118,7 @@ object Export extends util {
             or graphics) directly, you can still export their SMILES
             string or InCHi key and use an appropriate plugin
             if available.
-            """
+            """)
           )
         ),
       ),

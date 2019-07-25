@@ -7,12 +7,14 @@
 package cyby
 package ui
 
+import cyby.msf.js.{Node, nodes}
+
 /**
   * Enum declaring whether the UI is in editing mode or not.
   */
 sealed trait EditMode{
   val isEditing: Boolean
-  def ifEditing(s: ⇒ String): String = if (isEditing) s else ""
+  def ifEditing(s: ⇒ Node): Node = if (isEditing) s else nodes()
 }
 
 case object Editing extends EditMode{ val isEditing = true }

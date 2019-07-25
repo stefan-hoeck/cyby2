@@ -9,7 +9,7 @@ package msf
 
 import org.scalajs.dom.{document, XMLHttpRequest, DOMList, window}
 
-package object js extends cyby.msf.js.util {
+package object js extends cyby.msf.js.util with cyby.msf.js.shared {
   type MkUIHttpSF = (Handler[HttpRequest], Handler[UIEvent]) ⇒
                      IO[SF[IO,Either[HttpEvent,UIEvent],Unit]]
 

@@ -16,26 +16,29 @@ import CompType._, IconType.{Clone ⇒ _, _}
 
 import shapeless.{HList, HNil}
 
+import msf.js.{Node, nodes}
 import UId.{Item ⇒ _, _}
 
 trait DispZShared extends CyByZ {
   import tags.{id, cls, title}
    
-  def htmlIni(d: DispEnv): String = htmlLeft(d) ++ Txt.mainView(d.mode)
+  def htmlIni(d: DispEnv): Node = nodes(htmlLeft(d), Txt.mainView(d.mode))
 
-  def htmlLeft(d: DispEnv): String =
+  def htmlLeft(d: DispEnv): Node =
     Txt.leftView(d.creds, changes, navSections(d))
 
-  def navSections(de: DispEnv): String = {
-    def nav[A](dt: DataType, u: UserLevel, disp: DispEnv ⇒ A ⇒ String)
-      (get: St ⇒ List[A]): String =
+  def navSections(de: DispEnv): Node = {
+    def nav[A](dt: DataType, u: UserLevel, disp: DispEnv ⇒ A ⇒ Node)
+      (get: St ⇒ List[A]): Node =
       Txt.navSection(de, dt, RootP, loc dataTypePlural dt, u, get(de.st) map disp(de): _*)
 
-    nav(ProT, Superuser,  pro)(_.pros)  ++
-    nav(MetT, CommonUser, met)(_.mets)  ++
-    nav(StoT, CommonUser, sto)(_.stos)  ++
-    nav(SupT, CommonUser, sup)(_.sups)  ++
-    nav(UseT, Admin,      use)(_.uses)
+    nodes(
+      nav(ProT, Superuser,  pro)(_.pros),
+      nav(MetT, CommonUser, met)(_.mets),
+      nav(StoT, CommonUser, sto)(_.stos),
+      nav(SupT, CommonUser, sup)(_.sups),
+      nav(UseT, Admin,      use)(_.uses)
+    )
   }
 
 
@@ -93,7 +96,7 @@ trait DispZShared extends CyByZ {
     Txt.navDets(de, p)(
       Txt.linkRow(p, Pro.owner, pr.owner, de, some(Superuser)),
       Txt.linksRow(p, Pro.users, pr.users, de, some(Superuser)),
-      Txt.navDetRow(p, Pro.comment, pr.comment.v.v, de, some(Superuser)),
+      Txt.navDetRow(p, Pro.comment, Txt text pr.comment.v.v, de, some(Superuser)),
       Txt.createRow(pr.created),
       Txt.editRow(pr.modified),
     )
@@ -102,7 +105,7 @@ trait DispZShared extends CyByZ {
   def supDets(s: Sup.Cli, de: DispEnv) = {
     val p = SupP(s.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Sup.address, s.address.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Sup.address, Txt text s.address.v.v, de, some(CommonUser)),
       Txt.createRow(s.created),
       Txt.editRow(s.modified),
     )
@@ -111,7 +114,7 @@ trait DispZShared extends CyByZ {
   def stoDets(s: Sto.Cli, de: DispEnv) = {
     val p = StoP(s.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Sto.comment, s.comment.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Sto.comment, Txt text s.comment.v.v, de, some(CommonUser)),
       Txt.createRow(s.created),
       Txt.editRow(s.modified),
     )
@@ -120,7 +123,7 @@ trait DispZShared extends CyByZ {
   def metDets(m: Met.Cli, de: DispEnv) = {
     val p = MetP(m.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Met.comment, m.comment.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Met.comment, Txt text m.comment.v.v, de, some(CommonUser)),
       Txt.createRow(m.created),
       Txt.editRow(m.modified),
     )
@@ -132,10 +135,10 @@ trait DispZShared extends CyByZ {
                   else some(Admin)
 
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Use.firstName, u.firstName.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.lastName, u.lastName.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.email, u.email.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.level, loc dispUserLevel u.level.v, de, Some(Admin)),
+      Txt.navDetRow(p, Use.firstName, Txt text u.firstName.v.v, de, editLvl),
+      Txt.navDetRow(p, Use.lastName, Txt text u.lastName.v.v, de, editLvl),
+      Txt.navDetRow(p, Use.email, Txt text u.email.v.v, de, editLvl),
+      Txt.navDetRow(p, Use.level, Txt text loc.dispUserLevel(u.level.v), de, Some(Admin)),
       Txt.editRow(u.modified),
 
       if (some(de.creds.user.level.v) >= editLvl) (
@@ -144,32 +147,34 @@ trait DispZShared extends CyByZ {
             Txt.button(
               id := ClickEdit(Use.password.name, p),
               cls := WidgetType.EditPasswordBtn.c,
-            )(loc.editPassword),
+            )(Txt text loc.editPassword),
           )
         )
-      ) else ""
+      ) else nodes()
     )
   }
 
-  def dispSub(e: ExpEnv)(s: Sub.Cli): String = {
-    val row = e.expSt.columns map singleCell(e, s) mkString ""
+  def dispSub(e: ExpEnv)(s: Sub.Cli): Node = {
+    val row = nodes(e.expSt.columns map singleCell(e, s): _*)
     rest(e, s, row)
   }
   
-  def dispStats(e: ExpEnv)(s: BioStats): String = {
-    val row = e.expSt.columns map singleCellStats(e, s) mkString ""
+  def dispStats(e: ExpEnv)(s: BioStats): Node = {
+    val row = nodes(e.expSt.columns map singleCellStats(e, s): _*)
 
     Txt.li(cls := Comp(CompType.ExplorerSubRow))(row)
   }
 
-  def rest(e: ExpEnv, s: Sub.Cli, row: String): String = {
+  def rest(e: ExpEnv, s: Sub.Cli, row: Node): Node = {
     val pth = s.id :: HNil
     val p = SubP(pth).path
 
-    Txt.div(id := EditCont(Sub.structure.name,p))() ++
-    Txt.li(cls := ExplorerSubRow.c)(row) ++
-    mkCons(e, pth, s.containers) ++
-    mkFils(e, pth, s.files)(SubP, SubFilP)
+    nodes(
+      Txt.div(id := EditCont(Sub.structure.name,p))(),
+      Txt.li(cls := ExplorerSubRow.c)(row),
+      mkCons(e, pth, s.containers),
+      mkFils(e, pth, s.files)(SubP, SubFilP)
+    )
   }
 
   def singleCell(e: ExpEnv, s: Sub.Cli)(d: Column) = d match {
@@ -184,14 +189,14 @@ trait DispZShared extends CyByZ {
         case Mol.Structure         ⇒ Txt.structCell(d, s, some(Admin), some(CommonUser), e)
         case _                     ⇒ Txt.mol(fld, s.structure.o, e.expSt)
       }
-      case SubContainers         ⇒ ""
+      case SubContainers         ⇒ nodes()
       case SubEditInfo(ef)       ⇒ Txt.editInfo(d, s.modified, ef)
-      case SubFil(_)             ⇒ ""
+      case SubFil(_)             ⇒ nodes()
     }
-    case _            ⇒ ""
+    case _            ⇒ nodes()
   }
 
-  def singleCellStats(e: ExpEnv, s: BioStats)(c: Column): String = c match {
+  def singleCellStats(e: ExpEnv, s: BioStats)(c: Column): Node = c match {
     case ExportSub(f) ⇒ f match {
       case SubMol(fld)           ⇒ fld match {
         case Mol.Structure         ⇒ Txt.structCell(c, s, None, None, e)
@@ -199,10 +204,10 @@ trait DispZShared extends CyByZ {
       }
       case SubAbs                ⇒ Txt.subCellBool(c, s.sub.abs.v)
       case SubCasNr              ⇒ Txt.subCell(c, s.sub.casNr.v.v)
-      case SubContainers         ⇒ ""
+      case SubContainers         ⇒ nodes()
       case SubCreated            ⇒ Txt.created(c, s.sub.created)
       case SubEditInfo(ef)       ⇒ Txt.editInfo(c, s.sub.modified, ef)
-      case SubFil(_)             ⇒ ""
+      case SubFil(_)             ⇒ nodes()
       case SubId                 ⇒ Txt.subCell(c, s.sub.id.toString)
       case SubName               ⇒ Txt.subCell(c, s.sub.name.v.v)
       case SubProject            ⇒ Txt.subCell(c, s.sub.project.v._2.v)
@@ -224,13 +229,13 @@ trait DispZShared extends CyByZ {
       case ConPurityStr     ⇒ Txt.subCell(c, s.con.purityStr.v.v)
       case ConProject       ⇒ Txt.subCell(c, s.con.project.v._2.v)
       case ConSupplier      ⇒ Txt.subCell(c, s.con.supplier.v._2.v)
-      case ConFil(_)        ⇒ ""
+      case ConFil(_)        ⇒ nodes()
     }
     case b@ExportStats(_,_)  ⇒ metCell(b, e.expSt)(s)
-    case _                   ⇒ ""
+    case _                   ⇒ nodes()
   }
 
-    def metCell(c: ExportStats, expSt: ExpSt)(s: BioStats): String =
+    def metCell(c: ExportStats, expSt: ExpSt)(s: BioStats): Node =
       Txt.statsCell(c, c.stat, s.stats get c.mid, expSt)
 
   def abs(e: ExpEnv) = Txt.editableSubCellBool[Sub.Cli](
@@ -250,15 +255,17 @@ trait DispZShared extends CyByZ {
   //                      Containers
   //----------------------------------------------------------------------
 
-  def mkCon(e: ExpEnv, pth: Sub.Path)(c: Con.Cli): String =  {
+  def mkCon(e: ExpEnv, pth: Sub.Path)(c: Con.Cli): Node =  {
     val cpth = c.id :: pth
     val p = ConP(cpth).path
     val ename = Con.empty.name
 
     val purityDets =
       if (e isEditingAs CommonUser)
-        Txt.conDetRow(p, Con.purity, Txt text s"${c.purity.v}", some(CommonUser), e) ++
-        Txt.conDetRow(p, Con.purityStr, Txt text c.purityStr.v.v, some(CommonUser), e)
+        nodes(
+          Txt.conDetRow(p, Con.purity, Txt text s"${c.purity.v}", some(CommonUser), e),
+          Txt.conDetRow(p, Con.purityStr, Txt text c.purityStr.v.v, some(CommonUser), e)
+        )
       else
         Txt.conDetRow(p, Con.purity, Txt text purity(c), some(CommonUser), e)
 
@@ -280,7 +287,7 @@ trait DispZShared extends CyByZ {
                        )(),
                      )
 
-        flaskI ++ cloneI
+        nodes(flaskI, cloneI)
       },
       Txt.ul(cls := ConRestCell.c)(
         Txt.li(cls := ExplorerConRow.c)(
@@ -304,8 +311,8 @@ trait DispZShared extends CyByZ {
             Txt.conDetRow(p, Con.concentration, Txt text s"${c.concentration.v}", some(CommonUser), e),
           ),
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.created, Txt timeStampStr c.created, None, e),
-            Txt.conDetRow(p, Con.modified, Txt editStr c.modified, None, e),
+            Txt.conDetRow(p, Con.created, Txt timeStampNode c.created, None, e),
+            Txt.conDetRow(p, Con.modified, Txt editNode c.modified, None, e),
           ),
           e.ifEditingAs(Admin)(Txt.div(id := DeleteId(p), cls := DeleteHidden.c)()),
         ),
@@ -315,22 +322,24 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def mkCons(e: ExpEnv, pth: Sub.Path, cons: List[Con.Cli]): String =  {
+  def mkCons(e: ExpEnv, pth: Sub.Path, cons: List[Con.Cli]): Node =  {
     val p = SubP(pth).path
     val i = DataList(ConT,p).i
 
-    Txt.li(cls := ExplorerConRowHeader.c)(
-      Txt.expBtn(e.exp, i),
-      Txt.h1(cls := TitleType.ConRow.c)(Txt text s"${loc name Sub.containers} (${cons.size})"),
-      e.ifEditingAs(CommonUser)(Txt.div(id := Create(ConT,p), cls := AddHidden.c)()),
-    ) ++
-    Txt.ul(
-      id := CreateCont(ConT,p),
-      cls := NavCreateContainer.c
-    )() ++
-    Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
-      cons map mkCon(e, pth) mkString ""
-    ),
+    nodes(
+      Txt.li(cls := ExplorerConRowHeader.c)(
+        Txt.expBtn(e.exp, i),
+        Txt.h1(cls := TitleType.ConRow.c)(Txt text s"${loc name Sub.containers} (${cons.size})"),
+        e.ifEditingAs(CommonUser)(Txt.div(id := Create(ConT,p), cls := AddHidden.c)()),
+      ),
+      Txt.ul(
+        id := CreateCont(ConT,p),
+        cls := NavCreateContainer.c
+      )(),
+      Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
+        cons map mkCon(e, pth): _*
+      ),
+    )
   }
 
   def location(c: Con.Cli) = Txt text c.location.v._2.v
@@ -344,44 +353,50 @@ trait DispZShared extends CyByZ {
   //                      Bio Data
   //----------------------------------------------------------------------
 
-  def mkBios(e: ExpEnv, conP: Con.Path, bs: List[Bio.Cli]): String =  {
+  def mkBios(e: ExpEnv, conP: Con.Path, bs: List[Bio.Cli]): Node =  {
     val p = ConP(conP).path
     val i = DataList(BioT, p).i
 
-    Txt.li(cls := ExplorerConRowHeader.c)(
-      Txt.expBtn(e.exp, i),
-      Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Con.bio} (${bs.size})"),
-      e.ifEditingAs(CommonUser)(Txt.div(id := Create(BioT,p), cls := AddHidden.c)()),
-    ) ++
-    Txt.ul(
-      id := CreateCont(BioT,p),
-      cls := NavCreateContainer.c
-    )() ++
-    Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
-      bs map mkBio(e, conP) mkString ""
-    ),
+    nodes(
+      Txt.li(cls := ExplorerConRowHeader.c)(
+        Txt.expBtn(e.exp, i),
+        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Con.bio} (${bs.size})"),
+        e.ifEditingAs(CommonUser)(Txt.div(id := Create(BioT,p), cls := AddHidden.c)()),
+      ),
+      Txt.ul(
+        id := CreateCont(BioT,p),
+        cls := NavCreateContainer.c
+      )(),
+      Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
+        bs map mkBio(e, conP): _*
+      ),
+    )
   }
 
-  def mkBio(e: ExpEnv, conP: Con.Path)(b: Bio.Cli): String = {
+  def mkBio(e: ExpEnv, conP: Con.Path)(b: Bio.Cli): Node = {
     val bioP = b.id :: conP
     val p = BioP(bioP).path
-    Txt.li(id := Dat(p), cls := ExplorerConRow.c)(
-      Txt.div(cls := ConDetails.c)(
-        Txt.conDetRow(p, Bio.value, b.value.v.toString, some(CommonUser), e),
-        Txt.conDetRow(p, Bio.method, b.method.v._2.v, some(CommonUser), e),
-        Txt.conDetRow(p, Bio.date, Txt dateStr b.date.v.v, some(CommonUser), e),
+
+    nodes(
+      Txt.li(id := Dat(p), cls := ExplorerConRow.c)(
+        Txt.div(cls := ConDetails.c)(
+          Txt.conDetRow(p, Bio.value, Txt text b.value.v.toString, some(CommonUser), e),
+          Txt.conDetRow(p, Bio.method, Txt text b.method.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, Bio.date, Txt dateNode b.date.v.v, some(CommonUser), e),
+        ),
+        Txt.div(cls := ConDetails.c)(
+          Txt.conDetRow(p, Bio.supplier, Txt text b.supplier.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, Bio.project, Txt text b.project.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, Bio.comment, Txt text b.comment.v.v, some(CommonUser), e),
+        ),
+        Txt.div(cls := ConDetails.c)(
+          Txt.conDetRow(p, Bio.created, Txt timeStampNode b.created, None, e),
+          Txt.conDetRow(p, Bio.modified, Txt editNode b.modified, None, e),
+        ),
+        e.ifEditingAs(Admin)(Txt.div(id := DeleteId(p), cls := DeleteHidden.c)()),
       ),
-      Txt.div(cls := ConDetails.c)(
-        Txt.conDetRow(p, Bio.supplier, b.supplier.v._2.v, some(CommonUser), e),
-        Txt.conDetRow(p, Bio.project, b.project.v._2.v, some(CommonUser), e),
-        Txt.conDetRow(p, Bio.comment, Txt text b.comment.v.v, some(CommonUser), e),
-      ),
-      Txt.div(cls := ConDetails.c)(
-        Txt.conDetRow(p, Bio.created, Txt timeStampStr b.created, None, e),
-        Txt.conDetRow(p, Bio.modified, Txt editStr b.modified, None, e),
-      ),
-      e.ifEditingAs(Admin)(Txt.div(id := DeleteId(p), cls := DeleteHidden.c)()),
-    ) ++ mkFils(e, bioP, b.files)(BioP, BioFilP)
+      mkFils(e, bioP, b.files)(BioP, BioFilP)
+    )
   }
 
   //----------------------------------------------------------------------
@@ -391,16 +406,16 @@ trait DispZShared extends CyByZ {
   def mkFils[P<:HList](e: ExpEnv, p: P, fs: List[Fil.Cli])(
     pth: P ⇒ Path,
     filPth: shapeless.::[Fil.Id,P] ⇒ Path,
-  ): String =  {
+  ): Node =  {
     val ppth = pth(p)
     val i = DataList(FilT, ppth).i
 
-    def mkFil(f: Fil.Cli): String = {
+    def mkFil(f: Fil.Cli): Node = {
       val fpth = filPth(f.id :: p)
       val linkDets = if (e.isEditingAs(CommonUser))
                       Txt.div(cls := ConDetails.c)(
-                        Txt.conDetRow(fpth, Fil.name, f.name.v.v, some(CommonUser), e),
-                        Txt.conDetRow(fpth, Fil.path, f.path.v.v, some(CommonUser), e),
+                        Txt.conDetRow(fpth, Fil.name, Txt text f.name.v.v, some(CommonUser), e),
+                        Txt.conDetRow(fpth, Fil.path, Txt text f.path.v.v, some(CommonUser), e),
                       )
                     else
                       Txt.div(cls := ConDetails.c)(
@@ -410,31 +425,33 @@ trait DispZShared extends CyByZ {
       Txt.li(id := Dat(fpth), cls := ExplorerConRow.c)(
         linkDets,
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(fpth, Fil.project, f.project.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(fpth, Fil.project, Txt text f.project.v._2.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
           Txt.conDetRow(fpth, Fil.comment, Txt text f.comment.v.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(fpth, Fil.created, Txt timeStampStr f.created, None, e),
-          Txt.conDetRow(fpth, Fil.modified, Txt editStr f.modified, None, e),
+          Txt.conDetRow(fpth, Fil.created, Txt timeStampNode f.created, None, e),
+          Txt.conDetRow(fpth, Fil.modified,Txt editNode f.modified, None, e),
         ),
         e.ifEditingAs(Admin)(Txt.div(id := DeleteId(fpth), cls := DeleteHidden.c)()),
       )
     }
 
-    Txt.li(cls := ExplorerConRowHeader.c)(
-      Txt.expBtn(e.exp, i),
-      Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Sub.files} (${fs.size})"),
-      e.ifEditingAs(CommonUser)(Txt.div(id := Create(FilT, ppth), cls := AddHidden.c)()),
-    ) ++
-    Txt.ul(
-      id  := CreateCont(FilT, ppth),
-      cls := NavCreateContainer.c
-    )() ++
-    Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
-      fs map mkFil mkString ""
-    ),
+    nodes(
+      Txt.li(cls := ExplorerConRowHeader.c)(
+        Txt.expBtn(e.exp, i),
+        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Sub.files} (${fs.size})"),
+        e.ifEditingAs(CommonUser)(Txt.div(id := Create(FilT, ppth), cls := AddHidden.c)()),
+      ),
+      Txt.ul(
+        id  := CreateCont(FilT, ppth),
+        cls := NavCreateContainer.c
+      )(),
+      Txt.ul(id := i, cls := ContainerDets.c, Txt.hide(e.exp,i))(
+        fs map mkFil: _*
+      ),
+    )
   }
 }
 

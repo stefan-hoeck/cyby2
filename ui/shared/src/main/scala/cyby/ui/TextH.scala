@@ -17,7 +17,8 @@ import UId._
 import cyby.ui.{WidgetType ⇒ WT, TitleType ⇒ TT, IconType ⇒ IT, CompType ⇒ CT,
                 LabelType ⇒ LT}
 
-import msf.js.{InputType, SelectEntry}, InputType.{Text, Password}
+import msf.js.{InputType, SelectEntry, Node, raw, nodes, Attribute}
+import InputType.{Text, Password}
 
 /**
   * Wrapper trait defining many elements and widgets of the UI as
@@ -81,7 +82,7 @@ trait TextEnv extends LocEnv {
   /**
     * Helper class for creating Html Strings
     */
-  trait TextH extends msf.js.Text[UIdP,CyByClass] {
+  trait TextH extends msf.js.TextHelper[UIdP,CyByClass] {
 
     override def clsToString(c: CyByClass) = c.toString
 
@@ -91,7 +92,7 @@ trait TextEnv extends LocEnv {
       * Info link leading to a part of the documentation as given
       * by ID t.
       */
-    def info(t: UIdP): String = a(
+    def info(t: UIdP): Node = a(
       cls := IT.Info.c,
       href := s"doc_${version}.html#${t}",
       target := "_blank"
@@ -105,14 +106,14 @@ trait TextEnv extends LocEnv {
       * Constructs CyBy's main view depending on the actual
       * EditMode
       */
-    def mainView(mode: EditMode): String =
+    def mainView(mode: EditMode): Node =
       main(id := MainId, cls := CT.Main.c)(
         section(id := ExplorerId, cls := CT.Explorer.c)(
-          explorer(mode)("","","",""),
+          explorer(mode)(nodes(),nodes(),nodes(),nodes()),
         ),
         section(id := QueriesId, cls := CT.Queries.c)(
           h1(cls := TT.BorderBtnTitle.c)(
-            div(cls := CT.BorderTextCell.c)(loc.queries),
+            div(cls := CT.BorderTextCell.c)(text(loc.queries)),
             div(id := QueryUp, cls := IT.Up.c)(),
             div(id := QueryDown, cls := IT.Down.c)(),
             info(QueryDoc),
@@ -133,19 +134,20 @@ trait TextEnv extends LocEnv {
       * @param subs:   content of the explorer table
       */
     def explorer(mode: EditMode)(
-      export:  String,
-      columns: String,
-      header:  String,
-      subs:    String,
-    ): String =
+      export:  Node,
+      columns: Node,
+      header:  Node,
+      subs:    Node,
+    ): Node =
+      nodes(
         h1(cls := TT.BorderBtnTitle.c)(
           text(loc.explorer),
           div(id := ExplorerZoomOut, cls := IT.Minus.c)(),
           div(id := ExplorerZoomIn, cls := IT.Plus.c)(),
-          button(id := SubGridBtn, cls := WT.BorderBtn.c)(loc.grid),
-          button(id := SubTableBtn, cls := WT.BorderBtn.c)(loc.table),
-          button(id := SubStatsBtn, cls := WT.BorderBtn.c)(loc.stats),
-          button(id := EditExportBtn, cls := WT.BorderBtn.c)(loc.export),
+          button(id := SubGridBtn, cls := WT.BorderBtn.c)(text(loc.grid)),
+          button(id := SubTableBtn, cls := WT.BorderBtn.c)(text(loc.table)),
+          button(id := SubStatsBtn, cls := WT.BorderBtn.c)(text(loc.stats)),
+          button(id := EditExportBtn, cls := WT.BorderBtn.c)(text(loc.export)),
           // button(id := EditPlotBtn, cls := WT.BorderBtn.c)(loc.plots),
           input(Text, id := QuickSearchTxt, cls := WT.QuickTxt.c,
             placeholder := loc.quickSearch),
@@ -168,18 +170,19 @@ trait TextEnv extends LocEnv {
             title := loc.toggleEditing
           )(),
           info(ExplorerDoc),
-        ) ++
-        ul(id := ExportId, cls := CT.NavCreateContainer.c)(export) ++
-        ul(id := Columns, cls := CT.NavCreateContainer.c)(columns) ++
-        ul(id := SubTableHeader, cls := CT.SubTable.c)(header) ++
+        ),
+        ul(id := ExportId, cls := CT.NavCreateContainer.c)(export),
+        ul(id := Columns, cls := CT.NavCreateContainer.c)(columns),
+        ul(id := SubTableHeader, cls := CT.SubTable.c)(header),
         div(id := SubTableId, cls := Inner(CT.Explorer))(subs)
+      )
 
     /**
       * Creates the title of the export view
       */
-    def exportTitle: String =
+    def exportTitle: Node =
       li(cls := CT.NavRow.c)(
-        h1(cls := TT.NavSection.c)(loc.exportSettings),
+        h1(cls := TT.NavSection.c)(text(loc.exportSettings)),
         div(cls := CT.ExplorerTitelFill.c)(),
         info(ExportDoc),
       )
@@ -187,9 +190,9 @@ trait TextEnv extends LocEnv {
     /**
       * Creates the title of the column editing view
       */
-    def columnsTitle: String =
+    def columnsTitle: Node =
       li(cls := CT.NavRow.c)(
-        h1(cls := TT.NavSection.c)(loc.addColumn),
+        h1(cls := TT.NavSection.c)(text(loc.addColumn)),
         div(cls := CT.ExplorerTitelFill.c)(),
         info(ColumnsDoc)
       )
@@ -204,25 +207,25 @@ trait TextEnv extends LocEnv {
     def leftView(
       c:           Creds,
       changes:     List[(String,String)],
-      navSections: String*
-    ): String =
+      navSections: Node*
+    ): Node =
       aside(id := SideViewId, cls := CT.SideView.c)(
         div(cls := CT.SideViewUpper.c)(
           section(cls := CT.LoginStatus.c)(
             h2(cls := TT.BorderBtnTitle.c)(
-              div(cls := CT.BorderTextCell.c)(loc.loginStatus),
+              div(cls := CT.BorderTextCell.c)(text(loc.loginStatus)),
               div(id := NavLeft, cls := IT.Left.c)(),
               div(id := NavRight, cls := IT.Right.c)(),
             ),
             div(id := LoginStatusId, cls := Inner(CT.LoginStatus))(
-              loc.loggedIn(alias(c.user), level(c.user)),
-              button(id := LogoutBtnId, cls := WT.LogoutBtn.c)(loc.logout)
+              p()(text(loc.loggedIn(alias(c.user), level(c.user)))),
+              button(id := LogoutBtnId, cls := WT.LogoutBtn.c)(text(loc.logout))
             )
           ),
           navigator(c, changes, navSections: _*),
         ),
         section(cls := CT.Log.c)(
-          h2(cls := TT.BorderTxt.c)(loc.log),
+          h2(cls := TT.BorderTxt.c)(text(loc.log)),
           ul(id := LogId, cls := Inner(CT.Log))()
         ),
       )
@@ -237,11 +240,11 @@ trait TextEnv extends LocEnv {
     def navigator(
       c:           Creds,
       changes:     List[(String,String)],
-      navSections: String*
-    ): String = section(id := NavId, cls := CT.Nav.c)(
+      navSections: Node*
+    ): Node = section(id := NavId, cls := CT.Nav.c)(
        h1(cls := TT.BorderBtnTitle.c)(
-         button(id := NavBtn, cls := WT.BorderBtn.c)(loc.navigator),
-         button(id := InfoBtn, cls := WT.BorderBtn.c)(loc.info),
+         button(id := NavBtn, cls := WT.BorderBtn.c)(text(loc.navigator)),
+         button(id := InfoBtn, cls := WT.BorderBtn.c)(text(loc.info)),
          div(cls := CT.ExplorerTitelFill.c)(),
          info(NavigatorDoc),
        ),
@@ -287,14 +290,14 @@ trait TextEnv extends LocEnv {
       path   : Path,
       name   : String,
       lvl    : UserLevel,
-      rows   : String*,
-    ): String = {
+      rows   : Node*,
+    ): Node = {
       val i = DataList(dt, path).i
 
       section(id := NavSectionId(dt))(
         div(cls := CT.NavRow.c)(
           div(id := Expand(i), dexp(de exp i))(),
-          h2(cls := TT.NavSection.c)(name),
+          h2(cls := TT.NavSection.c)(text(name)),
           de.ifEditingAs(lvl)(
             div(id := Create(dt, path), cls := IT.AddHidden.c)()
           ),
@@ -324,12 +327,12 @@ trait TextEnv extends LocEnv {
     def navDetRow(
       p       : Path,
       f       : Symbol,
-      v       : String,
+      v       : Node,
       de      : DispEnv,
       editLvl : Option[UserLevel],
-    ) = {
+    ): Node = {
       li(id := UId.Edit(f.name, p), cls := CT.NavDetailRow(f).c)(
-        h4(cls := TT.NavDetail.c)(s"${loc name f}:"),
+        h4(cls := TT.NavDetail.c)(text(s"${loc name f}:")),
         if (editLvl exists de.isEditingAs)
           div(id := EditCont(f.name, p), cls := CT.NavDetailCell.c)(v)
         else div(cls := CT.NavDetailCell.c)(v)
@@ -340,20 +343,20 @@ trait TextEnv extends LocEnv {
       * Row in a list of details containing information about when
       * a piece of data was modified for the last time.
       */
-    def editRow(inf: EditInfo): String =
+    def editRow(inf: EditInfo): Node =
       li(cls := CT.NavDetailRow(modifiedSym).c)(
-        h4(cls := TT.NavDetail.c)(s"${loc name modifiedSym}:"),
-        div(cls := CT.NavDetailCell.c)(editStr(inf))
+        h4(cls := TT.NavDetail.c)(text(s"${loc name modifiedSym}:")),
+        div(cls := CT.NavDetailCell.c)(text(editStr(inf)))
       )
 
     /**
       * Row in a list of details containing information about when
       * a piece of data was created.
       */
-    def createRow(ts: TimeStamp): String =
+    def createRow(ts: TimeStamp): Node =
       li(cls := CT.NavDetailRow(createdSym).c)(
-        h4(cls := TT.NavDetail.c)(s"${loc name createdSym}:"),
-        div(cls := CT.NavDetailCell.c)(timeStampStr(ts))
+        h4(cls := TT.NavDetail.c)(text(s"${loc name createdSym}:")),
+        div(cls := CT.NavDetailCell.c)(text(timeStampStr(ts)))
       )
 
     /**
@@ -366,11 +369,17 @@ trait TextEnv extends LocEnv {
       s"${date} ${time}"
     }
 
+    def timeStampNode(ts: TimeStamp): Node = text(timeStampStr(ts))
+
     /**
       * Properly formatted string of date represented as milliseconds
       * since 1.1.1970.
       */
     def dateStr(v: Long): String = localeDateString(mkDate(v))
+
+    def dateNode(v: Long): Node = text(dateStr(v))
+
+    def editNode(inf: EditInfo): Node = text(editStr(inf))
 
     /**
       * Properly formatted string of editing information
@@ -404,20 +413,20 @@ trait TextEnv extends LocEnv {
       *                list of icons being visible when hovering over the
       *                entry in question.
       */
-    def dispNav[A](dets: (A,DispEnv) ⇒ String)(
+    def dispNav[A](dets: (A,DispEnv) ⇒ Node)(
       n           : A ⇒ Name,
       path        : A ⇒ Path,
       s           : Symbol,
       deleteLevel : Option[UserLevel],
       editLevel   : Option[UserLevel],
       search      : List[NavSearchMode],
-    ): DispEnv ⇒ A ⇒ String = de ⇒ a ⇒ {
+    ): DispEnv ⇒ A ⇒ Node = de ⇒ a ⇒ {
       val pth = path(a)
       val i = Dat(pth).i
-      val se  = search map navSearchBtn(pth) mkString ""
+      val se  = nodes(search map navSearchBtn(pth): _*)
       val del = if (deleteLevel exists de.isEditingAs)
                   div(id := DeleteId(pth), cls := IT.DeleteHidden.c)()
-                else ""
+                else nodes()
 
       navItem(UId Item i)(
         div(cls := CT.NavRow.c)(
@@ -445,10 +454,10 @@ trait TextEnv extends LocEnv {
       *              the navigator. this is mainly used to create the appropriate
       *              element IDs.
       */
-    def navDets(de: DispEnv, p: Path)(ss: String*) =
+    def navDets(de: DispEnv, p: Path)(ss: Node*): Node =
       ul(id := Dat(p), cls := CT.NavDetails.c, hide(de.exp, Dat(p)))(ss:_*)
 
-    private def navItem(i: UIdP)(ss: String*): String =
+    private def navItem(i: UIdP)(ss: Node*): Node =
       li(id := i, cls := CT.NavCell.c)(ss:_*)
    
     /**
@@ -484,24 +493,24 @@ trait TextEnv extends LocEnv {
       deleteLevel          : Option[UserLevel],
       editLevel            : Option[UserLevel],
       search               : List[NavSearchMode],
-    )(mkChild: DispEnv ⇒ A ⇒ String)(dets: String*): String = {
+    )(mkChild: DispEnv ⇒ A ⇒ Node)(dets: Node*): Node = {
       val i = DataList(dt,path).i
 
       navItem(UId Item i)(
         div(cls := CT.NavRow.c)(
           expBtn(de.exp, i),
           navTitle(path, name, de, titleSymbol, editLevel),
-          search map navSearchBtn(path) mkString "",
+          nodes(search map navSearchBtn(path): _*),
           if (editLevel exists de.isEditingAs) {
             val del = if (deleteLevel exists de.isEditingAs)
                         div(id := DeleteId(path), cls := IT.DeleteHidden.c)()
-                      else ""
-            del ++ div(id := Create(dt,path), cls := IT.AddHidden.c)()
-          } else "",
+                      else nodes()
+            nodes(del, div(id := Create(dt,path), cls := IT.AddHidden.c)())
+          } else nodes(),
         ),
         if (editLevel exists de.isEditingAs) 
           ul(id := CreateCont(dt,path), cls := CT.NavCreateContainer.c)()
-        else "",
+        else nodes(),
         ul(id := i, cls := CT.NavDetails.c, hide(de.exp, i))(
           dets.toList ::: as.map(mkChild(de)): _*
         ),
@@ -536,7 +545,7 @@ trait TextEnv extends LocEnv {
       titleSymbol          : Symbol,
       deleteLevel          : Option[UserLevel],
       editLevel            : Option[UserLevel],
-    )(mkChild: DispEnv ⇒ A ⇒ String): String =
+    )(mkChild: DispEnv ⇒ A ⇒ Node): Node =
       navChildrenDets(path,dt,name,as,de,titleSymbol,deleteLevel,editLevel,Nil)(mkChild)()
 
     /**
@@ -560,9 +569,9 @@ trait TextEnv extends LocEnv {
       editLevel : Option[UserLevel],
     ) = if (editLevel exists de.isEditingAs)
           h3(id := UId.Edit(s.name, p), cls := TT.NavItem.c)(
-            span(id := EditCont(s.name, p))(n)
+            span(id := EditCont(s.name, p))(text(n))
           )
-        else h3(cls := TT.NavItem.c)(span()(n))
+        else h3(cls := TT.NavItem.c)(span()(text(n)))
 
     /**
       * Editable detail entry for an editable link to another
@@ -581,7 +590,7 @@ trait TextEnv extends LocEnv {
       l         : (Id[A],Name),
       de        : DispEnv,
       editLevel : Option[UserLevel],
-    ): String = navDetRow(p, f, l._2.v, de, editLevel)
+    ): Node = navDetRow(p, f, text(l._2.v), de, editLevel)
 
     /**
       * Editable list of links to other data items
@@ -599,7 +608,7 @@ trait TextEnv extends LocEnv {
       l         : List[(Id[A],Name)],
       de        : DispEnv,
       editLevel : Option[UserLevel],
-    ): String = navDetRow(p, f, l.map(_._2.v).mkString(", "), de, editLevel)
+    ): Node = navDetRow(p, f, text(l.map(_._2.v).mkString(", ")), de, editLevel)
 
     /**
       * Creates an icon for expanding an element in the UI
@@ -609,7 +618,7 @@ trait TextEnv extends LocEnv {
       */
     def expBtn(ids: Set[UIdP], i: UIdP) = div(id := Expand(i), dexp(ids(i)))()
 
-    private def navSearchBtn(p: Path)(m: NavSearchMode): String = div(
+    private def navSearchBtn(p: Path)(m: NavSearchMode): Node = div(
       id    := NavSearch(p, m),
       cls   := IT.NavSearch(m).c,
       title := loc.navSearchTitle(m),
@@ -625,7 +634,7 @@ trait TextEnv extends LocEnv {
       * mode the explorer is actually in: A grid view gets a different
       * header than the statistics table view for instance.
       */
-    def mkHeadRow(expEnv: ExpEnv): String = {
+    def mkHeadRow(expEnv: ExpEnv): Node = {
       import implicits.colEqI
 
       val expSt = expEnv.expSt
@@ -649,7 +658,7 @@ trait TextEnv extends LocEnv {
 
         val sortImg =
           if (canSortBy(c)) div(id := SortSub(pth), cls := sortIcon)()
-          else ""
+          else nodes()
 
         lazy val formatI = div(
           id    := EditFormatId(pth),
@@ -657,7 +666,7 @@ trait TextEnv extends LocEnv {
           title := loc.editFormatting,
         )()
 
-        val formatImg = if (columnDesc(c).formattable) formatI else ""
+        val formatImg = if (columnDesc(c).formattable) formatI else nodes()
 
         val addImg = div(
           id    := AddColumnId(index),
@@ -665,7 +674,7 @@ trait TextEnv extends LocEnv {
           title := loc.addColumnTitle,
         )()
 
-        val delImg = if (c === structCol) "" else div(
+        val delImg = if (c === structCol) nodes() else div(
           id    := DelColumnId(index),
           cls   := IT.DeleteColumn.c,
           title := loc.deleteColumn,
@@ -700,24 +709,25 @@ trait TextEnv extends LocEnv {
             select(id := GridColumns, cls := WT.GridColumnsSel.c)(options(columns)),
           )
         case PlotsView     ⇒ li(cls := CT.GridHeaderRow.c)(
-          ul(id := UId.PlotEditList, cls := CT.PlotEditList.c)(
-          )
+          ul(id := UId.PlotEditList, cls := CT.PlotEditList.c)()
         )
         case _             ⇒ 
-          div(
-            id := CreateCont(subType,rootPath),
-            cls := CT.NavCreateContainer.c
-          )() ++
-          li(cls := CT.ExplorerHeaderRow.c)(
-            expSt.columns.zipWithIndex map mkHeader: _*
+          nodes(
+            div(
+              id := CreateCont(subType,rootPath),
+              cls := CT.NavCreateContainer.c
+            )(),
+            li(cls := CT.ExplorerHeaderRow.c)(
+              expSt.columns.zipWithIndex map mkHeader: _*
+            )
           )
       }
     }
 
-    private def gridRow[S](mkId: S ⇒ UIdP)(ss: List[S])(implicit S: ToMol[S]): String = {
+    private def gridRow[S](mkId: S ⇒ UIdP)(ss: List[S])(implicit S: ToMol[S]): Node = {
       def cell(s: S) = div(id := mkId(s), cls := CT.SubGridCell.c)(
-        S svg s,
-        div()(S id s toString)
+        raw(S svg s),
+        div()(text(S id s toString))
       )
 
       div(cls := CT.SubGridRow.c)(ss map cell:_*)
@@ -735,9 +745,9 @@ trait TextEnv extends LocEnv {
       */
     def subItems[S:ToMol](
       e: ExpEnv,
-      inner: ExpEnv ⇒ S ⇒ String,
+      inner: ExpEnv ⇒ S ⇒ Node,
       mkId: S ⇒ UIdP,
-    )(subs: List[S]): List[String] = {
+    )(subs: List[S]): List[Node] = {
 
       def item(s: S) = div(id := mkId(s), cls := CT.SubEntry.c)(inner(e)(s))
 
@@ -753,7 +763,7 @@ trait TextEnv extends LocEnv {
       * at the beginning of the HTML document whenever one of these
       * settings change.
       */
-    def expStyle(env: ExpEnv, width: Int): String = {
+    def expStyle(env: ExpEnv, width: Int): Node = {
       def st = env.expSt
       val gridW = (width - st.gridColumns * 10) / st.gridColumns
       val expH = st.verticalSize max MinSize min MaxSize
@@ -761,27 +771,29 @@ trait TextEnv extends LocEnv {
       val sideW = TotSize - expW
       val queryH = TotSize - expH
 
-      s"""
-        .cell.sub.structure svg {
-          width: ${st.rowH}px;
-          height: ${st.rowH}px;
-        }
-        .cell.sub-header.structure { width: ${st.rowH + 10}px; }
-        .cell.sub.structure { width: ${st.rowH + 10}px; height: ${st.rowH + 10}px }
-        .row.explorer-sub { height: ${st.rowH + 10}px; }
-        .cell.sub-grid svg {
-          width: ${gridW}px;
-          height: ${st.rowH}px;
-        }
-        .cell.sub-grid {
-          height: ${st.rowH + 25}px;
-          width: ${gridW + 10}px;
-        }
-        .comp.main.explorer { flex: ${expH}; }
-        .comp.main.queries { flex: ${queryH}; }
-        .comp.maincontent { flex: ${expW}; }
-        .comp.sideview { flex: ${sideW}; }
-      """
+      raw(
+        s"""
+          .cell.sub.structure svg {
+            width: ${st.rowH}px;
+            height: ${st.rowH}px;
+          }
+          .cell.sub-header.structure { width: ${st.rowH + 10}px; }
+          .cell.sub.structure { width: ${st.rowH + 10}px; height: ${st.rowH + 10}px }
+          .row.explorer-sub { height: ${st.rowH + 10}px; }
+          .cell.sub-grid svg {
+            width: ${gridW}px;
+            height: ${st.rowH}px;
+          }
+          .cell.sub-grid {
+            height: ${st.rowH + 25}px;
+            width: ${gridW + 10}px;
+          }
+          .comp.main.explorer { flex: ${expH}; }
+          .comp.main.queries { flex: ${queryH}; }
+          .comp.maincontent { flex: ${expW}; }
+          .comp.sideview { flex: ${sideW}; }
+        """
+      )
     }
 
     private def colName(c: Column) = columnDesc(c) match {
@@ -814,7 +826,7 @@ trait TextEnv extends LocEnv {
       t         : S ⇒ String,
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ): S ⇒ String =
+    ): S ⇒ Node =
       rawEditableSubCell[S](col, sub ⇒ text(t(sub)), editLevel, env)
 
     /**
@@ -830,10 +842,10 @@ trait TextEnv extends LocEnv {
       */
     def rawEditableSubCell[S:ToMol](
       col       : Column,
-      t         : S ⇒ String,
+      t         : S ⇒ Node,
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ): S ⇒ String = sub ⇒ {
+    ): S ⇒ Node = sub ⇒ {
       val pth = subPath(ToMol[S] id sub)
       val cn  = colName(col)
 
@@ -860,7 +872,7 @@ trait TextEnv extends LocEnv {
       t         : S ⇒ Boolean,
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ): S ⇒ String = sub ⇒ {
+    ): S ⇒ Node = sub ⇒ {
       val pth = subPath(ToMol[S] id sub)
       val cn  = colName(col)
       val c = if (t(sub)) IT.True.c else IT.False.c
@@ -879,7 +891,7 @@ trait TextEnv extends LocEnv {
       * @param col : column of the cell
       * @param t   : value to be displayed
       */
-    def subCellBool(col: Column, t: Boolean): String = {
+    def subCellBool(col: Column, t: Boolean): Node = {
       val c = if (t) IT.True.c else IT.False.c
       div(cls := subCellCls(col))(div(cls := c)())
     }
@@ -892,7 +904,7 @@ trait TextEnv extends LocEnv {
       *              do not try to render some HTML here. use rawEditableSubCell
       *              for this.
       */
-    def subCell(col: Column, t: String): String = rawSubCell(col, text(t))
+    def subCell(col: Column, t: String): Node = rawSubCell(col, text(t))
 
     /**
       * Creates an non-editable cell for a value in the substance table
@@ -901,7 +913,7 @@ trait TextEnv extends LocEnv {
       * @param t   : text value to be displayed. this will not be escaped,
       *              so it can contain additional markup.
       */
-    def rawSubCell(col: Column, t: String): String =
+    def rawSubCell(col: Column, t: Node): Node =
       div(cls := subCellCls(col))(t)
 
     /**
@@ -924,7 +936,7 @@ trait TextEnv extends LocEnv {
       deleteLevel : Option[UserLevel],
       editLevel   : Option[UserLevel],
       env         : ExpEnv,
-    )(implicit S: ToMol[S]): String =
+    )(implicit S: ToMol[S]): Node =
       if (editLevel exists env.isEditingAs) {
         val pth = subPath(S id s)
         val cn  = colName(col)
@@ -932,10 +944,10 @@ trait TextEnv extends LocEnv {
           div(id := ClickEdit(cn, pth), cls := IT.Edit.c)(),
           if (deleteLevel exists env.isEditingAs)
             div(id := DeleteId(pth), cls := IT.Delete.c)()
-          else ""
+          else nodes()
         )
-        div(id := UId.Edit(cn, pth), cls := subCellCls(col))(S svg s, icons)
-      } else div(cls := subCellCls(col))(S svg s)
+        div(id := UId.Edit(cn, pth), cls := subCellCls(col))(raw(S svg s), icons)
+      } else div(cls := subCellCls(col))(raw(S svg s))
 
     /**
       * Displays a floating point value with correct background coloring
@@ -945,7 +957,7 @@ trait TextEnv extends LocEnv {
       * @param ov: optional floating point value to be displayed
       * @param expSt: explorer state containing all defined formatting rules
       */
-    def gradientCell(c: Column, ov: Option[Double], expSt: ExpSt): String =
+    def gradientCell(c: Column, ov: Option[Double], expSt: ExpSt): Node =
       gradientCell(c, subCellCls(c), ov, expSt)
 
     /**
@@ -963,7 +975,7 @@ trait TextEnv extends LocEnv {
       tpe: StatsType,
       stats: Option[Stats],
       expSt: ExpSt
-    ): String = gradientCell(
+    ): Node = gradientCell(
       col,
       CT.MethodStatsCell.c,
       stats map tpe.get,
@@ -988,7 +1000,7 @@ trait TextEnv extends LocEnv {
       ov:      Option[Double],
       expSt:   ExpSt,
       tooltip: Option[String] = None,
-    ): String = {
+    ): Node = {
       lazy val form: Format[Double] =
         expSt.settings.doubleFormats.get(col) getOrElse Gradient[Double](Nil,0)
 
@@ -1012,20 +1024,20 @@ trait TextEnv extends LocEnv {
       * @param est: explorer state containing all kinds of information about
       *             the explorer and how to format and display values
       */
-    def mol(f: Mol.Field, o: Option[Mol], est: ExpSt): String = f match {
+    def mol(f: Mol.Field, o: Option[Mol], est: ExpSt): Node = f match {
       case Mol.Mass ⇒ gradientCell(molFieldToColumn(f), o.map(_.mass), est)
       case Mol.ExactMass ⇒ gradientCell(molFieldToColumn(f), o.map(_.exactMass), est)
       case Mol.LogP ⇒ gradientCell(molFieldToColumn(f), o.flatMap(_.logP), est)
       case Mol.Tpsa ⇒ gradientCell(molFieldToColumn(f), o.flatMap(_.tpsa), est)
       case Mol.Lipinski ⇒ subCellBool(molFieldToColumn(f), o.flatMap(_.lipinski) getOrElse false)
-      case Mol.Formula  ⇒ rawSubCell(molFieldToColumn(f), o.fold("")(_.formulaHtml))
-      case Mol.Structure ⇒ ""
-      case Mol.SubStructure ⇒ ""
-      case Mol.ExactStructure ⇒ ""
-      case Mol.NoStructure ⇒ ""
-      case Mol.Svg ⇒ ""
-      case Mol.Inchi ⇒ ""
-      case Mol.Smiles ⇒ ""
+      case Mol.Formula  ⇒ rawSubCell(molFieldToColumn(f), raw(o.fold("")(_.formulaHtml)))
+      case Mol.Structure ⇒ nodes()
+      case Mol.SubStructure ⇒ nodes()
+      case Mol.ExactStructure ⇒ nodes()
+      case Mol.NoStructure ⇒ nodes()
+      case Mol.Svg ⇒ nodes()
+      case Mol.Inchi ⇒ nodes()
+      case Mol.Smiles ⇒ nodes()
     }
 
     /**
@@ -1035,11 +1047,11 @@ trait TextEnv extends LocEnv {
       * @param e : modification info to be displayed
       * @param f : field to be displayed
       */
-    def editInfo(c: Column, e: EditInfo, f: EditInfo.Field): String = f match {
-      case EditInfo.Summary   ⇒ rawSubCell(c, s"""${timeStampStr(e.timestamp)} (${e.name.fold("")(_.v)})""")
-      case EditInfo.UserId    ⇒ rawSubCell(c, e.id.toString)
-      case EditInfo.UserName  ⇒ rawSubCell(c, e.name.fold("")(_.v))
-      case EditInfo.Timestamp ⇒ rawSubCell(c, timeStampStr(e.timestamp))
+    def editInfo(c: Column, e: EditInfo, f: EditInfo.Field): Node = f match {
+      case EditInfo.Summary   ⇒ subCell(c, s"""${timeStampStr(e.timestamp)} (${e.name.fold("")(_.v)})""")
+      case EditInfo.UserId    ⇒ subCell(c, e.id.toString)
+      case EditInfo.UserName  ⇒ subCell(c, e.name.fold("")(_.v))
+      case EditInfo.Timestamp ⇒ subCell(c, timeStampStr(e.timestamp))
     }
 
     /**
@@ -1048,7 +1060,7 @@ trait TextEnv extends LocEnv {
       * @param c : column of the cell
       * @param ts : time of creation
       */
-    def created(c: Column, ts: TimeStamp): String = rawSubCell(c, timeStampStr(ts))
+    def created(c: Column, ts: TimeStamp): Node = subCell(c, timeStampStr(ts))
 
     /**
       * Creates a link to a file stored at the server
@@ -1058,7 +1070,7 @@ trait TextEnv extends LocEnv {
       * @param c : user credentials (the caller is actually autheticated
       *            at the server and access rights are verified)
       */
-    def fileLink(pth: Path, p: FileName, n: Name, c: Creds) = a(
+    def fileLink(pth: Path, p: FileName, n: Name, c: Creds): Node = a(
       href   := s"""cyby-serv/$filType/${pth}/${p.v}${c.credsQ}""",
       target := "_blank"
     )(text(n.v))
@@ -1069,8 +1081,7 @@ trait TextEnv extends LocEnv {
       *
       * @param p : path to parent type containing the displayed field
       * @param f : symbol representing the field being displayed
-      * @param v : actual value being displayed. this is not escaped so
-      *            it can contain additional markup
+      * @param v : actual value being displayed
       * @param editLevel : user level needed to edit the field
       *                    (None if field is not editable)
       * @param env: explorer environment affecting editability of items
@@ -1080,12 +1091,12 @@ trait TextEnv extends LocEnv {
     def conDetRow(
       p         : Path,
       f         : Symbol,
-      v         : String,
+      v         : Node,
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ) = {
+    ): Node = {
       div(id := UId.Edit(f.name, p), cls := CT.ConDetailRow(f).c)(
-        h4(cls := TT.ConDetail.c)(s"${loc name f}:"),
+        h4(cls := TT.ConDetail.c)(text(s"${loc name f}:")),
         if (editLevel exists env.isEditingAs)
           div(id := EditCont(f.name, p), cls := CT.ConDetailCell.c)(v)
         else div(cls := CT.ConDetailCell.c)(v)
@@ -1111,7 +1122,7 @@ trait TextEnv extends LocEnv {
       l         : (Id[_],Name),
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ): String = conDetRow(p, f, l._2.v, editLevel, env)
+    ): Node = conDetRow(p, f, text(l._2.v), editLevel, env)
 
     /**
       * Row of details about a list of linked data objects in an expanded
@@ -1132,7 +1143,7 @@ trait TextEnv extends LocEnv {
       l         : List[(Id[_],Name)],
       editLevel : Option[UserLevel],
       env       : ExpEnv,
-    ): String = conDetRow(p, f, l.map(_._2.v).mkString(", "), editLevel, env)
+    ): Node = conDetRow(p, f, text(l.map(_._2.v).mkString(", ")), editLevel, env)
 
     // -----------------------------------------------------------------
     // -----                Login                                  -----
@@ -1141,7 +1152,7 @@ trait TextEnv extends LocEnv {
     /**
       * HTML formatted string of the login screen
       */
-    lazy val login: String =
+    lazy val login: Node =
       div(id := Login, cls := CT.LoginView.c, dshow)(
         img(cls := Logo, src := "css/images/cyby2.png")(),
         div(cls := CT.LoginTxt.c)(
@@ -1153,12 +1164,12 @@ trait TextEnv extends LocEnv {
             lbl(LoginPw, LT.Login, loc name "password"),
             input(Password, id := LoginPw, cls := WT.LoginTxt.c)
           ),
-          button(id := LoginBtnId, cls := WT.LoginBtn.c)(loc.login),
+          button(id := LoginBtnId, cls := WT.LoginBtn.c)(text(loc.login)),
           ul(id := LoginLog, cls := CT.LoginList.c)(),
           div(cls := CT.DocLinkContainer.c)(
-            a(href := s"doc_${version}.html", target := "_blank")(loc.documentation)
+            a(href := s"doc_${version}.html", target := "_blank")(text(loc.documentation))
           ),
-          div(cls := Copyright)("&#169 Stefan Höck, Rainer Riedl (ZHAW)"),
+          div(cls := Copyright)(raw("&#169 Stefan Höck, Rainer Riedl (ZHAW)")),
         )
       )
 
@@ -1170,20 +1181,20 @@ trait TextEnv extends LocEnv {
     /**
       * Displays a log message in the log view.
       */
-    def log(l: Log): String = li(cls := CT.LogRow.c)(
+    def log(l: Log): Node = li(cls := CT.LogRow.c)(
       div(cls := CT.LogLvlCell(l.lvl).c)(),
-      div(cls := CT.LogMsgCell.c)(l.message)
+      div(cls := CT.LogMsgCell.c)(text(l.message))
     )
 
     /**
       * Displays a collection of log messages together in the log view.
       */
-    def logs(ls: Vector[Log]): String = ls map log mkString ""
+    def logs(ls: Vector[Log]): Node = nodes(ls map log: _*)
 
     /**
       * Displays a log message in the login screen
       */
-    def loginLog(l: Log): String = if (l.lvl < Warning) "" else log(l)
+    def loginLog(l: Log): Node = if (l.lvl < Warning) nodes() else log(l)
 
 
     // -----------------------------------------------------------------
@@ -1197,8 +1208,8 @@ trait TextEnv extends LocEnv {
       * @param tpe: used to provide the CSS class
       * @param txt: actual textual content
       */
-    def lbl(uid: UIdP, tpe: LabelType, txt: String): String =
-      label(id := Lbl(uid), forId := uid, cls := tpe.c)(txt)
+    def lbl(uid: UIdP, tpe: LabelType, txt: String): Node =
+      label(id := Lbl(uid), forId := uid, cls := tpe.c)(text(txt))
   }
 }
 

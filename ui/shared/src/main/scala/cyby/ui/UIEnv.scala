@@ -12,6 +12,8 @@ import cats.implicits.{none ⇒ _, _}
 import cyby.dat.{UserLevel, format ⇒ F, Mol, Name, CyByEnv}
 import cyby.query.{SubstanceQuery, StatisticsQuery, Q, Chain, QuickSearch}
 
+import cyby.msf.js.{Node, nodes}
+
 import export.Format
 
 /**
@@ -176,8 +178,8 @@ trait UIEnv extends CyByEnv {
 
     def ifEditing(s: ⇒ String): String = if (mode.isEditing) s else ""
 
-    def ifEditingAs(lvl: UserLevel)(s: ⇒ String): String =
-      if (isEditingAs(lvl)) s else ""
+    def ifEditingAs(lvl: UserLevel)(s: ⇒ Node): Node =
+      if (isEditingAs(lvl)) s else nodes()
   }
 
   /**

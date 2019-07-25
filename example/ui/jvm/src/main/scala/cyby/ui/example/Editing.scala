@@ -9,15 +9,16 @@ package ui
 package example
 
 import cyby.ui.{DocType ⇒ DT}
+import cyby.msf.js.{nodes, raw}
 
 object EditingDoc extends util {
   import Txt._
 
   def doc = section(id := UId.EditingDoc, cls := DT.Section.c)(
-    h1(cls := DT.H1.c)("Editing Data"),
+    h1(cls := DT.H1.c)(text("Editing Data")),
     div(cls := DT.SectionContent.c)(
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         With the exception of ${link(UId.UsersDoc, "Guest")} accounts, all
         users in ${cyby} are allowed to modify the content of the database
         to a certain degree. Since modifying existing containers and
@@ -25,20 +26,20 @@ object EditingDoc extends util {
         HTML element, all editing is disabled unless turned on by clicking
         the master editing button in the upper right corner of the
         explorer:
-        """
+        """)
       ),
-      example(explorerDoc(NotEditing)("", "", "", "")),
+      example(explorerDoc(NotEditing)(nodes(), nodes(), nodes(), nodes())),
 
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Turning editing on will result in some parts of the
         data being displayed and behaving differently than with
         editing turned off, so activate this mode only when needed.
-        """
+        """)
       ),
-      h2(id := UId.CreateDoc, cls := DT.H2.c)("Adding Data"),
+      h2(id := UId.CreateDoc, cls := DT.H2.c)(text("Adding Data")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Creating a new data objects always starts with clicking
         the blue plus icon next to the list of objects, to which
         the new item should be added. For adding new compounds,
@@ -48,13 +49,13 @@ object EditingDoc extends util {
         a certain ${link(UId.UsersDoc, "role")}:
         Only Superusers can create new projects and
         only Administrators can create new user accounts.
-        """
+        """)
       ),
-      example(explorerDoc(Editing)("", "", "", "")),
+      example(explorerDoc(Editing)(nodes(), nodes(), nodes(), nodes())),
 
-      h2(id := UId.UpdateDoc, cls := DT.H2.c)("Updating Data"),
+      h2(id := UId.UpdateDoc, cls := DT.H2.c)(text("Updating Data")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Changing a field of an existing data object is in
         most cases started by double clicking the corresponding
         element when in editing mode. This will result
@@ -62,36 +63,36 @@ object EditingDoc extends util {
         where a new value can be entered. Pressing ${enter}
         sends the new value to the server, pressing Esc
         aborts editing the field in question.
-        """
+        """)
       ),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         There are two important exceptions to the general
         behavior described above: The structure of a compound
         can be changed by clicking the icon next to it when
         in editing mode (see example below), and containers
         can be set to empty
         by double clicking the full container icon.
-        """
+        """)
       ),
       example(
-        explorerDoc(Editing)("", "", mkHeadRow(expEnvEdit),
+        explorerDoc(Editing)(nodes(), nodes(), mkHeadRow(expEnvEdit),
           Explorer.dispSubs(Explorer.expEnvEdit))
       ),
 
-      h2(id := UId.DeleteDoc, cls := DT.H2.c)("Deleting Data"),
+      h2(id := UId.DeleteDoc, cls := DT.H2.c)(text("Deleting Data")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         Deleting stuff from a database is a delicate task an in
         general strongly discouraged. Administrators will delete
         erroneous entries upon request. Just drop a quick email to
         hock@zhaw.ch.
-        """
+        """)
       ),
 
-      h2(id := UId.ValidateDoc, cls := DT.H2.c)("Input Validation"),
+      h2(id := UId.ValidateDoc, cls := DT.H2.c)(text("Input Validation")),
       div(cls := DT.Paragraph.c)(
-        s"""
+        raw(s"""
         When editing fields or creating new data objects, most
         input is immediatly being validated. Text fields containing
         invalid input will be sourrounded by a red border to
@@ -108,7 +109,7 @@ object EditingDoc extends util {
         the user will be informed accordingly in the Log at the lower
         left of the screen. Always keep an eye out for warnings
         or error messages appearing in the Log when editing data.
-        """
+        """)
       ),
     )
   )

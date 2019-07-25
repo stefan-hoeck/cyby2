@@ -10,7 +10,7 @@ package js
 
 import cats.implicits._
 
-import org.scalajs.dom.{html, document, raw}
+import org.scalajs.dom.{html, document, raw ⇒ hraw}
 
 trait JSDom[F[_],ID,Cls,EV] extends JSHelper[F,ID,Cls,EV] { self ⇒ 
   private def uid[A<:Elem]: A ⇒ Html[Unit] = a ⇒
@@ -115,7 +115,7 @@ trait JSDom[F[_],ID,Cls,EV] extends JSHelper[F,ID,Cls,EV] { self ⇒
   def Tr[A](mods: Elem ⇒ Html[Unit]*)(h: Html[A]): Html[A] = withinH(tr(mods: _*))(h)
   def Ul[A](mods: Elem ⇒ Html[Unit]*)(h: Html[A]): Html[A] = withinH(ul(mods: _*))(h)
 
-  def text(s: String): Html[raw.Text] = for {
+  def text(s: String): Html[hraw.Text] = for {
     t <- Html liftIO delay(document createTextNode s)
     _ <- appendText(t)
   } yield t
@@ -126,7 +126,7 @@ trait JSDom[F[_],ID,Cls,EV] extends JSHelper[F,ID,Cls,EV] { self ⇒
   implicit def elemAsMod[A<:Elem](el: Elem)
     : A ⇒ Html[Unit] = local(append(el))(_).void
 
-  implicit def txtAsMod[A<:Elem](t: Html[raw.Text])
+  implicit def txtAsMod[A<:Elem](t: Html[hraw.Text])
     : A ⇒ Html[Unit] = local(t)(_).void
 
   implicit def elemHAsMod[A<:Elem,B<:Elem](el: Html[B])

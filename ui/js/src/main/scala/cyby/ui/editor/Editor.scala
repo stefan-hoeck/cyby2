@@ -14,7 +14,7 @@ import chemdoodle.Molecule
 
 import cats.implicits.{none ⇒ _, _}
 
-import msf.js.{UIEvent, InputType}, UIEvent.{DblClick, Click}
+import msf.js.{UIEvent, InputType, nodes}, UIEvent.{DblClick, Click}
 import cyby.ui.{CompType ⇒ CT}
 
 import shapeless.{HNil, HList, Witness, Lazy, LabelledGeneric}
@@ -120,7 +120,7 @@ trait EditEnv extends DomEnv {
       _   <- Html liftE cleanup
       i   <- Html.ask
       ht  <- get.innerHtml
-      _   <- set innerHtml ""
+      _   <- set innerHtml nodes()
       act <- Html liftE elemAt[Elem](actId)
       _   <- act traverse_ (e ⇒ Html delayed (e.id = ""))
       _   <- Html liftE setS(

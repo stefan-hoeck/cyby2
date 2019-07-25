@@ -10,7 +10,7 @@ package display
 
 import cats.implicits._
 
-import msf.js.UIEvent
+import msf.js.{UIEvent, Node}
 
 trait Disp extends CoreEnv {
 
@@ -29,7 +29,7 @@ trait Disp extends CoreEnv {
       * HTML string used to display the environment
       * linked to this part of the UI
       */
-    def htmlIni(e: DispEnv): String
+    def htmlIni(e: DispEnv): Node
 
     /**
       * Sink for results (probably redisplaying parts of the UI,

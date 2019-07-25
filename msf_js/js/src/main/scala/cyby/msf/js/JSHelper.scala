@@ -11,7 +11,7 @@ package js
 import cats.data.Kleisli
 import cats.{ Applicative, Monad, Monoid, MonoidK }, cats.implicits._
 
-import org.scalajs.dom.{html, raw, document, File}
+import org.scalajs.dom.{html, raw ⇒ hraw, document, File}
 
 abstract class BasicJS[F[_]](implicit M: Monad[F], L: LiftIO[F])
   extends JSHelper[F,String,String,Either[HttpEvent,UIEvent]] {
@@ -73,23 +73,23 @@ trait JSHelper[F[_],ID,Cls,EV]
   private[js] implicit def monadI: Monad[Eff] = effAsMonad
 
   private[msf] def setAttr(a: Attribute)(e: html.Element): Unit = {
-    //println(s"Setting attribute $a")
-    if (a._2.isEmpty) e removeAttribute a._1 else e.setAttribute(a._1,a._2)
+    if (a._2.isEmpty) e removeAttribute a._1
+    else e.setAttribute(a._1,a._2)
   }
 
   def append[A<:html.Element](c: A): Html[A] =
     withElem_{e: Elem ⇒ e appendChild c; ()}.as(c)
 
-  def appendText(t: raw.Text): Html[Unit] =
+  def appendText(t: hraw.Text): Html[Unit] =
     withElem_{e: Elem ⇒ e appendChild t; ()}
 
-  def appendHtml(h: String): Html[Unit] =
-    withElem_{e: Elem ⇒ e.innerHTML = e.innerHTML ++ h}
+  def appendHtml(h: Node): Html[Unit] =
+    withElem_{e: Elem ⇒ e.innerHTML = e.innerHTML ++ h.toString}
 
   def at[A:ToElem,B](a: A)(b: Html[B]): Eff[B] =
     ToElem[A] apply a flatMap b.run
 
-  def clear: Html[Unit] = set innerHtml ""
+  def clear: Html[Unit] = set innerHtml nodes()
 
   def elemAt[A:FromElem](id: ID): Eff[Option[A]] = Eff.delayed(
     document getElementById idToString(id) match {
@@ -178,10 +178,10 @@ trait JSHelper[F[_],ID,Cls,EV]
     def attribute(a: Attribute): Html[Unit] = withElem_(setAttr(a))
 
     def customValidity(msg: String ⇒ String): Html[Unit] =
-      withElem_((i: Input) ⇒ i setCustomValidity msg(i.value))
+      withElem_((i: Input) ⇒ i setCustomValidity escape(msg(i.value)))
 
-    def innerHtml(h: String): Html[Unit] =
-      withElem_{e: Elem ⇒ e.innerHTML = h}
+    def innerHtml(h: Node): Html[Unit] =
+      withElem_{e: Elem ⇒ e.innerHTML = h.toString}
 
     def select(s: String): Html[Unit] =
       withElem_((i: Select) ⇒ i.value = s)
@@ -284,19 +284,19 @@ trait JSHelper[F[_],ID,Cls,EV]
 
     lazy val init: Action = ui.collect{ case UIEvent.Init ⇒ unit}
 
-    lazy val keydown: Html[Src[raw.KeyboardEvent]] = htmlSrc(keydown[Elem])
+    lazy val keydown: Html[Src[hraw.KeyboardEvent]] = htmlSrc(keydown[Elem])
 
-    def keydown[E:HasID](e: E): Src[raw.KeyboardEvent] =
+    def keydown[E:HasID](e: E): Src[hraw.KeyboardEvent] =
       ev(i ⇒ ui.collect{ case UIEvent.KeyDown(x@IDStr(s)) if s == idToString(i) ⇒ x })(e)
 
-    lazy val keyup: Html[Src[raw.KeyboardEvent]] = htmlSrc(keyup[Elem])
+    lazy val keyup: Html[Src[hraw.KeyboardEvent]] = htmlSrc(keyup[Elem])
 
-    def keyup[E:HasID](e: E): Src[raw.KeyboardEvent] =
+    def keyup[E:HasID](e: E): Src[hraw.KeyboardEvent] =
       ev(i ⇒ ui.collect{ case UIEvent.KeyUp(x@IDStr(s)) if s == idToString(i) ⇒ x })(e)
 
-    lazy val keypress: Html[Src[raw.KeyboardEvent]] = htmlSrc(keypress[Elem])
+    lazy val keypress: Html[Src[hraw.KeyboardEvent]] = htmlSrc(keypress[Elem])
 
-    def keypress[E:HasID](e: E): Src[raw.KeyboardEvent] =
+    def keypress[E:HasID](e: E): Src[hraw.KeyboardEvent] =
       ev(i ⇒ ui.collect{ case UIEvent.KeyPress(x@IDStr(s)) if s == idToString(i) ⇒ x })(e)
 
     lazy val scroll: Html[Action] = htmlSrc(scroll[Elem])
@@ -348,7 +348,7 @@ trait JSHelper[F[_],ID,Cls,EV]
     def attribute[E:ToElem](e: E): Sink[Attribute] =
       liftS{ a ⇒ at(e)(set attribute a) }
     
-    def innerHtml[E:ToElem](e: E): Sink[String] =
+    def innerHtml[E:ToElem](e: E): Sink[Node] =
       liftS{ s ⇒ at(e)(set innerHtml s) }
     
     def value[E:ToElem](e: E): Sink[String] =
@@ -372,7 +372,7 @@ trait JSHelper[F[_],ID,Cls,EV]
 
   object Eff extends MonadH[Eff]
 
-  lazy val T = new Text[ID,Cls]{
+  lazy val T = new TextHelper[ID,Cls]{
     def clsToString(c: Cls) = self clsToString c
     def idToString(i: ID) = self idToString i
   }
@@ -395,7 +395,7 @@ trait JSHelper[F[_],ID,Cls,EV]
     implicit def effI[A](implicit A: ToElem[A]): ToElem[Eff[A]] =
       inst(_ >>= A.apply)
 
-    implicit val targetI: ToElem[raw.EventTarget] = inst{
+    implicit val targetI: ToElem[hraw.EventTarget] = inst{
       case e: Elem ⇒ Eff pure some(e)
       case _       ⇒ Eff pure none
     }
@@ -420,14 +420,14 @@ trait JSHelper[F[_],ID,Cls,EV]
   }
 
   object ID {
-    def unapply(e: raw.Event): Option[ID] = e.target match {
+    def unapply(e: hraw.Event): Option[ID] = e.target match {
       case i: html.Element ⇒ unapplyId(i.id)
       case _               ⇒ None
     }
   }
 
   object IDStr {
-    def unapply(e: raw.Event): Option[String] = {
+    def unapply(e: hraw.Event): Option[String] = {
       e.target match {
         case i: html.Element ⇒ Some(i.id)
         case _               ⇒ None

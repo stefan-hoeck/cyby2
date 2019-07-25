@@ -10,17 +10,18 @@ package ui
 import cats.implicits._
 import cyby.query.{Comp ⇒ QComp, ReadPred ⇒ RP}
 import cyby.ui.{IconType ⇒ IT, CompType ⇒ CT, WidgetType ⇒ WT, TitleType ⇒ TT}
-import msf.js.{SelectEntry, InputType}, InputType.Text
+import msf.js.{SelectEntry, InputType, Node, nodes}
+import InputType.Text
 
 trait QueryDocEnv extends DocEnv {
   import tags._
 
   def queries(
     sels: List[SelectEntry],
-    qs:   String*
-  ): String = Txt.section(cls := CT.Queries.c)(
+    qs:   Node*
+  ): Node = Txt.section(cls := CT.Queries.c)(
     Txt.h1(cls := TT.BorderBtnTitle.c)(
-      Txt.div(cls := CT.BorderTextCell.c)(loc.queries),
+      Txt.div(cls := CT.BorderTextCell.c)(Txt text loc.queries),
       Txt.div(cls := IT.Up.c)(),
       Txt.div(cls := IT.Down.c)(),
     ),
@@ -49,11 +50,11 @@ trait QueryDocEnv extends DocEnv {
   def queryRow(
     comp:     Option[QComp],
     neg:      Boolean,
-    field:    String,
-    query:    String,
-  ): String = Txt.li(cls := CT.QueryRow.c)(
+    field:    Node,
+    query:    Node,
+  ): Node = Txt.li(cls := CT.QueryRow.c)(
     Txt.div(cls := CT.QCompContainer.c)(
-      comp.fold("")(comparator(_, WT.Query))
+      comp.fold(nodes())(comparator(_, WT.Query))
     ),
     negator(neg, WT.Query),
     field,
@@ -61,26 +62,29 @@ trait QueryDocEnv extends DocEnv {
     Txt.div(cls := IT.DeleteQuery.c)(),
   )
 
-  def parens(comp: Option[QComp])(qs: String*): String =
+  def parens(comp: Option[QComp])(qs: Node*): Node = nodes(
     Txt.li(cls := CT.ParensRow.c)(
       Txt.div(cls := CT.QCompContainer.c)(
-        comp.fold("")(comparator(_, WT.Query))
+        comp.fold(nodes())(comparator(_, WT.Query))
       ),
       Txt.span(cls := CT.QueryParenTxt.c)(Txt text "(")
-    ) ++
-    Txt.ul(cls := CT.QueryParen.c)(qs: _*) ++
+    ),
+    Txt.ul(cls := CT.QueryParen.c)(qs: _*),
     Txt.li(cls := CT.ParensRow.c)(
       Txt.span(cls := CT.QueryParenTxt.c)(Txt text ")")
     )
+  )
 
-  def txtQ[A](rp: RP[A], s: String): String =
+  def txtQ[A](rp: RP[A], s: String): Node =
     Txt.input(Text, cls := WT.Query(WT.Text).c, value := rp(s).as(s).get)
 
-  def stringQ(pre: String, s: String): String =
-    stringQueryPrefix(pre) ++
+  def stringQ(pre: String, s: String): Node = nodes(
+    stringQueryPrefix(pre),
     Txt.input(Text, cls := WT.Query(WT.Text).c, value := s)
+  )
 
-  def dateQ(pre: String, d: String): String =
-    queryPrefix(pre) ++
+  def dateQ(pre: String, d: String): Node = nodes(
+    queryPrefix(pre),
     Txt.input(InputType.Date, cls := WT.Query(WT.Date).c, value := d)
+  )
 }
