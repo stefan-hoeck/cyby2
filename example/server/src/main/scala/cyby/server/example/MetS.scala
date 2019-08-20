@@ -37,8 +37,11 @@ object MetS extends RootEditor {
   val dbL        = St.L.mets
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) = Envs(e.lvl,e.lvl,e.lvl,e.st.mets,e.st.mets,
-    e.st.linkedMets,e.ei -> e.st.mets.keySet,e.ei,e.u)
+  def envs(ee: Env, edSt: EdSt) = {
+    val e  = ee loggedInEnv getSt(edSt)
+    Envs(e.lvl,e.lvl,e.lvl,e.st.mets,e.st.mets,
+      e.st.linkedMets,e.ei -> e.st.mets.keySet,e.ei,e.u)
+  }
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(t ⇒ i -> t.name.v)
 

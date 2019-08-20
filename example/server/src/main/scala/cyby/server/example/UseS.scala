@@ -40,8 +40,11 @@ object UseS extends RootEditor {
   lazy val dbasmbl = dbAsmbl[Id,Acc,Use.Cli](_.sortBy(_.alias.v.v))(asmbl)
   val cliToRes      = UseRes
 
-  def envs(e: Env, edSt: EdSt) = Envs(e.lvl,e.u,e.u,e.st.uses,e.st.uses,
-    e.st.linkedUses,e.ei -> e.st.uses.keySet,e.ei,e.u)
+  def envs(ee: Env, edSt: EdSt) = {
+    val e  = ee loggedInEnv getSt(edSt)
+    Envs(e.lvl,e.u,e.u,e.st.uses,e.st.uses,
+      e.st.linkedUses,e.ei -> e.st.uses.keySet,e.ei,e.u)
+  }
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(u ⇒ i -> u.alias.name)
 

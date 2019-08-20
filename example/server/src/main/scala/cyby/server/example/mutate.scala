@@ -20,32 +20,32 @@ import io.circe.syntax._
   * Component used (together with the different editors)
   * for creating, editing, and deleting data objects.
   */
-case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[LoggedInEnv] {
-  val M = CyByMonadIO.authEnv[St]
+case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditEnv] {
+  val M = CyByMonadIO.editEnv[St]
   val files = Files(coreSettings)
 
-  def env(e: LoggedInEnv) = e.env
+  def env(e: EditEnv) = e.env
   def readErr(s: String) = ReadErr(s)
 
-  val prog: M.Prog[Result] =  M.ask map (_.env.req) flatMap {
-    case _ -> _ / _ / DT(t@MetT)   ⇒ applyEdit(MetS fullEd hnil, logMet, t)
-    case _ -> _ / _ / DT(t@SupT)   ⇒ applyEdit(SupS fullEd hnil, logSup, t)
-    case _ -> _ / _ / DT(t@UseT)   ⇒ applyEdit(UseS fullEd hnil, logUse, t)
-    case _ -> _ / _ / DT(t@ProT)   ⇒ applyEdit(ProS fullEd hnil, logPro, t)
-    case _ -> _ / _ / DT(t@StoT)   ⇒ applyEdit(StoS fullEd hnil, logSto, t)
-    case _ -> _ / _ / DT(t@SubT)   ⇒ applyEdit(edSub, logSub, t, delFil)
-    case _ -> _ / _ / DT(FilT)     ⇒ edFile
-    case _ -> _ / _ / "settings"   ⇒ decodeAndRun(adjSettings)(storeSettings)
+  def prog(r: Request): M.Prog[Result] =  r match {
+    case _ -> _ / _ / DT(t@MetT)   ⇒ editDec(MetS fullEd hnil, logMet, t, r)
+    case _ -> _ / _ / DT(t@SupT)   ⇒ editDec(SupS fullEd hnil, logSup, t, r)
+    case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
+    case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProS fullEd hnil, logPro, t, r)
+    case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(StoS fullEd hnil, logSto, t, r)
+    case _ -> _ / _ / DT(t@SubT)   ⇒ editDec(edSub, logSub, t, r, delFil)
+    case _ -> _ / _ / DT(FilT)     ⇒ edFile(r)
+    case _ -> _ / _ / "settings"   ⇒ decoding(mutate(adjSettings)(storeSettings))(r)
     case r                         ⇒ M.raise(NotFound(r.uri.path))
   }
 
-  val edSub = (v: LoggedInEnv, p: SubTree) ⇒ p match {
-    case SubEdit(e)      ⇒ m3(SubS.fullEd(hnil)(v,e))(subEd)
-    case ConEdit(p,e)    ⇒ m3(ConS.fullEd(p)(v,e))(conEd(p))
-    case BioEdit(p,e)    ⇒ m3(BioS.fullEd(p)(v,e))(bioEd(p))
-    case SubFilEdit(p,e) ⇒ m3(SubFilS.fullEd(p)(v,e))(subFilEd(p))
-    case ConFilEdit(p,e) ⇒ m3(ConFilS.fullEd(p)(v,e))(conFilEd(p))
-    case BioFilEdit(p,e) ⇒ m3(BioFilS.fullEd(p)(v,e))(bioFilEd(p))
+  val edSub = (v: EditEnv, st: St, p: SubTree) ⇒ p match {
+    case SubEdit(e)      ⇒ m3(SubS.fullEd(hnil)(v,st,e))(subEd)
+    case ConEdit(p,e)    ⇒ m3(ConS.fullEd(p)(v,st,e))(conEd(p))
+    case BioEdit(p,e)    ⇒ m3(BioS.fullEd(p)(v,st,e))(bioEd(p))
+    case SubFilEdit(p,e) ⇒ m3(SubFilS.fullEd(p)(v,st,e))(subFilEd(p))
+    case ConFilEdit(p,e) ⇒ m3(ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
+    case BioFilEdit(p,e) ⇒ m3(BioFilS.fullEd(p)(v,st,e))(bioFilEd(p))
   }
 
   def delFil(p: SubTree): IO[Unit] = p match {
@@ -78,17 +78,18 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[Logge
   def subEd(ed: SubS.LoadEd): SubTreeL = SubEdit(ed)
   def subFilEd(p: Sub.Path)(ed: SubFilS.LoadEd): SubTreeL = SubFilEdit(p, ed)
 
-  def edFile: M.Prog[Result] = for {
+  def edFile(r: Request): M.Prog[Result] = for {
     v   <- M.ask
-    pr  <- decodeAddFile[SubTree](v.env.req) 
-    (st,bs) = pr
-    t   <- st match {
+    st  <- M.get
+    pr  <- decodeAddFile[SubTree](r)
+    (ed,bs) = pr
+    t   <- ed match {
              case SubFilEdit(p, e@Add(_)) ⇒ 
-               addFil(i ⇒ SubFilP(i::p), bs, SubFilS.fullEd(p)(v,e))(subFilEd(p))
+               addFil(i ⇒ SubFilP(i::p), bs, SubFilS.fullEd(p)(v,st,e))(subFilEd(p))
              case ConFilEdit(p, e@Add(_)) ⇒
-               addFil(i ⇒ ConFilP(i::p), bs, ConFilS.fullEd(p)(v,e))(conFilEd(p))
+               addFil(i ⇒ ConFilP(i::p), bs, ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
              case BioFilEdit(p, e@Add(_)) ⇒
-               addFil(i ⇒ BioFilP(i::p), bs, BioFilS.fullEd(p)(v,e))(bioFilEd(p))
+               addFil(i ⇒ BioFilP(i::p), bs, BioFilS.fullEd(p)(v,st,e))(bioFilEd(p))
              case _ ⇒ M.raise(ReadErr("error when adding file"))
            }
     (newSt,ed,res) = t
@@ -97,8 +98,8 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[Logge
     _   <- M set newSt
   } yield res
 
-  lazy val adjSettings = (le: LoggedInEnv, p: (Use.Id,USettings)) ⇒
-    (dotag[St,Adjusted](St.L.sets.modify(le.env.st)(_ + p)), p, SettingsChanged(p._2).r)
+  lazy val adjSettings = (le: EditEnv, st: St, p: (Use.Id,USettings)) ⇒
+    (dotag[St,Adjusted](St.L.sets.modify(st)(_ + p)), p, SettingsChanged(p._2).r)
 
   def logSub(s: SubTreeL): Log = s match {
     case SubEdit(ed)    ⇒ logEd("substance", ed)(_.id)

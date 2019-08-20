@@ -50,6 +50,12 @@ case class ProgT[F[_],E,L,S,Err,A](
       case Right(t)      ⇒ F pure Right(t)
     })
 
+  def cmapEnv[E2](f: E2 ⇒ E): ProgT[F,E2,L,S,Err,A] = ProgT((e2,ls,s) ⇒ run(f(e2),ls,s))
+
+  def mapSt[S2](f: S2 ⇒ S, g: (S2,S) ⇒ S2)(implicit F: Monad[F]): ProgT[F,E,L,S2,Err,A] =
+    ProgT((e,ls,s2) ⇒ run(e,ls,f(s2)).map(_ map { case (ls2,s,a) ⇒ (ls2,g(s2,s),a) }))
+    
+
   def or(p: ⇒ ProgT[F,E,L,S,Err,A])(implicit F: Monad[F]): ProgT[F,E,L,S,Err,A] =
     onErr(_ ⇒ p)
 

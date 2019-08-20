@@ -97,8 +97,11 @@ object SupS extends RootEditor {
 
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) = Envs(e.lvl,e.lvl,e.lvl,e.st.sups,e.st.sups,
-    e.st.linkedSups,e.ei -> e.st.sups.keySet,e.ei,e.u)
+  def envs(ee: Env, edSt: EdSt) = {
+    val e  = ee loggedInEnv getSt(edSt)
+    Envs(e.lvl,e.lvl,e.lvl,e.st.sups,e.st.sups,
+      e.st.linkedSups,e.ei -> e.st.sups.keySet,e.ei,e.u)
+  }
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(t ⇒ i -> t.name.v)
 

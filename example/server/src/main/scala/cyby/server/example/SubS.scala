@@ -36,8 +36,11 @@ object SubS extends RootEditor {
   val dbL        = St.L.subs
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) = Envs(Nil -> e.ae, Nil -> e.ae,e.lvl,
-    e.st.subs,e.st.subs,(), e.ei -> e.st.subs.keySet,e.ei,e.u)
+  def envs(ee: Env, edSt: EdSt) = {
+    val e  = ee loggedInEnv getSt(edSt)
+    Envs(Nil -> e.ae, Nil -> e.ae,e.lvl,
+      e.st.subs,e.st.subs,(), e.ei -> e.st.subs.keySet,e.ei,e.u)
+  }
 
   implicit lazy val filA: Asmbl[SubFilS.AccDB,List[Fil.Cli]] = SubFilS.asmbl
   implicit lazy val conA: Asmbl[ConS.AccDB,List[Con.Cli]] = ConS.asmbl

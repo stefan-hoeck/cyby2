@@ -38,7 +38,8 @@ object ConS extends ChildEditor {
   val dbL        = lens[SubS.Srv].containers
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) ={
+  def envs(ee: Env, edSt: EdSt) ={
+    val e  = ee loggedInEnv getSt(edSt)
     val pp = edSt.path
     val cs = edSt.node.containers
     val ae = List(edSt.node.project.v) -> e.ae

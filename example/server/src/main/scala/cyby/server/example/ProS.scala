@@ -38,8 +38,11 @@ object ProS extends RootEditor {
   val dbL        = St.L.pros
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) = Envs(e.lvl,e.u,e.lvl,e.st.pros,e.st.pros,
-    e.st.linkedPros,e.ei -> e.st.pros.keySet,e.ei,e.u)
+  def envs(ee: Env, edSt: EdSt) = {
+    val e  = ee loggedInEnv getSt(edSt)
+    Envs(e.lvl,e.u,e.lvl,e.st.pros,e.st.pros,
+      e.st.linkedPros,e.ei -> e.st.pros.keySet,e.ei,e.u)
+  }
 
   val link       = (s: St, i: Pro.AccId) ⇒ getSrv(i.to,s.root).map(t ⇒ i -> t.name.v)
 

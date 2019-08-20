@@ -38,9 +38,10 @@ object BioS extends ChildEditor {
   val dbL        = lens[ConS.Srv].bio
   val getId      = _.id
 
-  def envs(e: Env, edSt: EdSt) = {
+  def envs(ee: Env, edSt: EdSt) = {
     import shapeless.{::}
     val c::s::st::_ = edSt.nodes
+    val e  = ee loggedInEnv getSt(edSt)
     val ae = List(c.project.v, s.project.v) -> e.ae
     Envs(ae,ae,e.lvl,(),(),(),e.ei -> c.bio.keySet,e.ei,e.u)
   }

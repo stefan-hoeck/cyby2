@@ -24,8 +24,8 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
 
   object MP extends CyByMonad[Pure,LoggedInEnv,Unit]
 
-  val prog: M.Prog[Result] = M.ask map (_.env.req) flatMap {
-    case POST -> _/_/DT(SubT) ⇒ runSubs
+  def prog(r: Request): M.Prog[Result] = r match {
+    case POST -> _/_/DT(SubT) ⇒ runSubs(r)
     case GET  -> _/_/DT(ProT) ⇒ run(ProS)(_.pros)
     case GET  -> _/_/DT(StoT) ⇒ run(StoS)(_.stos)
     case GET  -> _/_/DT(SupT) ⇒ run(SupS)(_.sups)
@@ -37,9 +37,9 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   def run(e: DBEditor)(get: St ⇒ Map[e.Id,e.Srv]): M.Prog[Result] =
     M.ask >>= { le ⇒ M wrapValidated e.getAll(le.authSt, get(le.st)) }
 
-  def runSubs: M.Prog[Result] = for {
+  def runSubs(r: Request): M.Prog[Result] = for {
     le     <- M.ask
-    q      <- M.decodeReq[ZQuery](le.env.req)
+    q      <- M.decodeReq[ZQuery](r)
     res    <- q.qtype match {
                 case SubstanceQuery  ⇒ subQuery(q, le).trans(Pure.to[IO])
                 case StatisticsQuery ⇒ statsQuery(q, le).trans(Pure.to[IO])

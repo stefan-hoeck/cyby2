@@ -35,9 +35,9 @@ case class Export(coreSettings: CoreSettings)
 
   protected def path(fn: String) = Paths get s"/data/cyby/export/${fn}"
 
-  val prog: M.Prog[Result] = for {
+  def prog(r: Request): M.Prog[Result] = for {
     le  <- M.ask
-    exp <- M.decodeReq[ESettings](le.env.req)
+    exp <- M.decodeReq[ESettings](r)
     ss  <- query.querySubs(exp.query, le).trans(Pure.to[IO])
     fn  =  s"${le.u.alias.v}_${le.env.timestamp}.${exp.format}"
     nameFs = exp.fields map locName(le.st)

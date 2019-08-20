@@ -14,6 +14,8 @@ import cyby.dat.{EditInfo, TimeStamp, example}, example.{LoggedIn,Result,USettin
   * Environment for requests of logged in users
   */
 case class LoggedInEnv(env: Env[St], u: UseS.Srv, h: String) {
+  lazy val editEnv: EditEnv = EditEnv(env.copy(st = ()), u, h)
+
   def st: St = env.st
 
   lazy val settings: USettings = st settingsFor u.id

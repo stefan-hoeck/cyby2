@@ -21,7 +21,7 @@ import fs2.text.utf8Decode
 trait MutateEnv[E] extends ServerEnv {
   val M: CyByMonadIO[E,St]
 
-  protected def env(e: E): Env[St]
+  protected def env(e: E): Env[Unit]
 
   def readErr(s: String): Err
 
@@ -41,34 +41,45 @@ trait MutateEnv[E] extends ServerEnv {
   def storeSettings(p: (UseId, USettings)): M.Prog[Unit] =
     M lift updateSettings(p._1, p._2).transact(transactor)
 
-  def applyEdit[A:Decoder,B:Encoder](
-    run: (E,A) ⇒ DataE[(St @@ Adjusted,B,Result)],
+  def decoding[A:Decoder,B](prog: A ⇒ M.Prog[B])(r: Request): M.Prog[B] =
+    M.decodeReq[A](r) >>= prog
+
+  def editDec[A:Decoder,B:Encoder](
+    run: (E,St,A) ⇒ DataE[(St @@ Adjusted,B,Result)],
+    log: B ⇒ Log,
+    dt : DataType,
+    r:   Request,
+    post: A ⇒ IO[Unit] = (a: A) ⇒ ioUnit,
+  ): M.Prog[Result] = decoding(edit(run,log,dt,post))(r)
+
+  def edit[A,B:Encoder](
+    run: (E,St,A) ⇒ DataE[(St @@ Adjusted,B,Result)],
     log: B ⇒ Log,
     dt : DataType,
     post: A ⇒ IO[Unit] = (a: A) ⇒ ioUnit
-  ): M.Prog[Result] = applyEditP[A,B](
-    (as,a) ⇒ M.wrapEither(run(as,a)) <* M.lift(post(a)),
+  ): A ⇒ M.Prog[Result] = editM[A,B](
+    (as,st,a) ⇒ M.wrapEither(run(as,st,a)) <* M.lift(post(a)),
     log,
     dt
   )
 
-  def applyEditP[A:Decoder,B:Encoder](
-    run: (E,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)],
+  def editM[A,B:Encoder](
+    run: (E,St,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)],
     log: B ⇒ Log,
     dt : DataType,
-  ): M.Prog[Result] = decodeAndRunP(run)(
+  ): A ⇒ M.Prog[Result] = mutateM(run)(
     b ⇒ M.lift(appendLine(dt, stripEnc(b).noSpaces)) *> M.doLog(log(b))
   )
 
-  def decodeAndRun[A:Decoder,B](run: (E,A) ⇒ (St @@ Adjusted,B,Result))
-    (process: B ⇒ M.Prog[Unit]): M.Prog[Result] =
-    decodeAndRunP[A,B]((le,a) ⇒ M pure run(le,a))(process)
+  def mutate[A,B](run: (E,St,A) ⇒ (St @@ Adjusted,B,Result))
+    (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[Result] =
+    mutateM[A,B]((le,st,a) ⇒ M pure run(le,st,a))(process)
 
-  private def decodeAndRunP[A:Decoder,B](run: (E,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)])
-    (process: B ⇒ M.Prog[Unit]): M.Prog[Result] = for {
+  def mutateM[A,B](run: (E,St,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)])
+    (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[Result] = a ⇒ for {
     le   <- M.ask
-    a    <- M.decodeReq[A](env(le).req)
-    t    <- run(le,a)
+    st   <- M.get
+    t    <- run(le,st,a)
     (newSt,b,res) = t
     _    <- process(b)
     _    <- M set newSt

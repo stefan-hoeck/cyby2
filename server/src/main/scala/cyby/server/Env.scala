@@ -38,7 +38,6 @@ case class Env[S](
   timeout:   Long,
   timestamp: Timestamp,
   st:        S,
-  req:       Request,
 ){
   def expiresAt: Timestamp = timeout + timestamp
 }
@@ -46,13 +45,14 @@ case class Env[S](
 object Env {
   private val Timeout = 8L * 60L * 60L * 1000L // 8 hours
 
-  def apply[S](req: Request, ref: Ref[S]): IO[Env[S]] = for {
-    s  <- ref.get
-    ts <- now
-  } yield Env(consoleLogger, Timeout, ts, s, req)
+  def apply[S](ref: Ref[S]): IO[Env[S]] =
+    ref.get flatMap applyS
 
-  def opt[S](req: Request, ref: Ref[S]): OptionT[IO,Env[S]] =
-    OptionT[IO,Env[S]](apply(req, ref) map Some.apply)
+  def applyS[S](s: S): IO[Env[S]] =
+    now map (Env(consoleLogger, Timeout, _, s))
+
+  def opt[S](ref: Ref[S]): OptionT[IO,Env[S]] =
+    OptionT[IO,Env[S]](apply(ref) map Some.apply)
 
   private def color (c: String, msg: String) = c + msg + Console.RESET
   private val red = (s: String) ⇒ color (Console.RED, s)

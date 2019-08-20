@@ -68,7 +68,8 @@ trait FilEditor extends ChildEditor {
 
   def proIds(e: EdSt): List[Pro.Id]
 
-  def envs(e: Env, edSt: EdSt) = {
+  def envs(ee: Env, edSt: EdSt) = {
+    val e   = ee loggedInEnv getSt(edSt)
     val pp  = edSt.path
     val fs  = dbL get edSt.node
     val ae  = proIds(edSt) -> e.ae

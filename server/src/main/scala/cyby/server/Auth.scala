@@ -88,7 +88,7 @@ trait auth[Auth] extends ServerEnv {
     * the user and hash query parameters in order for users
     * to get properly authenticated.
     */
-  lazy val prog: M.Prog[Auth] = M.ask map (_.req) flatMap {
+  lazy val prog: Request ⇒ M.Prog[Auth] = {
     case r@(GET -> Root / "login" :? UName(name))  ⇒
       login(name, r.headers.get(PW).fold("")(_.value))
 
@@ -100,7 +100,7 @@ trait auth[Auth] extends ServerEnv {
   }
 
 
-  private def login(name: String, pw: String): M.Prog[Auth] = for {
+  def login(name: String, pw: String): M.Prog[Auth] = for {
     _    <- M debug s"$name about to log in"
     env  <- M.ask
     st   <- M.get

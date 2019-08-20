@@ -58,6 +58,9 @@ trait CyByZ extends ServerEnv with cyby.dat.example.ZEnv {
     def env[S]: CyByMonadIO[Env[St],S] =
       apply[Env[St],S](_.logger, _.timestamp, _ ⇒ None)
 
+    def editEnv[S]: CyByMonadIO[EditEnv,S] =
+      apply[EditEnv,S](_.env.logger, _.env.timestamp, e ⇒ some(e.u.alias.v))
+
     def authEnv[S]: CyByMonadIO[LoggedInEnv,S] =
       apply[LoggedInEnv,S](_.env.logger, _.env.timestamp, e ⇒ some(e.u.alias.v))
   }

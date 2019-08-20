@@ -247,8 +247,6 @@ trait Editor {
     */
   val getId: Srv ⇒ Id
 
-  val envToSt: Env ⇒ St
-
   def envs(e: Env, edSt: EdSt): Envs
 
   final def srvSt(st: St, id: Id, p: ParentPath): DataE[(Srv,EdSt)] = for {
@@ -260,8 +258,7 @@ trait Editor {
   //                         Editing Data
   //----------------------------------------------------------------------
 
-  final def fullEd(pp: ParentPath): (Env,Ed) ⇒ DataE[(St @@ Adjusted, LoadEd, Res)] = (le,e) ⇒ {
-    val st = envToSt(le)
+  final def fullEd(pp: ParentPath): (Env,St,Ed) ⇒ DataE[(St @@ Adjusted, LoadEd, Res)] = (le,st,e) ⇒
     for {
       es  <- edSt(st,pp)
       vs  =  envs(le,es)
@@ -269,7 +266,6 @@ trait Editor {
       (st,s,lo) = p
       res <- toResTS(vs.res,s,st,lo)
     } yield (mapTagged(st)(getSt), lo, res)
-  }
 
   final def ed(st: St, envs: Envs, es: EdSt, e: Ed): DataE[(EdSt @@ Adjusted,Srv @@ Adjusted, LoadEd)] = e match {
     case Add(a) ⇒ for {

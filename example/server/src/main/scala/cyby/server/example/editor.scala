@@ -22,7 +22,7 @@ import shapeless.{::, HNil, HList}
   */
 trait ExampleEditor extends Editor {
   type St          = cyby.server.example.St
-  type Env         = cyby.server.example.LoggedInEnv
+  type Env         = cyby.server.example.EditEnv
   type Err         = cyby.dat.example.DataErr
   type Res         = cyby.dat.example.Result
   type ResEnv      = UseS.Srv
@@ -35,8 +35,6 @@ trait ExampleEditor extends Editor {
   lazy val L = lens[Acc]
 
   val unauthorized = cyby.dat.example.Unauthorized
-
-  val envToSt = _.st
 
   def acc(ae: AuthEnv, s: Srv): Option[Acc]
 

@@ -198,12 +198,18 @@ trait ServerEnv extends cyby.dat.CyByEnv {
   
     def run[A](s: S, c: C, toA: Errs ⇒ A)(p: Prog[A]): IO[(S,A)] =
       runT(s, c, err ⇒ Monad[IO] pure toA(err))(p)
+  
+    def eval[A](s: S, c: C, toA: Errs ⇒ A)(p: Prog[A]): IO[A] =
+      run(s, c, toA)(p) map (_._2)
 
     def runT[A](s: S, c: C, toA: Errs ⇒ IO[A])(p: Prog[A]): IO[(S,A)] = {
       val onErr: Errs ⇒ IO[(S,A)] = e ⇒ handleErrs(c)(e) *> toA(e).map(s -> _)
   
       runLogged(p)(c)(s) >>= { _.fold[IO[(S,A)]](onErr, Monad[IO].pure) }
     }
+
+    def evalO[A](s: S, c: C)(p: Prog[A]): IO[Option[A]] =
+      eval[Option[A]](s, c, _ ⇒ none)(p map some)
 
     def toResponse(p: Prog[Result]): Prog[Response] = for {
       result <- p
@@ -262,9 +268,9 @@ trait ServerEnv extends cyby.dat.CyByEnv {
     * thread-safe input (read-only) for other computations
     * wrapped up in a Signal.
     */
-  def statefulV[C,S,A](prog: CyByProg[IO,C,S,A])(ini: S)
+  def statefulV[C,S,A,R](prog: R ⇒ CyByProg[IO,C,S,A])(ini: S)
     (implicit M: CyByMonadIO[C,S],
-      CS: cats.effect.ContextShift[IO]): IO[(Ref[S], CyByProg[IO,C,Unit,A])] = {
+      CS: cats.effect.ContextShift[IO]): IO[(Ref[S], R ⇒ CyByProg[IO,C,Unit,A])] = {
 
     val MU = new CyByMonadIO[C,Unit]{
       def handleErr(c: C) = M handleErr c
@@ -278,15 +284,15 @@ trait ServerEnv extends cyby.dat.CyByEnv {
       acquire.bracket(_ ⇒ io)(_ ⇒ release)
     }
 
-    def stateless(c: C, r: Ref[S]): IO[Either[Errs,A]] = for {
-      sold <- r.get
-      e    <- M.runLogged(prog)(c)(sold)
-      r    <- e.traverse{ case (s,a) ⇒ r.set(s).as(a) }
+    def stateless(c: C, ref: Ref[S], r: R): IO[Either[Errs,A]] = for {
+      sold <- ref.get
+      e    <- M.runLogged(prog(r))(c)(sold)
+      r    <- e.traverse{ case (s,a) ⇒ ref.set(s).as(a) }
     } yield r
 
-    def run(mv: MVar[IO,Unit], r: Ref[S]): CyByProg[IO,C,Unit,A] = for {
+    def run(mv: MVar[IO,Unit], ref: Ref[S]): R ⇒ CyByProg[IO,C,Unit,A] = r ⇒ for {
       c <- MU.ask
-      e <- MU.lift(locked(mv)(stateless(c, r)))
+      e <- MU.lift(locked(mv)(stateless(c, ref, r)))
       a <- MU wrapEither e
     } yield a
 
