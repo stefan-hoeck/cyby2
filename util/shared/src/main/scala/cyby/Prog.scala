@@ -152,6 +152,8 @@ abstract class ProgHelper[F[_],Conf,St,L,Err](implicit F: Monad[F]) {
 
   def doLog(l: L): Prog[Unit] = ProgT((_,ls,s) ⇒ F pure Right((l::ls,s,unit)))
 
+  def getAndClearLogs: Prog[List[L]] =
+    ProgT((_,ls,s) ⇒ F pure Right((Nil,s,ls)))
 
   // *** Dependency injection using the Reader Monad *** //
 

@@ -193,6 +193,12 @@ trait ServerEnv extends cyby.dat.CyByEnv {
 
     def handleLogs(c: C): Logs ⇒ IO[Unit] = _.reverse traverse_ handleLog(c)
 
+    def doLogNow: Prog[Unit] = for {
+      c  <- ask
+      ls <- getAndClearLogs
+      _  <- lift(handleLogs(c)(ls))
+    } yield ()
+
     def run_(s: S, c: C)(p: Prog[Unit]): IO[Unit] =
       runT(s, c, handleErrs(c))(p) map (_._2)
   
@@ -301,47 +307,4 @@ trait ServerEnv extends cyby.dat.CyByEnv {
       ref <- cats.effect.concurrent.Ref.of[IO,S](ini)
     } yield (ref, run(mv, ref))
   }
-
-//  @deprecated("use statefulV instead", "2.2")
-//  def stateful[C,S,A](prog: CyByProg[IO,C,S,A])(ini: S)
-//    (implicit M: CyByMonadIO[C,S], CS: cats.effect.ContextShift[IO])
-//    : IStream[(ISignal[S], CyByProg[IO,C,Unit,A])] = {
-//
-//    val MU = new CyByMonadIO[C,Unit]{
-//      def handleErr(c: C) = M handleErr c
-//      def handleLog(c: C) = M handleLog c
-//    }
-//
-//    // Result of a stateful computation with the risk of failure
-//    type Res[S2] = Either[Errs,(S2,A)]
-//
-//    // Callback to be invoked once the result is ready
-//    type Callback = Either[Throwable,Res[Unit]] ⇒ Unit
-//
-//    // A mutator is a stateful computation with the potential
-//    // of failure and side effects plus a callback to be
-//    // invoked once the computation's result is ready
-//    type Mutator = (S ⇒ IO[Res[S]], Callback)
-//
-//    // Mutate a given state S and invoke the
-//    // callback before returning the new state
-//    def mutate(st: S, m: Mutator): IO[S] = m match {
-//      case (mutIO, callback) ⇒ for {
-//        e          <- mutIO(st)
-//        _          <- delay(callback(Right(e map (p ⇒ () -> p._2))))
-//      } yield e.map(_._1) getOrElse st
-//    }
-//
-//    def enqueue(c: C, q: IQueue[Mutator])(callback: Callback): Unit =
-//      q.enqueue1(M.runLogged(prog)(c) -> callback).unsafeRunAsync(_ ⇒ ())
-//      
-//
-//    def stateless(q: IQueue[Mutator]): CyByProg[IO,C,Unit,A] =
-//      MU.ask flatMap { c ⇒ MU.wrap(_ ⇒ _ ⇒ async(enqueue(c,q))) }
-//
-//    for {
-//      q    <- eval(Queue.unbounded[IO,Mutator])
-//      sig  <- q.dequeue.evalScan[IO,S](ini)(mutate).hold(ini)
-//    } yield sig -> stateless(q)
-//  }
 }

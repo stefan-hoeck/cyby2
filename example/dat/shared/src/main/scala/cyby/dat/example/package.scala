@@ -58,7 +58,7 @@ package object example {
       cbio(BioProject)
     ) map (Or.c -> _))
 
-    lazy val empty: ZQ = Prim(ExportCon(ConEmpty).f, s"== false", false)
+    lazy val empty: ZQ = Prim(ExportCon(ConEmpty).f, s"false", false)
 
     def isId(s: String) = Read[Long].read(s).nonEmpty
 

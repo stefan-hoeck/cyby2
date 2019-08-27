@@ -57,7 +57,14 @@ trait MutateEnv[E] extends ServerEnv {
     log: B ⇒ Log,
     dt : DataType,
     post: A ⇒ IO[Unit] = (a: A) ⇒ ioUnit
-  ): A ⇒ M.Prog[Result] = editM[A,B](
+  ): A ⇒ M.Prog[Result] = a ⇒ editP(run,log,dt,post).apply(a) map (_._2)
+
+  def editP[A,B:Encoder](
+    run: (E,St,A) ⇒ DataE[(St @@ Adjusted,B,Result)],
+    log: B ⇒ Log,
+    dt : DataType,
+    post: A ⇒ IO[Unit] = (a: A) ⇒ ioUnit
+  ): A ⇒ M.Prog[(B,Result)] = editM[A,B](
     (as,st,a) ⇒ M.wrapEither(run(as,st,a)) <* M.lift(post(a)),
     log,
     dt
@@ -67,23 +74,27 @@ trait MutateEnv[E] extends ServerEnv {
     run: (E,St,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)],
     log: B ⇒ Log,
     dt : DataType,
-  ): A ⇒ M.Prog[Result] = mutateM(run)(
+  ): A ⇒ M.Prog[(B,Result)] = mutateM(run)(
     b ⇒ M.lift(appendLine(dt, stripEnc(b).noSpaces)) *> M.doLog(log(b))
   )
 
   def mutate[A,B](run: (E,St,A) ⇒ (St @@ Adjusted,B,Result))
     (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[Result] =
+    mutateP[A,B](run)(process)(_) map (_._2)
+
+  def mutateP[A,B](run: (E,St,A) ⇒ (St @@ Adjusted,B,Result))
+    (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[(B,Result)] =
     mutateM[A,B]((le,st,a) ⇒ M pure run(le,st,a))(process)
 
   def mutateM[A,B](run: (E,St,A) ⇒ M.Prog[(St @@ Adjusted,B,Result)])
-    (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[Result] = a ⇒ for {
+    (process: B ⇒ M.Prog[Unit]): A ⇒ M.Prog[(B,Result)] = a ⇒ for {
     le   <- M.ask
     st   <- M.get
     t    <- run(le,st,a)
     (newSt,b,res) = t
     _    <- process(b)
     _    <- M set newSt
-  } yield res
+  } yield (b,res)
 
   /**
     * Appends a line of text to the file representing edits
