@@ -25,9 +25,9 @@ import io.circe.syntax._
   * are the types of IDs leading to elements of a given type.
   * In order to access a bio entry, for instance, we need its ID (of
   * type BiodataEntry.Id) together with the ID of its parent container (type Container.Id)
-  * and the ID of the container's parent compound (type Sub.Id).
+  * and the ID of the container's parent compound (type Compound.Id).
   *
-  *   Sub (Sub.Id)
+  *   Cpd (Compound.Id)
   *   |
   *   |___ Con (Container.Id)
   *   |    |
@@ -47,34 +47,34 @@ import io.circe.syntax._
   *  @tparam F: represents file entry
   *  @tparam S: represents substance entry
   */
-@JsonCodec sealed trait SubTreeEd[B,C,F,S] {
-  def e: SubTreeEd[B,C,F,S] = this
+@JsonCodec sealed trait CpdTreeEd[B,C,F,S] {
+  def e: CpdTreeEd[B,C,F,S] = this
 }
 
-case class SubEdit[B,C,F,S](ed: S) extends SubTreeEd[B,C,F,S]
+case class CpdEdit[B,C,F,S](ed: S) extends CpdTreeEd[B,C,F,S]
 
-case class ConEdit[B,C,F,S](p: Sub.Path, ed: C) extends SubTreeEd[B,C,F,S]
+case class ConEdit[B,C,F,S](p: Compound.Path, ed: C) extends CpdTreeEd[B,C,F,S]
 
-case class BioEdit[B,C,F,S](p: Container.Path, ed: B) extends SubTreeEd[B,C,F,S]
+case class BioEdit[B,C,F,S](p: Container.Path, ed: B) extends CpdTreeEd[B,C,F,S]
 
-case class SubFilEdit[B,C,F,S](p: Sub.Path, ed: F) extends SubTreeEd[B,C,F,S]
+case class CpdFilEdit[B,C,F,S](p: Compound.Path, ed: F) extends CpdTreeEd[B,C,F,S]
 
-case class ConFilEdit[B,C,F,S](p: Container.Path, ed: F) extends SubTreeEd[B,C,F,S]
+case class ConFilEdit[B,C,F,S](p: Container.Path, ed: F) extends CpdTreeEd[B,C,F,S]
 
-case class BioFilEdit[B,C,F,S](p: BiodataEntry.Path, ed: F) extends SubTreeEd[B,C,F,S]
+case class BioFilEdit[B,C,F,S](p: BiodataEntry.Path, ed: F) extends CpdTreeEd[B,C,F,S]
 
-object SubTreeEd {
+object CpdTreeEd {
   def bioJson(p: Container.Path)(j: J): J = BioEdit[J,J,J,J](p,j).e.asJson
 
   def bioFilJson(p: BiodataEntry.Path)(j: J): J = BioFilEdit[J,J,J,J](p,j).e.asJson
 
-  def conJson(p: Sub.Path)(j: J): J = ConEdit[J,J,J,J](p,j).e.asJson
+  def conJson(p: Compound.Path)(j: J): J = ConEdit[J,J,J,J](p,j).e.asJson
 
   def conFilJson(p: Container.Path)(j: J): J = ConFilEdit[J,J,J,J](p,j).e.asJson
 
-  def subJson(h: shapeless.HNil)(j: J): J = SubEdit[J,J,J,J](j).e.asJson
+  def subJson(h: shapeless.HNil)(j: J): J = CpdEdit[J,J,J,J](j).e.asJson
 
-  def subFilJson(p: Sub.Path)(j: J): J = SubFilEdit[J,J,J,J](p,j).e.asJson
+  def subFilJson(p: Compound.Path)(j: J): J = CpdFilEdit[J,J,J,J](p,j).e.asJson
 
-  implicit def eqI[B,C,F,S]: cats.Eq[SubTreeEd[B,C,F,S]] = cats.Eq.fromUniversalEquals
+  implicit def eqI[B,C,F,S]: cats.Eq[CpdTreeEd[B,C,F,S]] = cats.Eq.fromUniversalEquals
 }

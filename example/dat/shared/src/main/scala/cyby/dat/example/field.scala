@@ -25,50 +25,50 @@ sealed trait ZHAWField {
   * when defining the order and visibility of columns in
   * tabular views.
   */
-sealed abstract class SubField(
+sealed abstract class CpdField(
   val desc: F.ColumnDesc,
   val canExport: Boolean = true,
   val canQuery: Boolean = true,
 )extends ZHAWField {
   def locName(l: Loc) = l subField this
-  def ef: ExportField = ExportSub(this)
+  def ef: ExportField = ExportCpd(this)
 }
 
-case object SubId         extends SubField(F.strDesc("id"))
-case object SubName       extends SubField(F.strDesc("name"))
-case object SubAbs        extends SubField(F.strDesc("abs"))
-case object SubCasNr      extends SubField(F.strDesc("casNr"))
-case object SubProject    extends SubField(F.strDesc("project"))
-case object SubCreated    extends SubField(F.strDesc("created"))
-case object SubContainers extends SubField(F.NoDesc, false, false)
+case object CpdId         extends CpdField(F.strDesc("id"))
+case object CpdName       extends CpdField(F.strDesc("name"))
+case object CpdAbs        extends CpdField(F.strDesc("abs"))
+case object CpdCasNr      extends CpdField(F.strDesc("casNr"))
+case object CpdProject    extends CpdField(F.strDesc("project"))
+case object CpdCreated    extends CpdField(F.strDesc("created"))
+case object CpdContainers extends CpdField(F.NoDesc, false, false)
 
-case class SubMol(f: Mol.Field)
-   extends SubField(f.desc, f.canExport, f.canQuery) {
+case class CpdMol(f: Mol.Field)
+   extends CpdField(f.desc, f.canExport, f.canQuery) {
   override val toString = s"structure_${f.toString}"
 }
 
-case class SubEditInfo(f: EditInfo.Field)
-   extends SubField(f.colDesc, f.canExport, f.canQuery) {
+case class CpdEditInfo(f: EditInfo.Field)
+   extends CpdField(f.colDesc, f.canExport, f.canQuery) {
   override val toString = s"editInfo_${f.toString}"
 }
 
-case class SubFil(f: FilField) extends SubField(f.desc, false, f.canQuery) {
+case class CpdFil(f: FilField) extends CpdField(f.desc, false, f.canQuery) {
   override val toString = s"fil_${f.toString}"
   override def inColumn = false
 }
 
-object SubField extends EnumHelper[SubField] {
-  val name = "cyby.dat.example.SubField"
+object CpdField extends EnumHelper[CpdField] {
+  val name = "cyby.dat.example.CpdField"
   lazy val values =
-    Nel.of(SubId, SubName, SubAbs, SubCasNr, SubProject, SubCreated, SubContainers) :::
-    Mol.Field.values.map(SubMol.apply) :::
-    EditInfo.Field.values.map(SubEditInfo.apply) :::
-    FilField.values.map(SubFil.apply)
+    Nel.of(CpdId, CpdName, CpdAbs, CpdCasNr, CpdProject, CpdCreated, CpdContainers) :::
+    Mol.Field.values.map(CpdMol.apply) :::
+    EditInfo.Field.values.map(CpdEditInfo.apply) :::
+    FilField.values.map(CpdFil.apply)
 
-  def encode(s: SubField) = s match {
-    case SubMol(f)      ⇒ Mol.Field.encode(f)
-    case SubEditInfo(f) ⇒ EditInfo.Field.encode(f)
-    case SubFil(f)      ⇒ FilField encode f map ("fil_" ++ _)
+  def encode(s: CpdField) = s match {
+    case CpdMol(f)      ⇒ Mol.Field.encode(f)
+    case CpdEditInfo(f) ⇒ EditInfo.Field.encode(f)
+    case CpdFil(f)      ⇒ FilField encode f map ("fil_" ++ _)
     case sf             ⇒ lowerHeadDropEncode(sf, 3)
   }
 }
@@ -218,8 +218,8 @@ sealed abstract class ExportField(val tag: DataType) {
   def desc: F.ColumnDesc
 }
 
-case class ExportSub(fld: SubField) extends ExportField(SubT){
-  override lazy val toString = s"sub:${SubField show fld}"
+case class ExportCpd(fld: CpdField) extends ExportField(CpdT){
+  override lazy val toString = s"sub:${CpdField show fld}"
   def desc = fld.desc
 }
 
@@ -254,7 +254,7 @@ object ExportField {
     new KeyDecoder[ExportField]{ def apply(s: String) = readI read s }
 
   def read(s: String): Option[ExportField] = s split ":" toList match {
-    case "sub"::f::Nil ⇒ Read[SubField].read(f) map ExportSub.apply
+    case "sub"::f::Nil ⇒ Read[CpdField].read(f) map ExportCpd.apply
     case "con"::f::Nil ⇒ Read[ConField].read(f) map ExportCon.apply
     case "bio"::f::Nil ⇒ Read[BioField].read(f) map ExportBio.apply
     case "stats"::m::s::Nil ⇒

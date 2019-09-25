@@ -77,7 +77,7 @@ object EditingDoc extends util {
       ),
       example(
         explorerDoc(Editing)(nodes(), nodes(), mkHeadRow(expEnvEdit),
-          Explorer.dispSubs(Explorer.expEnvEdit))
+          Explorer.dispCpds(Explorer.expEnvEdit))
       ),
 
       h2(id := UId.DeleteDoc, cls := DT.H2.c)(text("Deleting Data")),

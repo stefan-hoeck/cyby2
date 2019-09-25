@@ -11,7 +11,7 @@ package example
 import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._
-import cyby.dat.example._, SubTreeEd._
+import cyby.dat.example._, CpdTreeEd._
 
 import io.circe.Json
 
@@ -27,15 +27,15 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def add(dt: DataType, p: Path)(env: Env) = ad(dt,p,env._2)
 
     def ad(dt: DataType, p: Path, c: Creds) = (dt,p) match {
-      case (BioT,ConP(p)) ⇒ proEnvC(p).bioC.add(c,SubT,p)(bioJson)
+      case (BioT,ConP(p)) ⇒ proEnvC(p).bioC.add(c,CpdT,p)(bioJson)
       case (FilT,BioP(p)) ⇒ filAdd(p,proEnvB(p),c)(bioFilJson)
-      case (ConT,SubP(p)) ⇒ proEnvS(p).conC.add(c,SubT,p)(conJson)
+      case (ConT,CpdP(p)) ⇒ proEnvS(p).conC.add(c,CpdT,p)(conJson)
       case (FilT,ConP(p)) ⇒ filAdd(p,proEnvC(p),c)(conFilJson)
       case (ProT,RootP)   ⇒ proC.add(c,ProT,HNil)(hnilJson)
       case (MetT,RootP)   ⇒ metC.add(c,MetT,HNil)(hnilJson)
       case (StoT,RootP)   ⇒ stoC.add(c,StoT,HNil)(hnilJson)
-      case (SubT,RootP)   ⇒ proEnv.subC.add(c,SubT,HNil)(subJson)
-      case (FilT,SubP(p)) ⇒ filAdd(p,proEnvS(p),c)(subFilJson)
+      case (CpdT,RootP)   ⇒ proEnv.subC.add(c,CpdT,HNil)(subJson)
+      case (FilT,CpdP(p)) ⇒ filAdd(p,proEnvS(p),c)(subFilJson)
       case (SupT,RootP)   ⇒ supC.add(c,SupT,HNil)(hnilJson)
       case (UseT,RootP)   ⇒ useC.add(c,UseT,HNil)(hnilJson)
       case (dt,p)         ⇒ warnH(s"invalid datatpye, path combo: $dt, $p") *>
@@ -45,39 +45,39 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def delete(p: Path)(env: Env) = del(p, env._2)
 
     def edit(f: String, p: Path)(e: Env) = p match {
-      case BioP(p@h::t)    ⇒ proEnvC(t).bioC.ed(e,SubT,t,h,f)(bioJson,fbioE(p))
-      case BioFilP(p@h::t) ⇒ proEnvB(t).filC.ed(e,SubT,t,h,f)(bioFilJson,fbioFilE(p))
-      case ConP(p@h::t)    ⇒ proEnvS(t).conC.ed(e,SubT,t,h,f)(conJson,fconE(p))
-      case ConFilP(p@h::t) ⇒ proEnvC(t).filC.ed(e,SubT,t,h,f)(conFilJson,fconFilE(p))
+      case BioP(p@h::t)    ⇒ proEnvC(t).bioC.ed(e,CpdT,t,h,f)(bioJson,fbioE(p))
+      case BioFilP(p@h::t) ⇒ proEnvB(t).filC.ed(e,CpdT,t,h,f)(bioFilJson,fbioFilE(p))
+      case ConP(p@h::t)    ⇒ proEnvS(t).conC.ed(e,CpdT,t,h,f)(conJson,fconE(p))
+      case ConFilP(p@h::t) ⇒ proEnvC(t).filC.ed(e,CpdT,t,h,f)(conFilJson,fconFilE(p))
       case ProP(p@h::t)    ⇒ proC.ed(e,ProT,t,h,f)(hnilJson,fpro(_)(h.to) map proE)
       case MetP(p@h::t)    ⇒ metC.ed(e,MetT,t,h,f)(hnilJson,fmet(_)(h) map metE)
       case StoP(p@h::t)    ⇒ stoC.ed(e,StoT,t,h,f)(hnilJson,fsto(_)(h) map stoE)
-      case SubP(p@h::t)    ⇒ proEnv.subC.ed(e,SubT,t,h,f)(subJson, fsub(_)(h) map subE)
-      case SubFilP(p@h::t) ⇒ proEnvS(t).filC.ed(e,SubT,t,h,f)(subFilJson,fsubFilE(p))
+      case CpdP(p@h::t)    ⇒ proEnv.subC.ed(e,CpdT,t,h,f)(subJson, fsub(_)(h) map subE)
+      case CpdFilP(p@h::t) ⇒ proEnvS(t).filC.ed(e,CpdT,t,h,f)(subFilJson,fsubFilE(p))
       case SupP(p@h::t)    ⇒ supC.ed(e,SupT,t,h,f)(hnilJson,fsup(_)(h) map supE)
       case UseP(p@h::t)    ⇒ useC.ed(e,UseT,t,h,f)(hnilJson,fuse(_)(h) map useE)
       case RootP           ⇒ warnH("tried to edit root!") *> Src.srcNoneHtml[Load]
     }
 
     def del(p: Path, c: Creds) = p match {
-      case BioP(h::t)    ⇒ proEnvC(t).bioC.del(c,SubT,t,h)(bioJson)
-      case BioFilP(h::t) ⇒ proEnvB(t).filC.del(c,SubT,t,h)(bioFilJson)
-      case ConP(h::t)    ⇒ proEnvS(t).conC.del(c,SubT,t,h)(conJson)
-      case ConFilP(h::t) ⇒ proEnvC(t).filC.del(c,SubT,t,h)(conFilJson)
+      case BioP(h::t)    ⇒ proEnvC(t).bioC.del(c,CpdT,t,h)(bioJson)
+      case BioFilP(h::t) ⇒ proEnvB(t).filC.del(c,CpdT,t,h)(bioFilJson)
+      case ConP(h::t)    ⇒ proEnvS(t).conC.del(c,CpdT,t,h)(conJson)
+      case ConFilP(h::t) ⇒ proEnvC(t).filC.del(c,CpdT,t,h)(conFilJson)
       case ProP(h::t)    ⇒ proC.del(c,ProT,t,h)(hnilJson)
       case MetP(h::t)    ⇒ metC.del(c,MetT,t,h)(hnilJson)
       case StoP(h::t)    ⇒ stoC.del(c,StoT,t,h)(hnilJson)
-      case SubP(h::t)    ⇒ proEnv.subC.del(c,SubT,t,h)(subJson)
-      case SubFilP(h::t) ⇒ proEnvS(t).filC.del(c,SubT,t,h)(subFilJson)
+      case CpdP(h::t)    ⇒ proEnv.subC.del(c,CpdT,t,h)(subJson)
+      case CpdFilP(h::t) ⇒ proEnvS(t).filC.del(c,CpdT,t,h)(subFilJson)
       case SupP(h::t)    ⇒ supC.del(c,SupT,t,h)(hnilJson)
       case UseP(h::t)    ⇒ useC.del(c,UseT,t,h)(hnilJson)
       case RootP         ⇒ Src.srcNone[Load]
     }
 
     def clone(pth: Path): Eff[Option[Src[Option[Load]]]] = pth match {
-      case ConP(p@h::t) ⇒ at(UId.CreateCont(ConT,SubP(t)))(
-        prepare(UId.Create(ConT,SubP(t))) >>= {
-          case (st,c) ⇒ proEnvS(t).conC.addO(c,SubT,t,fconE(p)(st))(conJson)
+      case ConP(p@h::t) ⇒ at(UId.CreateCont(ConT,CpdP(t)))(
+        prepare(UId.Create(ConT,CpdP(t))) >>= {
+          case (st,c) ⇒ proEnvS(t).conC.addO(c,CpdT,t,fconE(p)(st))(conJson)
         }
       ) map some
       case _       ⇒ Eff pure none[Src[Option[Load]]]
@@ -105,7 +105,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     type MetE = Method[Pure,Undef,Undef,Undef]
     type ProE = Project[Pure,Undef,Link[Use.Id],Undef,Undef]
     type StoE = Location[Pure,Undef,Undef,Undef]
-    type SubE = Sub[Pure,Undef,Mol,Link[Project.AccId],Undef,Undef,Undef,Undef]
+    type CpdE = Compound[Pure,Undef,Mol,Link[Project.AccId],Undef,Undef,Undef,Undef]
     type SupE = Sup[Pure,Undef,Undef,Undef]
     type UseE = cyby.dat.example.Use[Pure,Undef,Option[Password],Undef,Undef]
 
@@ -115,11 +115,11 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def metE(m: Method.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
     def proE(p: Project.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
     def stoE(s: Location.Cli): StoE = s.copy(id = undef, created = undef, modified = undef)
-    def subE(s: Sub.Cli): SubE = s.copy(id = undef, containers = undef, files = undef, created = undef, modified = undef)
+    def subE(s: Compound.Cli): CpdE = s.copy(id = undef, containers = undef, files = undef, created = undef, modified = undef)
     def supE(s: Sup.Cli): SupE = s.copy(id = undef, created = undef, modified = undef)
     def useE(u: cyby.dat.example.Use.Cli): UseE = u.copy(id = undef, password = None, created = undef, modified = undef)
 
-    lazy val fsubFilE: Sub.FilPath ⇒ St ⇒ Option[FilE] =
+    lazy val fsubFilE: Compound.FilPath ⇒ St ⇒ Option[FilE] =
       p ⇒ s ⇒ fsubFil(s)(p) map (p ⇒ filE(p._1))
 
     lazy val fconFilE: Container.FilPath ⇒ St ⇒ Option[FilE] =
@@ -148,7 +148,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
       lazy val bioC = Createable[BioE]
       lazy val conC = Createable[ConE]
       lazy val filC = Createable[FilE]
-      lazy val subC = Createable[SubE]
+      lazy val subC = Createable[CpdE]
     }
 
     def proEnv[B](f: St ⇒ Option[B])(ps: B ⇒ Link[Project.AccId]): ProEnv =
@@ -156,7 +156,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
 
     def proEnvB(p: BiodataEntry.Path): ProEnv = proEnv(fbio(_)(p))(_._1.project.v)
     def proEnvC(p: Container.Path): ProEnv = proEnv(fcon(_)(p))(_._1.project.v)
-    def proEnvS(p: Sub.Path): ProEnv = proEnv(fsub(_)(p.head))(_.project.v)
+    def proEnvS(p: Compound.Path): ProEnv = proEnv(fsub(_)(p.head))(_.project.v)
 
     def proEnv: ProEnv = ProEnv(_ ⇒ None)
   }

@@ -20,7 +20,7 @@ import shapeless.HNil
 
 trait util extends DispZShared with DocEnv {
     
-  def subField(p: SubField ⇒ Boolean, f: SubField, mod: WT ⇒ WT): Node =
+  def subField(p: CpdField ⇒ Boolean, f: CpdField, mod: WT ⇒ WT): Node =
     selectEnumP(p)(mod(WT.Field2Sel), _ locName loc, f)
     
   def conField(p: ConField ⇒ Boolean, f: ConField, mod: WT ⇒ WT): Node =
@@ -36,14 +36,14 @@ trait util extends DispZShared with DocEnv {
     
   def dataTypeE(d: DataType): Node = dataType(_.canExport, d, WT.Export)
     
-  def subQ(s: SubField): Node = subField(_.canQuery, s, WT.Query)
+  def subQ(s: CpdField): Node = subField(_.canQuery, s, WT.Query)
     
   def conQ(c: ConField): Node = conField(_.canQuery, c, WT.Query)
   
   def expDescP(
     ef:    ExportField,
     expP:  DataType ⇒ Boolean,
-    subP:  SubField ⇒ Boolean,
+    subP:  CpdField ⇒ Boolean,
     conP:  ConField ⇒ Boolean,
     bioP:  BioField ⇒ Boolean,
     mod:   WT ⇒ WT,
@@ -57,7 +57,7 @@ trait util extends DispZShared with DocEnv {
     def wrap(s: Node) = Txt.div(Txt.cls := ct.c)(s)
 
     ef match {
-      case ExportSub(f)     ⇒ nodes(dt(SubT),   wrap(subField(subP, f, mod)))
+      case ExportCpd(f)     ⇒ nodes(dt(CpdT),   wrap(subField(subP, f, mod)))
       case ExportCon(f)     ⇒ nodes(dt(ConT),   wrap(conField(conP, f, mod)))
       case ExportBio(f)     ⇒ nodes(dt(BioT),   wrap(bioField(bioP, f, mod)))
       case ExportStats(m,t) ⇒ nodes(dt(StatsT), wrap(stats(m,t)))
@@ -73,7 +73,7 @@ trait util extends DispZShared with DocEnv {
   def columnF(f: ExportField, mode: ExpMode): Node = mode match {
     case MethodTable ⇒ expDescP(f, _.inStatsTable, _.inColumn,
       _.inColumn, _.inColumn, WT.Export, CT.ExportDetailRow)
-    case _ ⇒ expDescP(f, _.inSubTable, _.inColumn, _.inColumn,
+    case _ ⇒ expDescP(f, _.inCpdTable, _.inColumn, _.inColumn,
       _.inColumn, WT.Export, CT.ExportDetailRow)
   }
 
@@ -277,10 +277,10 @@ trait util extends DispZShared with DocEnv {
   //                      Substances
   //----------------------------------------------------------------------
 
-  def commonSub(
+  def commonCpd(
     i: Long,
     smiles: String,
-  ): Sub.Cli = Sub(
+  ): Compound.Cli = Compound(
     Id(i),
     plainP(""),
     Pure(Maybe(Mol read smiles) map (_.toDatMol)),
@@ -292,7 +292,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val sub1: Sub.Cli = Sub(
+  lazy val sub1: Compound.Cli = Compound(
     Id(1),
     plainP("Ethanol"),
     Pure(Maybe(Mol read "CCO") map (_.toDatMol)),
@@ -304,11 +304,11 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  def statsSub(
+  def statsCpd(
     i: Long,
     smiles: String,
     cons: Container.Cli*
-  ): Sub.Cli = Sub(
+  ): Compound.Cli = Compound(
     Id(i),
     plainP(""),
     Pure(Maybe(Mol read smiles) map (_.toDatMol)),
@@ -320,33 +320,33 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val sub2: Sub.Cli = statsSub(2L, "c1c(F)cccc1C(=O)NCC1CCC(N(C)C)C1", con3)
+  lazy val sub2: Compound.Cli = statsCpd(2L, "c1c(F)cccc1C(=O)NCC1CCC(N(C)C)C1", con3)
 
-  lazy val subs: List[Sub.Cli] = List(
+  lazy val subs: List[Compound.Cli] = List(
     sub1, sub2,
-    statsSub(
+    statsCpd(
       3L,
       "c1c(F)cccc1C(=O)NCC1CCC(N(C)C)C1",
       statsCon(1, "MM-1-1", List(1.25, 1.4), List(10.12, 13.3, 11.1)),
       statsCon(2, "MM-1-2", List(1.20, 1.3), List(9.8)),
     ),
-    statsSub(
+    statsCpd(
       4L,
       "c1c(F)c(F)ccc1C(=O)NCC1CCC(N(C)CCO)C1",
       statsCon(1, "MM-2-1", List(5.25, 4.4), List(30.1, 31.2)),
     ),
-    statsSub(
+    statsCpd(
       5L,
       "c1cc(N)ccc1C(=O)NC(O)C1C(O)C(O)C(N(C)C(F)(F)O)C1CO",
       statsCon(1, "MM-3-1", List(12.0, 9.9), List(1.0, 0.9, 0.82)),
     ),
-    statsSub(
+    statsCpd(
       6L,
       "c1cc(N)cc(O)c1C(=O)NCC1CCC(N(C)C)C1CCO",
       statsCon(1, "MM-4-1", List(23.0), List(80.1, 59.2)),
       statsCon(1, "MM-4-2", List(20.0, 17.2), List(60.1, 58.2)),
     ),
-  ) ::: (7 to 20).toList.map(i ⇒ commonSub(i, alcohol(i)))
+  ) ::: (7 to 20).toList.map(i ⇒ commonCpd(i, alcohol(i)))
 
   def alcohol(i: Int) = (1 to i).toList.as("C").mkString("") ++ "O"
 
@@ -438,7 +438,7 @@ trait util extends DispZShared with DocEnv {
     List(mmp10, mmp13),
     List(hock, jodo, jado, pott),
     subs,
-    Sub toStats subs
+    Compound toStats subs
   )
 
   lazy val emptySettings: USettings = UserSettings.empty
@@ -449,7 +449,7 @@ trait util extends DispZShared with DocEnv {
 
   lazy val yellow: Color = Color(255,255,0).get
 
-  lazy val massCol = SubMol(DMol.Mass).ef
+  lazy val massCol = CpdMol(DMol.Mass).ef
 
   lazy val mmp10Col = ExportStats(mmp10.id, MeanStat).f
 
@@ -468,19 +468,19 @@ trait util extends DispZShared with DocEnv {
 
   lazy val settings: USettings = emptySettings.copy(
     substanceColumns = List(
-      SubMol(DMol.Structure).ef,
-      SubId.ef,
-      SubName.ef,
-      SubCasNr.ef,
+      CpdMol(DMol.Structure).ef,
+      CpdId.ef,
+      CpdName.ef,
+      CpdCasNr.ef,
       massCol,
-      SubMol(DMol.Formula).ef,
+      CpdMol(DMol.Formula).ef,
     ),
     methodColumns = List(
-      SubMol(DMol.Structure).ef,
-      SubId.ef,
+      CpdMol(DMol.Structure).ef,
+      CpdId.ef,
       ConBatch.ef,
       massCol,
-      SubMol(DMol.Lipinski).ef,
+      CpdMol(DMol.Lipinski).ef,
       mmp10Col,
       mmp13Col,
     ),
@@ -492,19 +492,19 @@ trait util extends DispZShared with DocEnv {
     exportFormat = Some(Sdf),
     exportSelectionO = Some(false),
     exportFieldsO = Some(List(
-      SubMol(DMol.Structure).ef,
-      SubId.ef,
-      SubName.ef,
-      SubCasNr.ef,
+      CpdMol(DMol.Structure).ef,
+      CpdId.ef,
+      CpdName.ef,
+      CpdCasNr.ef,
       massCol,
-      SubMol(DMol.Formula).ef,
+      CpdMol(DMol.Formula).ef,
       ConLocation.ef,
       ConAmount.ef,
     ))
   )
 
   lazy val exp: Set[UIdP] = Set(
-    UId.DataList(ConT, SubP(sub2.id :: HNil)),
+    UId.DataList(ConT, CpdP(sub2.id :: HNil)),
     UId.DataList(BioT, ConP(con3.id :: sub2.id :: HNil)),
   )
 

@@ -21,12 +21,12 @@ trait CyByZ extends TextEnv with ZEnv {
 
   override def columnDesc(c: Column)       = c.desc
   override def columnPath(c: Column)       = c.toString
-  override def molFieldToColumn(m: Mol.Field) = ExportSub(SubMol(m))
+  override def molFieldToColumn(m: Mol.Field) = ExportCpd(CpdMol(m))
   override def structCol                      = molFieldToColumn(Mol.Structure)
-  override def defaultSortCol                 = ExportSub(SubId)
+  override def defaultSortCol                 = ExportCpd(CpdId)
 
   def columnLoc(st: St)(c: Column)   = c match {
-    case ExportSub(f)         ⇒ f locName loc
+    case ExportCpd(f)         ⇒ f locName loc
     case ExportCon(f)         ⇒ f locName loc
     case ExportBio(f)         ⇒ f locName loc
     case x@ExportStats(i,s)   ⇒ fmet(st)(i).fold(i.toString){
@@ -36,9 +36,9 @@ trait CyByZ extends TextEnv with ZEnv {
 
   val SubStr = "sub"
   val SubStrL = SubStr.length
-  def subIdString(s: Sub.Id): String = s"${SubStr}${s}"
+  def subIdString(s: Compound.Id): String = s"${SubStr}${s}"
   
-  def statsIdString(p: (Container.Id,Sub.Id)): String = s"${BioStats}${p._1}_${p._2}"
+  def statsIdString(p: (Container.Id,Compound.Id)): String = s"${BioStats}${p._1}_${p._2}"
   def statsId(s: BioStats) = s.path.head -> s.path.tail.head
 
   //----------------------------------------------------------------------
@@ -71,34 +71,34 @@ trait CyByZ extends TextEnv with ZEnv {
   //                      Data Access
   //----------------------------------------------------------------------
 
-  lazy val fbio: St ⇒ BiodataEntry.Path ⇒ Option[(BiodataEntry.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbio: St ⇒ BiodataEntry.Path ⇒ Option[(BiodataEntry.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     b     <- c.bio find (_.id === p.head)
   } yield (b,c,s)
 
-  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     (b,c,s) <- fbio(s)(p.tail)
     f       <- b.files find (_.id === p.head)
   } yield (f,b,c,s)
 
-  lazy val fcon: St ⇒ Container.Path ⇒ Option[(Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fcon: St ⇒ Container.Path ⇒ Option[(Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     s <- fsub(s)(p.tail.head)
     c <- s.containers find (_.id === p.head)
   } yield c -> s
 
-  lazy val fconFil: St ⇒ Container.FilPath ⇒ Option[(Fil.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fconFil: St ⇒ Container.FilPath ⇒ Option[(Fil.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     f     <- c.files find (_.id === p.head)
   } yield (f,c,s)
 
-  lazy val fsubFil: St ⇒ Sub.FilPath ⇒ Option[(Fil.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fsubFil: St ⇒ Compound.FilPath ⇒ Option[(Fil.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     s <- fsub(s)(p.tail.head)
     f <- s.files find (_.id === p.head)
   } yield (f,s)
 
   lazy val fpro: St ⇒ Project.AccId ⇒ Option[Project.Cli] = s ⇒ i ⇒ s.pros find (_.id === i)
 
-  lazy val fsub: St ⇒ Sub.Id ⇒ Option[Sub.Cli] = s ⇒ i ⇒ s.subs find (_.id === i)
+  lazy val fsub: St ⇒ Compound.Id ⇒ Option[Compound.Cli] = s ⇒ i ⇒ s.subs find (_.id === i)
 
   lazy val fsup: St ⇒ Sup.Id ⇒ Option[Sup.Cli] = s ⇒ i ⇒ s.sups find (_.id === i)
 

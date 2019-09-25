@@ -33,13 +33,13 @@ package object example {
     val pre = if (caseSensitive) Contains else ContainsCI
     val strs = r.split(" ").toList
 
-    def csub(f: SubField): ZQ = Prim(ExportSub(f).f, s"$pre $r", false)
+    def csub(f: CpdField): ZQ = Prim(ExportCpd(f).f, s"$pre $r", false)
     def ccon(f: ConField): ZQ = Prim(ExportCon(f).f, s"$pre $r", false)
     def cbio(f: BioField): ZQ = Prim(ExportBio(f).f, s"$pre $r", false)
 
     lazy val sub: ZQ = Chain(List(
-      csub(SubName),
-      csub(SubProject),
+      csub(CpdName),
+      csub(CpdProject),
     ) map (Or.c -> _))
 
     lazy val con: ZQ = Chain(List(
@@ -65,8 +65,8 @@ package object example {
     def isCas(s: String) = Read[CasNr].read(s).nonEmpty
 
     val query: ZQ =
-      if (strs forall isId) Prim(ExportSub(SubId).f, strs mkString " ", false)
-      else if (isCas(r)) Prim(ExportSub(SubCasNr).f, s"== ${r}", false)
+      if (strs forall isId) Prim(ExportCpd(CpdId).f, strs mkString " ", false)
+      else if (isCas(r)) Prim(ExportCpd(CpdCasNr).f, s"== ${r}", false)
       else Chain(List(Or.c -> sub, Or.c -> con, Or.c -> bio))
 
     if (includeEmpty) query

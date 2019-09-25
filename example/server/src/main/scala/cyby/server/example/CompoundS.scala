@@ -12,26 +12,26 @@ import cats.implicits._
 import cyby.chem.Mol
 import cyby.dat.{Mol ⇒ _, _}, cyby.dat.example._
 
-object SubS extends RootEditor {
+object CompoundS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Sub.Id
-  type Add           = Sub[Pure,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
-  type Mod           = Sub[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Sub[Pure,Id,Mol,Project.Id,ContainerS.DB,SubFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = Sub[Pure,Id,Mol,Project.Id,Undef,Undef,TimeStamp,EditInfo]
-  type SrvMod        = Sub[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Sub[Pure,Id,Mol,Project.AccId,ContainerS.AccDB,SubFilS.AccDB,TimeStamp,EditInfo]
-  type Cli           = Sub.Cli
+  type Id            = Compound.Id
+  type Add           = Compound[Pure,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
+  type Mod           = Compound[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
+  type Srv           = Compound[Pure,Id,Mol,Project.Id,ContainerS.DB,CpdFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = Compound[Pure,Id,Mol,Project.Id,Undef,Undef,TimeStamp,EditInfo]
+  type SrvMod        = Compound[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,EditInfo]
+  type Acc           = Compound[Pure,Id,Mol,Project.AccId,ContainerS.AccDB,CpdFilS.AccDB,TimeStamp,EditInfo]
+  type Cli           = Compound.Cli
 
   //----------------------------------------------------------------------
   //                         Util
   //----------------------------------------------------------------------
 
-  val notFound   = p ⇒ PathNotFound(SubP(p))
-  val exists     = (i: Id,n: Name) ⇒ Exists(n, SubP(i::hnil))
+  val notFound   = p ⇒ PathNotFound(CpdP(p))
+  val exists     = (i: Id,n: Name) ⇒ Exists(n, CpdP(i::hnil))
 
   val dbL        = St.L.subs
   val getId      = _.id
@@ -42,19 +42,19 @@ object SubS extends RootEditor {
       e.st.subs,e.st.subs,(), e.ei -> e.st.subs.keySet,e.ei,e.u)
   }
 
-  implicit lazy val filA: Asmbl[SubFilS.AccDB,List[Fil.Cli]] = SubFilS.asmbl
+  implicit lazy val filA: Asmbl[CpdFilS.AccDB,List[Fil.Cli]] = CpdFilS.asmbl
   implicit lazy val conA: Asmbl[ContainerS.AccDB,List[Container.Cli]] = ContainerS.asmbl
-  lazy val asmbl = asmblD[Acc,Sub.Cli]
-  lazy val dbasmbl = dbAsmbl[Id,Acc,Sub.Cli](identity)(asmbl)
-  val cliToRes = SubRes
+  lazy val asmbl = asmblD[Acc,Compound.Cli]
+  lazy val dbasmbl = dbAsmbl[Id,Acc,Compound.Cli](identity)(asmbl)
+  val cliToRes = CpdRes
 
   //----------------------------------------------------------------------
   //                         Valdation
   //----------------------------------------------------------------------
   
-  val subExists = (i: Sub.Id, p: Plain) ⇒ SubExists(p, i::hnil)
-  val casExists = (i: Sub.Id, n: CasNr) ⇒ CasNrExists(n, i::hnil)
-  val strExists = (i: Sub.Id, p: (Mol,Boolean)) ⇒
+  val subExists = (i: Compound.Id, p: Plain) ⇒ CpdExists(p, i::hnil)
+  val casExists = (i: Compound.Id, n: CasNr) ⇒ CasNrExists(n, i::hnil)
+  val strExists = (i: Compound.Id, p: (Mol,Boolean)) ⇒
                     StructureExists(p._1.toDatMol, i::hnil)
 
   val mp  = (s: Pure[Maybe[Mol]], a: Pure[Boolean]) ⇒ s map (_.o map (_ -> a.v))

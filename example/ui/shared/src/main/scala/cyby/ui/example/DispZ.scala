@@ -154,7 +154,7 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def dispSub(e: ExpEnv)(s: Sub.Cli): Node = {
+  def dispCpd(e: ExpEnv)(s: Compound.Cli): Node = {
     val row = nodes(e.expSt.columns map singleCell(e, s): _*)
     rest(e, s, row)
   }
@@ -165,52 +165,52 @@ trait DispZShared extends CyByZ {
     Txt.li(cls := Comp(CompType.ExplorerSubRow))(row)
   }
 
-  def rest(e: ExpEnv, s: Sub.Cli, row: Node): Node = {
+  def rest(e: ExpEnv, s: Compound.Cli, row: Node): Node = {
     val pth = s.id :: HNil
-    val p = SubP(pth).path
+    val p = CpdP(pth).path
 
     nodes(
-      Txt.div(id := EditCont(Sub.structure.name,p))(),
+      Txt.div(id := EditCont(Compound.structure.name,p))(),
       Txt.li(cls := ExplorerSubRow.c)(row),
       mkCons(e, pth, s.containers),
-      mkFils(e, pth, s.files)(SubP, SubFilP)
+      mkFils(e, pth, s.files)(CpdP, CpdFilP)
     )
   }
 
-  def singleCell(e: ExpEnv, s: Sub.Cli)(d: Column) = d match {
-    case ExportSub(f) ⇒ f match {
-      case SubId                 ⇒ Txt.subCell(d, s.id.toString)
-      case SubName               ⇒ nameDesc(e)(s)
-      case SubAbs                ⇒ abs(e)(s)
-      case SubCasNr              ⇒ casNr(e)(s)
-      case SubProject            ⇒ project(e)(s)
-      case SubCreated            ⇒ Txt.created(SubCreated.ef, s.created)
-      case SubMol(fld)           ⇒ fld match {
+  def singleCell(e: ExpEnv, s: Compound.Cli)(d: Column) = d match {
+    case ExportCpd(f) ⇒ f match {
+      case CpdId                 ⇒ Txt.subCell(d, s.id.toString)
+      case CpdName               ⇒ nameDesc(e)(s)
+      case CpdAbs                ⇒ abs(e)(s)
+      case CpdCasNr              ⇒ casNr(e)(s)
+      case CpdProject            ⇒ project(e)(s)
+      case CpdCreated            ⇒ Txt.created(CpdCreated.ef, s.created)
+      case CpdMol(fld)           ⇒ fld match {
         case Mol.Structure         ⇒ Txt.structCell(d, s, some(Admin), some(CommonUser), e)
         case _                     ⇒ Txt.mol(fld, s.structure.o, e.expSt)
       }
-      case SubContainers         ⇒ nodes()
-      case SubEditInfo(ef)       ⇒ Txt.editInfo(d, s.modified, ef)
-      case SubFil(_)             ⇒ nodes()
+      case CpdContainers         ⇒ nodes()
+      case CpdEditInfo(ef)       ⇒ Txt.editInfo(d, s.modified, ef)
+      case CpdFil(_)             ⇒ nodes()
     }
     case _            ⇒ nodes()
   }
 
   def singleCellStats(e: ExpEnv, s: BioStats)(c: Column): Node = c match {
-    case ExportSub(f) ⇒ f match {
-      case SubMol(fld)           ⇒ fld match {
+    case ExportCpd(f) ⇒ f match {
+      case CpdMol(fld)           ⇒ fld match {
         case Mol.Structure         ⇒ Txt.structCell(c, s, None, None, e)
         case _                     ⇒ Txt.mol(fld, s.sub.structure.v.o, e.expSt)
       }
-      case SubAbs                ⇒ Txt.subCellBool(c, s.sub.abs.v)
-      case SubCasNr              ⇒ Txt.subCell(c, s.sub.casNr.v.v)
-      case SubContainers         ⇒ nodes()
-      case SubCreated            ⇒ Txt.created(c, s.sub.created)
-      case SubEditInfo(ef)       ⇒ Txt.editInfo(c, s.sub.modified, ef)
-      case SubFil(_)             ⇒ nodes()
-      case SubId                 ⇒ Txt.subCell(c, s.sub.id.toString)
-      case SubName               ⇒ Txt.subCell(c, s.sub.name.v.v)
-      case SubProject            ⇒ Txt.subCell(c, s.sub.project.v._2.v)
+      case CpdAbs                ⇒ Txt.subCellBool(c, s.sub.abs.v)
+      case CpdCasNr              ⇒ Txt.subCell(c, s.sub.casNr.v.v)
+      case CpdContainers         ⇒ nodes()
+      case CpdCreated            ⇒ Txt.created(c, s.sub.created)
+      case CpdEditInfo(ef)       ⇒ Txt.editInfo(c, s.sub.modified, ef)
+      case CpdFil(_)             ⇒ nodes()
+      case CpdId                 ⇒ Txt.subCell(c, s.sub.id.toString)
+      case CpdName               ⇒ Txt.subCell(c, s.sub.name.v.v)
+      case CpdProject            ⇒ Txt.subCell(c, s.sub.project.v._2.v)
     }
     case ExportCon(f) ⇒ f match {
       case ConAmount        ⇒ Txt.gradientCell(c, some(s.con.amount.v.v), e.expSt)
@@ -238,24 +238,24 @@ trait DispZShared extends CyByZ {
     def metCell(c: ExportStats, expSt: ExpSt)(s: BioStats): Node =
       Txt.statsCell(c, c.stat, s.stats get c.mid, expSt)
 
-  def abs(e: ExpEnv) = Txt.editableSubCellBool[Sub.Cli](
-    SubAbs.ef, _.abs.v, some(CommonUser), e)
+  def abs(e: ExpEnv) = Txt.editableSubCellBool[Compound.Cli](
+    CpdAbs.ef, _.abs.v, some(CommonUser), e)
 
-  def casNr(e: ExpEnv) = Txt.editableSubCell[Sub.Cli](
-    SubCasNr.ef, _.casNr.v.v, some(CommonUser), e)
+  def casNr(e: ExpEnv) = Txt.editableSubCell[Compound.Cli](
+    CpdCasNr.ef, _.casNr.v.v, some(CommonUser), e)
 
-  def nameDesc(e: ExpEnv) = Txt.editableSubCell[Sub.Cli](
-    SubName.ef, _.name.v.v, some(CommonUser), e)
+  def nameDesc(e: ExpEnv) = Txt.editableSubCell[Compound.Cli](
+    CpdName.ef, _.name.v.v, some(CommonUser), e)
 
-  def project(e: ExpEnv) = Txt.editableSubCell[Sub.Cli](
-    SubProject.ef, _.project.v._2.v, some(CommonUser), e)
+  def project(e: ExpEnv) = Txt.editableSubCell[Compound.Cli](
+    CpdProject.ef, _.project.v._2.v, some(CommonUser), e)
 
 
   //----------------------------------------------------------------------
   //                      Containers
   //----------------------------------------------------------------------
 
-  def mkCon(e: ExpEnv, pth: Sub.Path)(c: Container.Cli): Node =  {
+  def mkCon(e: ExpEnv, pth: Compound.Path)(c: Container.Cli): Node =  {
     val cpth = c.id :: pth
     val p = ConP(cpth).path
     val ename = Container.empty.name
@@ -322,14 +322,14 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def mkCons(e: ExpEnv, pth: Sub.Path, cons: List[Container.Cli]): Node =  {
-    val p = SubP(pth).path
+  def mkCons(e: ExpEnv, pth: Compound.Path, cons: List[Container.Cli]): Node =  {
+    val p = CpdP(pth).path
     val i = DataList(ConT,p).i
 
     nodes(
       Txt.li(cls := ExplorerConRowHeader.c)(
         Txt.expBtn(e.exp, i),
-        Txt.h1(cls := TitleType.ConRow.c)(Txt text s"${loc name Sub.containers} (${cons.size})"),
+        Txt.h1(cls := TitleType.ConRow.c)(Txt text s"${loc name Compound.containers} (${cons.size})"),
         e.ifEditingAs(CommonUser)(Txt.div(id := Create(ConT,p), cls := AddHidden.c)()),
       ),
       Txt.ul(
@@ -441,7 +441,7 @@ trait DispZShared extends CyByZ {
     nodes(
       Txt.li(cls := ExplorerConRowHeader.c)(
         Txt.expBtn(e.exp, i),
-        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Sub.files} (${fs.size})"),
+        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Compound.files} (${fs.size})"),
         e.ifEditingAs(CommonUser)(Txt.div(id := Create(FilT, ppth), cls := AddHidden.c)()),
       ),
       Txt.ul(

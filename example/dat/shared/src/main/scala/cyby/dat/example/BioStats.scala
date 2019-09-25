@@ -13,7 +13,7 @@ import tagInstances._
 import shapeless.HNil
 
 @io.circe.generic.JsonCodec case class BioStats(
-  sub:   Sub.Cli,
+  sub:   Compound.Cli,
   con:   Container.Cli,
 ){
   def path: Container.Path = con.id :: sub.id :: HNil

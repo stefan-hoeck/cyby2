@@ -11,7 +11,7 @@ package ui
   * Field Types in UI. F is field type here, In linked
   * input type, Out: linked output type.
   *
-  * For instance: F = SubField, In = Sub.Cli, Out = type of field in Sub.Cli
+  * For instance: F = CpdField, In = Compound.Cli, Out = type of field in Compound.Cli
   *
   * Queries:   F ⇒ St ⇒ WidgetDesc[Unit,String,String]
   * Update:    F ⇒ Option[In] ⇒ St ⇒ Html[(Elem,Signal[Option[Json]])]

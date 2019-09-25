@@ -30,7 +30,7 @@ case class ProRes(res: EditRes[Project.Cli]) extends Result
 
 case class StoRes(res: EditRes[Location.Cli]) extends Result
 
-case class SubRes(res: EditRes[Sub.Cli]) extends Result
+case class CpdRes(res: EditRes[Compound.Cli]) extends Result
 
 case class SupRes(res: EditRes[Sup.Cli]) extends Result
 

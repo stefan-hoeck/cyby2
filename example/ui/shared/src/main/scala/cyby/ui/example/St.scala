@@ -16,7 +16,7 @@ case class St(
   sups:  List[Sup.Cli],
   mets:  List[Method.Cli],
   uses:  List[Use.Cli],
-  subs:  List[Sub.Cli],
+  subs:  List[Compound.Cli],
   bio:   List[BioStats],
 )
 
@@ -24,7 +24,7 @@ object St {
   def ini: St = St(Nil, Nil, Nil, Nil, Nil, Nil, Nil)
 
   def subsChanged(or: Option[Result]) = or match {
-    case Some(SubRes(r)) ⇒ some(r)
+    case Some(CpdRes(r)) ⇒ some(r)
     case _               ⇒ None
   }
 }

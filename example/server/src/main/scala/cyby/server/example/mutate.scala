@@ -33,23 +33,23 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
     case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProjectS fullEd hnil, logPro, t, r)
     case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(LocationS fullEd hnil, logSto, t, r)
-    case _ -> _ / _ / DT(t@SubT)   ⇒ editDec(edSub, logSub, t, r, delFil)
+    case _ -> _ / _ / DT(t@CpdT)   ⇒ editDec(edCpd, logCpd, t, r, delFil)
     case _ -> _ / _ / DT(FilT)     ⇒ edFile(r)
     case _ -> _ / _ / "settings"   ⇒ decoding(mutate(adjSettings)(storeSettings))(r)
     case r                         ⇒ M.raise(NotFound(r.uri.path))
   }
 
-  val edSub = (v: EditEnv, st: St, p: SubTree) ⇒ p match {
-    case SubEdit(e)      ⇒ m3(SubS.fullEd(hnil)(v,st,e))(subEd)
+  val edCpd = (v: EditEnv, st: St, p: CpdTree) ⇒ p match {
+    case CpdEdit(e)      ⇒ m3(CompoundS.fullEd(hnil)(v,st,e))(subEd)
     case ConEdit(p,e)    ⇒ m3(ContainerS.fullEd(p)(v,st,e))(conEd(p))
     case BioEdit(p,e)    ⇒ m3(BiodataEntryS.fullEd(p)(v,st,e))(bioEd(p))
-    case SubFilEdit(p,e) ⇒ m3(SubFilS.fullEd(p)(v,st,e))(subFilEd(p))
+    case CpdFilEdit(p,e) ⇒ m3(CpdFilS.fullEd(p)(v,st,e))(subFilEd(p))
     case ConFilEdit(p,e) ⇒ m3(ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
     case BioFilEdit(p,e) ⇒ m3(BioFilS.fullEd(p)(v,st,e))(bioFilEd(p))
   }
 
-  def delFil(p: SubTree): IO[Unit] = p match {
-    case SubFilEdit(p,Del(i)) ⇒ files delete SubFilP(i :: p)
+  def delFil(p: CpdTree): IO[Unit] = p match {
+    case CpdFilEdit(p,Del(i)) ⇒ files delete CpdFilP(i :: p)
     case ConFilEdit(p,Del(i)) ⇒ files delete ConFilP(i :: p)
     case BioFilEdit(p,Del(i)) ⇒ files delete BioFilP(i :: p)
     case _                    ⇒ ioUnit
@@ -61,31 +61,31 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   def addFil(
     pth: Fil.Id ⇒ Path,
     bs:  Array[Byte],
-    e:   DataE[(St @@ Adjusted,SubFilS.LoadEd,Result)]
+    e:   DataE[(St @@ Adjusted,CpdFilS.LoadEd,Result)]
   )(
-    f: SubFilS.LoadEd ⇒ SubTreeL
-  ): M.Prog[(St @@ Adjusted,SubTreeL,Result)] = for {
+    f: CpdFilS.LoadEd ⇒ CpdTreeL
+  ): M.Prog[(St @@ Adjusted,CpdTreeL,Result)] = for {
     t             <- M wrapEither e
     (st,sfl,res)  = t
     id            = sfl.id(a ⇒ mapTagged(a)(_.id))
     _             <- M lift files.insert(pth(id))(bs)
   } yield (st,f(sfl),res)
 
-  def bioEd(p: Container.Path)(ed: BiodataEntryS.LoadEd): SubTreeL = BioEdit(p, ed)
-  def bioFilEd(p: BiodataEntry.Path)(ed: BioFilS.LoadEd): SubTreeL = BioFilEdit(p, ed)
-  def conEd(p: Sub.Path)(ed: ContainerS.LoadEd): SubTreeL = ConEdit(p, ed)
-  def conFilEd(p: Container.Path)(ed: ConFilS.LoadEd): SubTreeL = ConFilEdit(p, ed)
-  def subEd(ed: SubS.LoadEd): SubTreeL = SubEdit(ed)
-  def subFilEd(p: Sub.Path)(ed: SubFilS.LoadEd): SubTreeL = SubFilEdit(p, ed)
+  def bioEd(p: Container.Path)(ed: BiodataEntryS.LoadEd): CpdTreeL = BioEdit(p, ed)
+  def bioFilEd(p: BiodataEntry.Path)(ed: BioFilS.LoadEd): CpdTreeL = BioFilEdit(p, ed)
+  def conEd(p: Compound.Path)(ed: ContainerS.LoadEd): CpdTreeL = ConEdit(p, ed)
+  def conFilEd(p: Container.Path)(ed: ConFilS.LoadEd): CpdTreeL = ConFilEdit(p, ed)
+  def subEd(ed: CompoundS.LoadEd): CpdTreeL = CpdEdit(ed)
+  def subFilEd(p: Compound.Path)(ed: CpdFilS.LoadEd): CpdTreeL = CpdFilEdit(p, ed)
 
   def edFile(r: Request): M.Prog[Result] = for {
     v   <- M.ask
     st  <- M.get
-    pr  <- decodeAddFile[SubTree](r)
+    pr  <- decodeAddFile[CpdTree](r)
     (ed,bs) = pr
     t   <- ed match {
-             case SubFilEdit(p, e@Add(_)) ⇒ 
-               addFil(i ⇒ SubFilP(i::p), bs, SubFilS.fullEd(p)(v,st,e))(subFilEd(p))
+             case CpdFilEdit(p, e@Add(_)) ⇒ 
+               addFil(i ⇒ CpdFilP(i::p), bs, CpdFilS.fullEd(p)(v,st,e))(subFilEd(p))
              case ConFilEdit(p, e@Add(_)) ⇒
                addFil(i ⇒ ConFilP(i::p), bs, ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
              case BioFilEdit(p, e@Add(_)) ⇒
@@ -93,19 +93,19 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
              case _ ⇒ M.raise(ReadErr("error when adding file"))
            }
     (newSt,ed,res) = t
-    _   <- M lift appendLine(SubT, ed.asJson.noSpaces)
-    _   <- M doLog logSub(ed)
+    _   <- M lift appendLine(CpdT, ed.asJson.noSpaces)
+    _   <- M doLog logCpd(ed)
     _   <- M set newSt
   } yield res
 
   lazy val adjSettings = (le: EditEnv, st: St, p: (Use.Id,USettings)) ⇒
     (dotag[St,Adjusted](St.L.sets.modify(st)(_ + p)), p, SettingsChanged(p._2).r)
 
-  def logSub(s: SubTreeL): Log = s match {
-    case SubEdit(ed)    ⇒ logEd("substance", ed)(_.id)
+  def logCpd(s: CpdTreeL): Log = s match {
+    case CpdEdit(ed)    ⇒ logEd("substance", ed)(_.id)
     case ConEdit(p, ed) ⇒ logEd(s"substance ${p.head}: container", ed)(_.id)
     case BioEdit(p, ed) ⇒ logEd(s"substance ${p.tail.head}, container ${p.head}: biodata", ed)(_.id)
-    case SubFilEdit(p, ed) ⇒ logEd(s"substance ${p.head}: file", ed)(_.id)
+    case CpdFilEdit(p, ed) ⇒ logEd(s"substance ${p.head}: file", ed)(_.id)
     case ConFilEdit(p, ed) ⇒ logEd(s"substance ${p.tail.head}, container ${p.head}: file", ed)(_.id)
     case BioFilEdit(p, ed) ⇒ logEd(s"substance ${p.tail.tail.head}, container ${p.tail.head}, biodata ${p.head}: file", ed)(_.id)
   }

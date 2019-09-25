@@ -27,8 +27,8 @@ trait ZEnv extends CyByEnv {
   override def pathRead          = implicitly
   override def dataTypeRead      = implicitly
   override def rootPath          = RootP.path
-  override def subPath(id: Long) = SubP(Id[Sub.type](id)::shapeless.HNil)
-  override def subType: DataType = SubT
+  override def subPath(id: Long) = CpdP(Id[Compound.type](id)::shapeless.HNil)
+  override def subType: DataType = CpdT
   override def filType: DataType = FilT
   override def useDecoder        = implicitly
   override def useEncoder        = implicitly

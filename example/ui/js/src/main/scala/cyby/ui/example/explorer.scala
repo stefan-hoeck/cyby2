@@ -29,7 +29,7 @@ case class ExplorerZ(
   outer ⇒
 
   def navSearchImpl(p: Path, m: NavSearchMode): Q[Field] = (p,m) match {
-    case (ProP(p),NSSub)         ⇒ prim(SubProject.ef, p.head.toString)
+    case (ProP(p),NSSub)         ⇒ prim(CpdProject.ef, p.head.toString)
     case (ProP(p),NSConAll)      ⇒ prim(ConProject.ef, p.head.toString)
     case (ProP(p),NSConNonEmpty) ⇒ nonEmpty(ConProject.ef, p.head.toString)
     case (ProP(p),NSBio)         ⇒ prim(BioProject.ef, p.head.toString)
@@ -108,25 +108,25 @@ case class ExplorerZ(
   //                      Main Signal Function
   //----------------------------------------------------------------------
 
-  object ExpZ extends Controller[Sub.Cli,Sub.Id](_.subs, hui, url) {
+  object ExpZ extends Controller[Compound.Cli,Compound.Id](_.subs, hui, url) {
 
-    private def idsQ(ids: List[Sub.Id]): ZQ =
-      Prim(ExportSub(SubId).f, ids mkString " ", false)
+    private def idsQ(ids: List[Compound.Id]): ZQ =
+      Prim(ExportCpd(CpdId).f, ids mkString " ", false)
 
-    def adjQuery(ids: List[Sub.Id]) = {
+    def adjQuery(ids: List[Compound.Id]) = {
       case Chain(Nil) ⇒ idsQ(ids)
       case q          ⇒ Chain(List(And.c -> idsQ(ids), And.c -> q))
     }
 
     def read(s: String) =
-      if (s startsWith SubStr) Read[Sub.Id] read s.drop(SubStrL)
+      if (s startsWith SubStr) Read[Compound.Id] read s.drop(SubStrL)
       else None
 
-    def toIdString(s: Sub.Id) = subIdString(s)
+    def toIdString(s: Compound.Id) = subIdString(s)
 
-    def getId(s: Sub.Cli) = s.id
+    def getId(s: Compound.Cli) = s.id
 
-    override def dispSub(e: Env)(s: Sub.Cli): Node = outer.dispSub(e)(s)
+    override def dispSub(e: Env)(s: Compound.Cli): Node = outer.dispCpd(e)(s)
 
     def exportRes(r: Result): Option[String] = r match {
       case ExportRes(p) ⇒ some(p)
@@ -138,7 +138,7 @@ case class ExplorerZ(
     //----------------------------------------------------------------------
 
     override def subRes(r: Result) = r match {
-      case SubRes(r) ⇒ some(r)
+      case CpdRes(r) ⇒ some(r)
       case _         ⇒ None
     }
   }
@@ -158,23 +158,23 @@ case class ExplorerZ(
       env.map(_._3).scan(loadInit)(adjLoadState).map(_.loaded)
       
     def query(f: ExportField, st: St) = f match {
-      case ExportSub(s)       ⇒ qsub(s, st)
+      case ExportCpd(s)       ⇒ qsub(s, st)
       case ExportCon(s)       ⇒ qcon(s, st)
       case ExportBio(s)       ⇒ qbio(s, st)
       case ExportStats(_,_)   ⇒ qstats
     }
 
-    def qsub(f: SubField, st: St): WidgetDesc[Unit,String,String] = f match {
-      case SubId           ⇒ txtQ(RP.id_[Sub.type])
-      case SubName         ⇒ stringQ
-      case SubCasNr        ⇒ stringQ
-      case SubProject      ⇒ qpro(st)
-      case SubAbs          ⇒ boolQ
-      case SubCreated      ⇒ dateQ
-      case SubMol(mf)      ⇒ molQ(mf)
-      case SubEditInfo(mf) ⇒ editQ(mf, quse(st))
-      case SubContainers   ⇒ noQ
-      case SubFil(ff)       ⇒ qfil(ff, st)
+    def qsub(f: CpdField, st: St): WidgetDesc[Unit,String,String] = f match {
+      case CpdId           ⇒ txtQ(RP.id_[Compound.type])
+      case CpdName         ⇒ stringQ
+      case CpdCasNr        ⇒ stringQ
+      case CpdProject      ⇒ qpro(st)
+      case CpdAbs          ⇒ boolQ
+      case CpdCreated      ⇒ dateQ
+      case CpdMol(mf)      ⇒ molQ(mf)
+      case CpdEditInfo(mf) ⇒ editQ(mf, quse(st))
+      case CpdContainers   ⇒ noQ
+      case CpdFil(ff)       ⇒ qfil(ff, st)
     }
 
     def qcon(f: ConField, st: St): WidgetDesc[Unit,String,String] = f match {
@@ -225,21 +225,21 @@ case class ExplorerZ(
 
   object Format extends ColumnControl with ExpDom
 
-  object BioZ extends Controller[BioStats,(Container.Id,Sub.Id)](_.bio, hui, url) {
+  object BioZ extends Controller[BioStats,(Container.Id,Compound.Id)](_.bio, hui, url) {
 
     private val BioStats = "biostats"
     private val BioStatsL = BioStats.length
   
-    def adjQuery(ids: List[(Container.Id,Sub.Id)]) = q ⇒ q
+    def adjQuery(ids: List[(Container.Id,Compound.Id)]) = q ⇒ q
   
     def read(s: String) =
       if (s startsWith BioStats) s drop BioStatsL split "_" toList match {
-        case a::b::Nil ⇒ (Read[Container.Id] read a, Read[Sub.Id] read b).mapN((_,_))
+        case a::b::Nil ⇒ (Read[Container.Id] read a, Read[Compound.Id] read b).mapN((_,_))
         case _         ⇒ None
       }
       else None
   
-    def toIdString(p: (Container.Id,Sub.Id)) = statsIdString(p)
+    def toIdString(p: (Container.Id,Compound.Id)) = statsIdString(p)
   
     def getId(s: BioStats) = statsId(s)
 

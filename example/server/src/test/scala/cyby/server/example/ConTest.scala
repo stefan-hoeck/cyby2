@@ -38,7 +38,7 @@ class ConTest extends ConImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Con-valid-1: new containers with an existing batch-nr are invalid"){
-    forAll{ (s: S.Srv, a: S.Add, i: Sub.Id) ⇒
+    forAll{ (s: S.Srv, a: S.Add, i: Compound.Id) ⇒
       val db  = Map(s.id -> s)
       val a2  = a.copy(batch = s.batch)
       val pp  = i :: hnil
@@ -51,7 +51,7 @@ class ConTest extends ConImplicits {
   }
 
   property("BR-Con-valid-2: changing a container's name to an existing one is invalid"){
-    forAll{ (s: S.Srv, o: S.Srv, b: Plain, i: Sub.Id) ⇒
+    forAll{ (s: S.Srv, o: S.Srv, b: Plain, i: Compound.Id) ⇒
       if (b.v.nonEmpty) {
         val pp  = i :: hnil
         val s2  = s.copy(batch = Pure(b))
@@ -121,12 +121,12 @@ class ConTest extends ConImplicits {
   //                         Util
   //----------------------------------------------------------------------
 
-  def est(st: St, s: SubS.Srv): S.EdSt = extract(S.edSt(st, s.id :: hnil))
+  def est(st: St, s: CompoundS.Srv): S.EdSt = extract(S.edSt(st, s.id :: hnil))
 
   property("ContainerS edEnv") {
-    forAll{ s: SubS.Srv ⇒
+    forAll{ s: CompoundS.Srv ⇒
       val st = subSt(s)
-      val e = PathNotFound(SubP(s.id.inc :: hnil)).e
+      val e = PathNotFound(CpdP(s.id.inc :: hnil)).e
 
       est(st,s).nodes shouldEq (s::st::hnil)
       errs(S.edSt(st,s.id.inc::hnil)) shouldEq Nel.of(e)
@@ -134,7 +134,7 @@ class ConTest extends ConImplicits {
   }
 
   property("ContainerS getSrv") {
-    forAll{ (s: SubS.Srv, c: S.Srv) ⇒
+    forAll{ (s: CompoundS.Srv, c: S.Srv) ⇒
       val st = conSt(c, s)
       val e = PathNotFound(ConP(c.id.inc :: s.id :: hnil)).e
 

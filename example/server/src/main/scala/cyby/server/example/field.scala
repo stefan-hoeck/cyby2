@@ -41,19 +41,19 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
   private def met[A,B](g: A ⇒ Link[Method.Id], h: B ⇒ Method.Id): Act[A,B] =
     link(g, h, _.metList)(_.name.v, _.id, RP.id_)
 
-  def sub(f: SubField): Act[Sub.Cli,SubS.Acc] = sub_(f, identity)
+  def sub(f: CpdField): Act[Compound.Cli,CompoundS.Acc] = sub_(f, identity)
 
-  def sub_[A](f: SubField, g: A ⇒ Sub.Cli): Act[A,SubS.Acc] = f match {
-    case SubMol(f)         ⇒ mol(f)(g(_).structure.v.o, _.structure.v.o)
-    case SubEditInfo(f)    ⇒ edit(f)(g(_).modified, _.modified)
-    case SubName           ⇒ string(g(_).name.v.v, _.name.v.v)
-    case SubCasNr          ⇒ string(g(_).casNr.v.v, _.casNr.v.v)
-    case SubProject        ⇒ pro(g(_).project.v, _.project.v)
-    case SubId             ⇒ id(g(_).id, _.id)
-    case SubAbs            ⇒ bool(g(_).abs.v, _.abs.v)
-    case SubCreated        ⇒ timestamp(g(_).created, _.created)
-    case SubFil(_)         ⇒ dummy
-    case SubContainers     ⇒ dummy
+  def sub_[A](f: CpdField, g: A ⇒ Compound.Cli): Act[A,CompoundS.Acc] = f match {
+    case CpdMol(f)         ⇒ mol(f)(g(_).structure.v.o, _.structure.v.o)
+    case CpdEditInfo(f)    ⇒ edit(f)(g(_).modified, _.modified)
+    case CpdName           ⇒ string(g(_).name.v.v, _.name.v.v)
+    case CpdCasNr          ⇒ string(g(_).casNr.v.v, _.casNr.v.v)
+    case CpdProject        ⇒ pro(g(_).project.v, _.project.v)
+    case CpdId             ⇒ id(g(_).id, _.id)
+    case CpdAbs            ⇒ bool(g(_).abs.v, _.abs.v)
+    case CpdCreated        ⇒ timestamp(g(_).created, _.created)
+    case CpdFil(_)         ⇒ dummy
+    case CpdContainers     ⇒ dummy
   }
 
   def con(f: ConField): Act[Container.Cli, ContainerS.Acc] = con_(f, identity)
@@ -91,7 +91,7 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
     case BioFil(_)         ⇒ dummy
   }
 
-  def fil(f: FilField): Act[Fil.Cli,SubFilS.Acc] = f match {
+  def fil(f: FilField): Act[Fil.Cli,CpdFilS.Acc] = f match {
     case FilId            ⇒ id(_.id, _.id)
     case FilName          ⇒ string(_.name.v.v, _.name.v.v)
     case FilComment       ⇒ string(_.comment.v.v, _.comment.v.v)

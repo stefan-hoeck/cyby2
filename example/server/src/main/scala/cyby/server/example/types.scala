@@ -8,7 +8,7 @@ package cyby
 package server
 package example
 
-import cyby.dat.example.{SubTreeEd, Project}
+import cyby.dat.example.{CpdTreeEd, Project}
 
 /**
   * Some utility type aliases
@@ -18,9 +18,9 @@ trait types {
 
   type ProAuthEnv = (List[Project.Id], AuthEnv)
 
-  type SubTree = SubTreeEd[BiodataEntryS.Ed,ContainerS.Ed,SubFilS.Ed,SubS.Ed]
+  type CpdTree = CpdTreeEd[BiodataEntryS.Ed,ContainerS.Ed,CpdFilS.Ed,CompoundS.Ed]
 
-  type SubTreeL = SubTreeEd[BiodataEntryS.LoadEd,ContainerS.LoadEd,SubFilS.LoadEd,SubS.LoadEd]
+  type CpdTreeL = CpdTreeEd[BiodataEntryS.LoadEd,ContainerS.LoadEd,CpdFilS.LoadEd,CompoundS.LoadEd]
 
   type StEnv = HQ[St,shapeless.HNil,shapeless.HNil]
 

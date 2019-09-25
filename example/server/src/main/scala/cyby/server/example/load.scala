@@ -28,16 +28,16 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
     load(ProT, _.pros, doLoad(ProjectS)(hnil))        >>=
     load(StoT, _.stos, doLoad(LocationS)(hnil))        >>=
     load(MetT, _.mets, doLoad(MethodS)(hnil))        >>=
-    load(SubT, _.subs, edSub)
+    load(CpdT, _.subs, edCpd)
 
   def doLoad(e: ExampleEditor)(p: e.ParentPath)(implicit D: Decoder[e.LoadEd]): Editor =
     s ⇒ st ⇒ parseAndDecodeE[e.LoadEd](s) flatMap (e.load(st,p,_))
 
-  val edSub: Editor = s ⇒ st ⇒ parseAndDecodeE[SubTreeL](s) flatMap {
-    case SubEdit(ed)       ⇒ SubS.load(st, hnil, ed)
+  val edCpd: Editor = s ⇒ st ⇒ parseAndDecodeE[CpdTreeL](s) flatMap {
+    case CpdEdit(ed)       ⇒ CompoundS.load(st, hnil, ed)
     case ConEdit(p, ed)    ⇒ ContainerS.load(st, p, ed)
     case BioEdit(p, ed)    ⇒ BiodataEntryS.load(st, p, ed)
-    case SubFilEdit(p, ed) ⇒ SubFilS.load(st, p, ed)
+    case CpdFilEdit(p, ed) ⇒ CpdFilS.load(st, p, ed)
     case ConFilEdit(p, ed) ⇒ ConFilS.load(st, p, ed)
     case BioFilEdit(p, ed) ⇒ BioFilS.load(st, p, ed)
   }

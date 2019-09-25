@@ -46,7 +46,7 @@ object Explorer extends util {
         """)
       ),
       example(
-        explorerDoc(NotEditing)(nodes(), nodes(), mkHeadRow(expEnv), dispSubs(expEnv))
+        explorerDoc(NotEditing)(nodes(), nodes(), mkHeadRow(expEnv), dispCpds(expEnv))
       ),
       div(cls := DT.Paragraph.c)(
         raw(s"""
@@ -168,7 +168,7 @@ object Explorer extends util {
         """)
       ),
       example(
-        explorerDoc(NotEditing)(nodes(), columnT(SubEditInfo(EditInfo.Summary).ef), nodes(),nodes())
+        explorerDoc(NotEditing)(nodes(), columnT(CpdEditInfo(EditInfo.Summary).ef), nodes(),nodes())
       ),
       h3(id := UId.FormattingDoc, cls := DT.H3.c)(raw("Conditional Formatting")),
       div(cls := DT.Paragraph.c)(
@@ -250,7 +250,7 @@ object Explorer extends util {
         """)
       ),
       example(
-        explorerDoc(NotEditing)(nodes(), nodes(), mkHeadRow(gridEnv), dispSubs(gridEnv))
+        explorerDoc(NotEditing)(nodes(), nodes(), mkHeadRow(gridEnv), dispCpds(gridEnv))
       ),
       div(cls := DT.Paragraph.c)(
         raw(s"""
@@ -264,8 +264,8 @@ object Explorer extends util {
     )
   )
 
-  def dispSubs(e: ExpEnv): Node = Txt.ul(cls := CT.SubTable.c)(
-    Txt.subItems[Sub.Cli](e, dispSub, s ⇒ UId Select subIdString(s.id))(e.dispEnv.st.subs) : _*
+  def dispCpds(e: ExpEnv): Node = Txt.ul(cls := CT.SubTable.c)(
+    Txt.subItems[Compound.Cli](e, dispCpd, s ⇒ UId Select subIdString(s.id))(e.dispEnv.st.subs) : _*
   )
 
   def dispStatsList(e: ExpEnv): Node = Txt.ul(cls := CT.SubTable.c)(

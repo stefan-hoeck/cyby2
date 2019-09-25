@@ -261,7 +261,7 @@ object Query extends util with QueryDocEnv {
       a case insensitive search by ${regexp}:
       """)
     ),
-    exampleQ(subRow(SubName, stringQ(Contains, "^3-Amino"))),
+    exampleQ(subRow(CpdName, stringQ(Contains, "^3-Amino"))),
 
     h3(id := UId.CombiningQueriesDoc, cls := DT.H3.c)(raw("Combining Queries")),
     div(cls := DT.Paragraph.c)(
@@ -334,11 +334,11 @@ object Query extends util with QueryDocEnv {
 
 
 
-  def idExmpl(s: String) = subRow(SubId, txtQ(RP.id_[Sub.type], s))
+  def idExmpl(s: String) = subRow(CpdId, txtQ(RP.id_[Compound.type], s))
 
-  def massExmpl(s: String) = subRow(SubMol(Mol.Mass), txtQ(RP.double_, s))
+  def massExmpl(s: String) = subRow(CpdMol(Mol.Mass), txtQ(RP.double_, s))
 
-  def subRow(f: SubField, q: Node, comp: Option[QComp] = None, neg: Boolean = false) =
+  def subRow(f: CpdField, q: Node, comp: Option[QComp] = None, neg: Boolean = false) =
     queryRow(comp, neg, queryF(f.ef), q)
 
   def conRow(f: ConField, q: Node, comp: Option[QComp] = None, neg: Boolean = false) =
@@ -366,6 +366,6 @@ object Query extends util with QueryDocEnv {
 
   lazy val ex3 = nodes(
     conRow(ConCreated, dateQ(">=", "2019-01-01")),
-    subRow(SubCreated, dateQ(">=", "2019-01-01"), some(QComp.And), true)
+    subRow(CpdCreated, dateQ(">=", "2019-01-01"), some(QComp.And), true)
   )
 }

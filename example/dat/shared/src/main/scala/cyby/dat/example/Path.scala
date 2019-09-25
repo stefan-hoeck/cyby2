@@ -27,8 +27,8 @@ sealed trait Path {
     case MetP(p)    ⇒ Path.csv(MetStr :: p)
     case ProP(p)    ⇒ Path.csv(ProStr :: p)
     case StoP(p)    ⇒ Path.csv(StoStr :: p)
-    case SubFilP(p) ⇒ Path.csv(SubFilStr :: p)
-    case SubP(p)    ⇒ Path.csv(SubStr :: p)
+    case CpdFilP(p) ⇒ Path.csv(SubFilStr :: p)
+    case CpdP(p)    ⇒ Path.csv(SubStr :: p)
     case SupP(p)    ⇒ Path.csv(SupStr :: p)
     case UseP(p)    ⇒ Path.csv(UseStr :: p)
     case RootP      ⇒ "root"
@@ -42,8 +42,8 @@ case class ConFilP(p: Container.FilPath)          extends Path
 case class ConP(p: Container.Path)                extends Path
 case class MetP(p: Method.Path)                extends Path
 case class ProP(p: Project.Path)                extends Path
-case class SubFilP(p: Sub.FilPath)          extends Path
-case class SubP(p: Sub.Path)       extends Path
+case class CpdFilP(p: Compound.FilPath)          extends Path
+case class CpdP(p: Compound.Path)       extends Path
 case class SupP(p: Sup.Path)       extends Path
 case class UseP(p: Use.Path)       extends Path
 case class StoP(p: Location.Path)       extends Path
@@ -71,8 +71,8 @@ object Path {
     case BioFilStr::t ⇒ uncsv(BioFilP, t)
     case ConStr::t    ⇒ uncsv(ConP, t)
     case ConFilStr::t ⇒ uncsv(ConFilP, t)
-    case SubStr::t    ⇒ uncsv(SubP, t)
-    case SubFilStr::t ⇒ uncsv(SubFilP, t)
+    case SubStr::t    ⇒ uncsv(CpdP, t)
+    case SubFilStr::t ⇒ uncsv(CpdFilP, t)
     case MetStr::t    ⇒ uncsv(MetP, t)
     case ProStr::t    ⇒ uncsv(ProP, t)
     case UseStr::t    ⇒ uncsv(UseP, t)

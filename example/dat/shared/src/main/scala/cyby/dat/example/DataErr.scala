@@ -28,9 +28,9 @@ import cyby.dat.{Plain, CasNr, Mol, FileName, Name}
 }
 
 case class BatchExists(b: Plain, p: Container.Path) extends DataErr
-case class CasNrExists(c: CasNr, p: Sub.Path) extends DataErr
+case class CasNrExists(c: CasNr, p: Compound.Path) extends DataErr
 case class Exists(n: Name, p: Path) extends DataErr
-case class SubExists(n: Plain, p: Sub.Path) extends DataErr
+case class CpdExists(n: Plain, p: Compound.Path) extends DataErr
 case class FilExists(f: FileName, p: Path) extends DataErr
 case class NotFound(url: String) extends DataErr
 case class PathNotFound(p: Path) extends DataErr
@@ -40,7 +40,7 @@ case class StillLinked(p: Path) extends DataErr
 case class ReadErr(s: String) extends DataErr
 case class QueryErr(f: ExportField, s: String) extends DataErr
 case class Serious(msg: String) extends DataErr
-case class StructureExists(m: Mol, p: Sub.Path) extends DataErr
+case class StructureExists(m: Mol, p: Compound.Path) extends DataErr
 case class Unset(s: String) extends DataErr
 case object AuthenticationFailed extends DataErr
 case object CantChangeAlias extends DataErr

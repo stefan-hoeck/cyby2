@@ -69,9 +69,9 @@ trait util {
   def asmblLink[A,B](find: (St,A) ⇒ DataE[B]): Asmbl[A,B] =
     Assemble.inst((st:St,a:A) ⇒ fromEither(find(st,a)))
  
-  def subPth(p: Sub.Path): String = s"${p.head}"
+  def subPth(p: Compound.Path): String = s"${p.head}"
  
-  def subFilPth(p: Sub.FilPath): String = s"${subPth(p.tail)}-${p.head}"
+  def subFilPth(p: Compound.FilPath): String = s"${subPth(p.tail)}-${p.head}"
 
   def conPth(p: Container.Path): String = s"${subPth(p.tail)}-${p.head}"
  

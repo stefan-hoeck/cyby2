@@ -24,7 +24,7 @@ trait Loc extends cyby.dat.Loc {
 
   def filField(s: FilField): String
 
-  def subField(s: SubField): String
+  def subField(s: CpdField): String
 
   def conField(s: ConField): String
 
@@ -61,7 +61,7 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case ProRes(r)          ⇒ Vector(Log info itemRes(proP,r))
     case MetRes(r)          ⇒ Vector(Log info itemRes(metP,r))
     case StoRes(r)          ⇒ Vector(Log info itemRes(stoP,r))
-    case SubRes(r)          ⇒ Vector(Log info itemRes(subP,r))
+    case CpdRes(r)          ⇒ Vector(Log info itemRes(subP,r))
     case SupRes(r)          ⇒ Vector(Log info itemRes(supP,r))
     case UseRes(r)          ⇒ Vector(Log info itemRes(useP,r))
     case ExportRes(p)       ⇒ Vector(Log info s"File ${p} ready. Download should start automatically.")
@@ -79,7 +79,7 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case CasNrExists(c,i)      ⇒ Log warn s"CAS Number $c already exists: (Code: $i)"
     case FilExists(f, p)       ⇒ Log warn s"file $f already exists: (ID: ${translatePath(p)})"
     case Exists(n, p)          ⇒ Log warn s"A ${pathType(p)._1} with name ${n} already exists. (ID: ${translatePath(p)})"
-    case SubExists(n, p)          ⇒ Log warn s"A ${pathType(SubP(p))._1} with name ${n} already exists. (ID: ${translatePath(SubP(p))})"
+    case CpdExists(n, p)       ⇒ Log warn s"A ${pathType(CpdP(p))._1} with name ${n} already exists. (ID: ${translatePath(CpdP(p))})"
     case StillLinked(p)        ⇒ Log warn s"This ${pathType(p)._1} is still linked to other data objects and cannot be deleted. (ID: ${translatePath(p)})"
     case InvalidCreds          ⇒ Log warn "invalid credentials"
     case NotFound(url)         ⇒ Log error s"the requested URL was not found: $url"
@@ -99,13 +99,13 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
   def pathType(p: Path): (String,String) = p match {
     case BioFilP(_) ⇒ filP
     case ConFilP(_) ⇒ filP
-    case SubFilP(_) ⇒ filP
+    case CpdFilP(_) ⇒ filP
     case BioP(_) ⇒ bioP
     case ConP(_) ⇒ conP
     case MetP(_) ⇒ metP
     case ProP(_) ⇒ proP
     case StoP(_) ⇒ stoP
-    case SubP(_) ⇒ subP
+    case CpdP(_) ⇒ subP
     case SupP(_) ⇒ supP
     case UseP(_) ⇒ useP
     case RootP   ⇒ ("Root", "Root")
@@ -115,12 +115,12 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case BioFilP(f::t) ⇒ s"${translatePath(BioP(t))}, ${filP._1} ${f}"
     case BioP(b::t)    ⇒ s"${translatePath(ConP(t))}, ${bioP._1} ${b}"
     case ConFilP(f::t) ⇒ s"${translatePath(ConP(t))}, ${filP._1} ${f}"
-    case ConP(c::t)    ⇒ s"${translatePath(SubP(t))}, ${conP._1} ${c}"
+    case ConP(c::t)    ⇒ s"${translatePath(CpdP(t))}, ${conP._1} ${c}"
     case MetP(m::HNil) ⇒ s"${metP._1} ${m}"
     case ProP(p::HNil) ⇒ s"${proP._1} ${p}"
     case StoP(p::HNil) ⇒ s"${stoP._1} ${p}"
-    case SubFilP(f::t) ⇒ s"${translatePath(SubP(t))}, ${filP._1} ${f}"
-    case SubP(s::HNil) ⇒ s"${subP._1} ${s}"
+    case CpdFilP(f::t) ⇒ s"${translatePath(CpdP(t))}, ${filP._1} ${f}"
+    case CpdP(s::HNil) ⇒ s"${subP._1} ${s}"
     case SupP(s::HNil) ⇒ s"${supP._1} ${s}"
     case UseP(u::HNil) ⇒ s"${useP._1} ${u}"
     case RootP         ⇒ s"Root"
@@ -139,17 +139,17 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case n ⇒ s"${n} entries out of $total found (starting at $start)."
   }
 
-  def subField(s: SubField): String = s match {
-    case SubId           ⇒ name("id")
-    case SubName         ⇒ name("name")
-    case SubAbs          ⇒ name("abs")
-    case SubCasNr        ⇒ name("casNr")
-    case SubProject      ⇒ name("project")
-    case SubCreated      ⇒ name("created")
-    case SubContainers   ⇒ name("containers")
-    case SubMol(f)       ⇒ molField(f)
-    case SubEditInfo(f)  ⇒ editInfoField(f)
-    case SubFil(f)       ⇒ filQuery(f)
+  def subField(s: CpdField): String = s match {
+    case CpdId           ⇒ name("id")
+    case CpdName         ⇒ name("name")
+    case CpdAbs          ⇒ name("abs")
+    case CpdCasNr        ⇒ name("casNr")
+    case CpdProject      ⇒ name("project")
+    case CpdCreated      ⇒ name("created")
+    case CpdContainers   ⇒ name("containers")
+    case CpdMol(f)       ⇒ molField(f)
+    case CpdEditInfo(f)  ⇒ editInfoField(f)
+    case CpdFil(f)       ⇒ filQuery(f)
   }
 
   def conField(s: ConField): String = s match {
@@ -205,7 +205,7 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case ProT   ⇒ "Project"
     case StatsT ⇒ "Statistics"
     case StoT   ⇒ "Location"
-    case SubT   ⇒ "Substance"
+    case CpdT   ⇒ "Compound"
     case SupT   ⇒ "Supplier"
     case UseT   ⇒ "User"
   }
@@ -218,7 +218,7 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
     case ProT   ⇒ "Projects"
     case StatsT ⇒ "Statistics"
     case StoT   ⇒ "Locations"
-    case SubT   ⇒ "Substances"
+    case CpdT   ⇒ "Compounds"
     case SupT   ⇒ "Suppliers"
     case UseT   ⇒ "Users"
   }

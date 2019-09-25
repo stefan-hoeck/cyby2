@@ -32,8 +32,8 @@ class DataTest extends DataSuite with Generators {
   checkLaws("Con eqv", EqLaws[Container.Cli].eqv)
   checkLaws("Con json", JsonLaws[Container.Cli].fromToStripped)
 
-  checkLaws("Sub eqv", EqLaws[Sub.Cli].eqv)
-  checkLaws("Sub json", JsonLaws[Sub.Cli].fromToStripped)
+  checkLaws("Cpd eqv", EqLaws[Compound.Cli].eqv)
+  checkLaws("Cpd json", JsonLaws[Compound.Cli].fromToStripped)
 
   checkLaws("Sup eqv", EqLaws[Sup.Cli].eqv)
   checkLaws("Sup json", JsonLaws[Sup.Cli].fromToStripped)
@@ -41,8 +41,8 @@ class DataTest extends DataSuite with Generators {
   checkLaws("FilField eqv", EqLaws[FilField].eqv)
   checkLaws("FilField json", JsonLaws[FilField].fromToStripped)
 
-  checkLaws("SubField eqv", EqLaws[SubField].eqv)
-  checkLaws("SubField json", JsonLaws[SubField].fromToStripped)
+  checkLaws("CpdField eqv", EqLaws[CpdField].eqv)
+  checkLaws("CpdField json", JsonLaws[CpdField].fromToStripped)
 
   checkLaws("ConField eqv", EqLaws[ConField].eqv)
   checkLaws("ConField json", JsonLaws[ConField].fromToStripped)

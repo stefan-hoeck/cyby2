@@ -57,7 +57,7 @@ object Container extends DataCmp {
   /**
     * Path leading to a given container in the data tree.
     */
-  type Path      = Id::Sub.Path
+  type Path      = Id::Compound.Path
 
   /**
     * Path leading to a file linked to a container entry.

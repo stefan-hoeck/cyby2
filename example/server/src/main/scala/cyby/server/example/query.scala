@@ -25,7 +25,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   object MP extends CyByMonad[Pure,LoggedInEnv,Unit]
 
   def prog(r: Request): M.Prog[Result] = r match {
-    case POST -> _/_/DT(SubT) ⇒ runSubs(r)
+    case POST -> _/_/DT(CpdT) ⇒ runCpds(r)
     case GET  -> _/_/DT(ProT) ⇒ run(ProjectS)(_.pros)
     case GET  -> _/_/DT(StoT) ⇒ run(LocationS)(_.stos)
     case GET  -> _/_/DT(SupT) ⇒ run(SupS)(_.sups)
@@ -37,7 +37,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   def run(e: DBEditor)(get: St ⇒ Map[e.Id,e.Srv]): M.Prog[Result] =
     M.ask >>= { le ⇒ M wrapValidated e.getAll(le.authSt, get(le.st)) }
 
-  def runSubs(r: Request): M.Prog[Result] = for {
+  def runCpds(r: Request): M.Prog[Result] = for {
     le     <- M.ask
     q      <- M.decodeReq[ZQuery](r)
     res    <- q.qtype match {
@@ -46,41 +46,41 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
               }
   } yield res
 
-  def querySubsUnsorted(q: ZQ, le: LoggedInEnv): MP.Prog[List[Sub.Cli]] = for {
+  def queryCpdsUnsorted(q: ZQ, le: LoggedInEnv): MP.Prog[List[Compound.Cli]] = for {
       filter <- MP wrapValidated readFilter(q, le.st)
-      db     =  filter(SubS.accDB(le.authEnv, le.st.subs))
+      db     =  filter(CompoundS.accDB(le.authEnv, le.st.subs))
       _      <- MP.debug(s"Mapped result: Size ${db.size}")
-      r      <- MP wrapValidated SubS.dbasmbl.run(le.st, db)
+      r      <- MP wrapValidated CompoundS.dbasmbl.run(le.st, db)
       _      <- MP.debug(s"Assembled result: Size ${r.size}")
     } yield r
 
-  def querySubs(q: ZQuery, le: LoggedInEnv): MP.Prog[List[Sub.Cli]] =
-    querySubsUnsorted(q.query, le).map{ r ⇒ 
+  def queryCpds(q: ZQuery, le: LoggedInEnv): MP.Prog[List[Compound.Cli]] =
+    queryCpdsUnsorted(q.query, le).map{ r ⇒ 
       val sort = getSort(q)
 
       if (q.reverse) sort(r).reverse else sort(r)
     }
 
   def subQuery(q: ZQuery, le: LoggedInEnv): MP.Prog[Result] =
-    querySubs(q, le) map (ss ⇒ 
-      SubRes(Found(ss drop q.start take q.count, ss.size, q.start))
+    queryCpds(q, le) map (ss ⇒ 
+      CpdRes(Found(ss drop q.start take q.count, ss.size, q.start))
     )
 
   def statsQuery(q: ZQuery, le: LoggedInEnv): MP.Prog[Result] =
-    querySubsUnsorted(q.query, le).map(Sub.toStats).map{ r ⇒ 
+    queryCpdsUnsorted(q.query, le).map(Compound.toStats).map{ r ⇒ 
       val sort = getStatsSort(q)
 
       val sorted  = if (q.reverse) sort(r).reverse else sort(r)
       BioStatsRes(Found(sorted drop q.start take q.count, r.size, q.start))
     }
 
-  def getSort(q: ZQuery): List[Sub.Cli] ⇒ List[Sub.Cli] = q.sort match {
-    case ExportSub(f) ⇒ field.sub(f).sort
+  def getSort(q: ZQuery): List[Compound.Cli] ⇒ List[Compound.Cli] = q.sort match {
+    case ExportCpd(f) ⇒ field.sub(f).sort
     case _            ⇒ _ sortBy (_.id)
   }
 
   def getStatsSort(q: ZQuery): List[BioStats] ⇒ List[BioStats] = q.sort match {
-    case ExportSub(f)      ⇒ field.sub_[BioStats](f, _.sub).sort
+    case ExportCpd(f)      ⇒ field.sub_[BioStats](f, _.sub).sort
     case ExportCon(f)      ⇒ field.con_[BioStats](f, _.con).sort
     case ExportStats(m,st) ⇒ _ sortBy (_.stats get m map st.get)
     case _                 ⇒ _ sortBy (_.sub.id)
@@ -98,32 +98,32 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     RP.doubleO(stats(_) get p map tpe.get)
   }
 
-  def expFilter(f: ExportField, st: St): SubS.MF = {
-    def con(t: ContainerS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.containers)
-    def bio(t: BiodataEntryS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.bio))
-    def bioFil(t: BioFilS.MF): SubS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
-    def subFil(t: SubFilS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.files)
-    def conFil(t: ConFilS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.files))
+  def expFilter(f: ExportField, st: St): CompoundS.MF = {
+    def con(t: ContainerS.MF): CompoundS.MF = (b,s) ⇒ lensed(t(b,s))(CompoundS.L.containers)
+    def bio(t: BiodataEntryS.MF): CompoundS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.bio))
+    def bioFil(t: BioFilS.MF): CompoundS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
+    def subFil(t: CpdFilS.MF): CompoundS.MF = (b,s) ⇒ lensed(t(b,s))(CompoundS.L.files)
+    def conFil(t: ConFilS.MF): CompoundS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.files))
 
     f match {
-      case ExportSub(SubFil(ff)) ⇒ subFil(toMapFilter(field fil ff que st))
+      case ExportCpd(CpdFil(ff)) ⇒ subFil(toMapFilter(field fil ff que st))
       case ExportCon(ConFil(ff)) ⇒ conFil(toMapFilter(field fil ff que st))
       case ExportBio(BioFil(ff)) ⇒ bioFil(toMapFilter(field fil ff que st))
-      case ExportSub(sf)         ⇒ toMapFilter(field sub sf que st)
+      case ExportCpd(sf)         ⇒ toMapFilter(field sub sf que st)
       case ExportCon(cf)         ⇒ con(toMapFilter(field con cf que st))
       case ExportBio(bf)         ⇒ bio(toMapFilter(field bio bf que st))
       case s@ExportStats(_,st)   ⇒ con(toMapFilter(statsPred(s.mid, st)))
     }
   }
 
-  lazy val join: (Map[Sub.Id,SubS.Acc],Map[Sub.Id,SubS.Acc]) ⇒ Map[Sub.Id,SubS.Acc] = {
-    val jf = joinMaps[Fil.Id,SubFilS.Acc]((f,_) ⇒ f)
+  lazy val join: (Map[Compound.Id,CompoundS.Acc],Map[Compound.Id,CompoundS.Acc]) ⇒ Map[Compound.Id,CompoundS.Acc] = {
+    val jf = joinMaps[Fil.Id,CpdFilS.Acc]((f,_) ⇒ f)
     val jb = joinMaps[BiodataEntry.Id,BiodataEntryS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files)))
     val jc = joinMaps[Container.Id,ContainerS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), bio = jb(a.bio,b.bio)))
 
-    joinMaps[Sub.Id,SubS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), containers = jc(a.containers,b.containers)))
+    joinMaps[Compound.Id,CompoundS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), containers = jc(a.containers,b.containers)))
   }
 
-  def readFilter(q: Q[ExportField], st: St): DataV[MapFilter[Sub.Id,SubS.Acc]] =
+  def readFilter(q: Q[ExportField], st: St): DataV[MapFilter[Compound.Id,CompoundS.Acc]] =
     mapErr(Q.mapper(q)((f,neg,s) ⇒ expFilter(f, st)(neg, s))(join))(DataErr.queryErr)
 }

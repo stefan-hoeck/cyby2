@@ -32,10 +32,10 @@ object ContainerS extends ChildEditor {
   //                         Util
   //----------------------------------------------------------------------
   
-  val parent     = SubS
+  val parent     = CompoundS
   val notFound   = p ⇒ PathNotFound(ConP(p))
 
-  val dbL        = lens[SubS.Srv].containers
+  val dbL        = lens[CompoundS.Srv].containers
   val getId      = _.id
 
   def envs(ee: Env, edSt: EdSt) ={
@@ -54,11 +54,11 @@ object ContainerS extends ChildEditor {
   //                         Valdation
   //----------------------------------------------------------------------
 
-  val exists = (p: Sub.Path) ⇒ (i: Container.Id,n: Plain) ⇒ BatchExists(n, i::p)
+  val exists = (p: Compound.Path) ⇒ (i: Container.Id,n: Plain) ⇒ BatchExists(n, i::p)
   val bo   = (b: Plain) ⇒ if (b.v.nonEmpty) some(b) else none[Plain]
   val bsrv = (s: Srv) ⇒ s.batch map bo
 
-  val valid = ValidatorImpl[(Sub.Path,DB),(Sub.Path,DB),Unit](
+  val valid = ValidatorImpl[(Compound.Path,DB),(Compound.Path,DB),Unit](
     (p,u)   ⇒ uniqAddO(p._2, u.batch map bo)(bsrv)(exists(p._1)),
     (p,o,u) ⇒ uniqModO(p._2, o.id, u.batch map bo)(bsrv)(exists(p._1)),
     (_,_,_) ⇒ Nil,

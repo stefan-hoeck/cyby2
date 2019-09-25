@@ -18,7 +18,7 @@ import shapeless.ops.record._
   *
   * Look at cyby.dat.example.Sup for a detailed description about
   * the type parameters used. Also, look at the companion object and
-  * cyby.server.example.SubFilS for aliases with often used type parameters.
+  * cyby.server.example.CpdFilS for aliases with often used type parameters.
   *
   * @tparam F:  Effect, in which fields are wrapped. Typically set
   *             to Pure for mandatory fields and Maybe if fields

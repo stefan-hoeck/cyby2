@@ -13,11 +13,11 @@ import cats.implicits.{none ⇒ _, _}
 import cyby.dat._, cyby.dat.example._
 import shapeless.{::}
 
-object SubFilS extends FilEditor {
-  val parent   = SubS
-  val notFound = p ⇒ PathNotFound(SubFilP(p))
-  val dbL      = lens[SubS.Srv].files
-  val pth      = SubFilP
+object CpdFilS extends FilEditor {
+  val parent   = CompoundS
+  val notFound = p ⇒ PathNotFound(CpdFilP(p))
+  val dbL      = lens[CompoundS.Srv].files
+  val pth      = CpdFilP
 
   def proIds(e: EdSt) = e.nodes match {
     case s::_ ⇒ List(s.project.v)

@@ -16,7 +16,7 @@ import cyby.dat.{Mol ⇒ DMol, _}, example._
 case class St(
   pros: ProjectS.DB,
   stos: LocationS.DB,
-  subs: SubS.DB,
+  subs: CompoundS.DB,
   sups: SupS.DB,
   mets: MethodS.DB,
   uses: UseS.DB,
@@ -51,10 +51,10 @@ case class St(
     pros.values.toList flatMap { p ⇒ p.owner.v :: p.users.v }
 
   def subElems[A](
-    sub: SubS.Srv ⇒ List[A],
+    sub: CompoundS.Srv ⇒ List[A],
     con: ContainerS.Srv ⇒ List[A],
     bio: BiodataEntryS.Srv ⇒ List[A],
-    fil: SubFilS.Srv ⇒ List[A],
+    fil: CpdFilS.Srv ⇒ List[A],
   ): List[A] = {
     val ss = subs.toList map (_._2)
     val cs = ss flatMap (_.containers.toList map (_._2))
@@ -91,21 +91,21 @@ object St {
   implicit val eqI: cats.Eq[St] = cats.Eq.fromUniversalEquals
 
   lazy val defaultSettings: USettings = UserSettings(
-    List(SubMol(DMol.Structure).ef,
-         SubId.ef,
-         SubName.ef,
-         SubCasNr.ef,
-         SubProject.ef,
-         SubMol(DMol.Mass).ef,
-         SubMol(DMol.Formula).ef,
-         SubAbs.ef,
+    List(CpdMol(DMol.Structure).ef,
+         CpdId.ef,
+         CpdName.ef,
+         CpdCasNr.ef,
+         CpdProject.ef,
+         CpdMol(DMol.Mass).ef,
+         CpdMol(DMol.Formula).ef,
+         CpdAbs.ef,
        ),
 
-    List(SubMol(DMol.Structure).ef,
-         SubId.ef,
-         SubMol(DMol.Mass).ef,
-         SubMol(DMol.LogP).ef,
-         SubMol(DMol.Tpsa).ef,
+    List(CpdMol(DMol.Structure).ef,
+         CpdId.ef,
+         CpdMol(DMol.Mass).ef,
+         CpdMol(DMol.LogP).ef,
+         CpdMol(DMol.Tpsa).ef,
        ),
 
     Map(), Map(), Map(), Map(), None, None, None, None, None, None, None, None

@@ -25,7 +25,7 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
     val l = lens[St]
   
     def accumS(s: St, r: Option[Result]): St = r match {
-      case Some(SubRes(r)) ⇒ l.subs.modify(s)(modRoot(r)(_.id))
+      case Some(CpdRes(r)) ⇒ l.subs.modify(s)(modRoot(r)(_.id))
       case Some(ProRes(r)) ⇒ l.pros.modify(s)(modRoot(r)(_.id))
       case Some(StoRes(r)) ⇒ l.stos.modify(s)(modRoot(r)(_.id))
       case Some(SupRes(r)) ⇒ l.sups.modify(s)(modRoot(r)(_.id))
@@ -119,7 +119,7 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
     // Export
     // ---------------------------------------------------------------
     
-    def subField(p: SubField ⇒ Boolean): SelectDesc[SubField] =
+    def subField(p: CpdField ⇒ Boolean): SelectDesc[CpdField] =
       selDescEnumP(p)(WT.Field2Sel, _ locName loc)
   
     def conField(p: ConField ⇒ Boolean): SelectDesc[ConField] =
@@ -134,15 +134,15 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
     def expDescP(
       st:    St,
       expP:  DataType ⇒ Boolean,
-      subP:  SubField ⇒ Boolean,
+      subP:  CpdField ⇒ Boolean,
       conP:  ConField ⇒ Boolean,
       bioP:  BioField ⇒ Boolean,
       wtMod: WT ⇒ WT,
       comp:  CT,// = CT.ExportDetailRow,
     ): WidgetDesc[Select,ExF,ExF] = {
       val mkSig = (ef: DataType) ⇒ (o: Option[ExF]) ⇒ ef match {
-        case SubT   ⇒ subField(subP).widgetMod(wtMod).desc.map(ExportSub(_).f)
-                        .signalO(o collect { case ExportSub(f) ⇒ f})
+        case CpdT   ⇒ subField(subP).widgetMod(wtMod).desc.map(ExportCpd(_).f)
+                        .signalO(o collect { case ExportCpd(f) ⇒ f})
   
         case ConT   ⇒ conField(conP).widgetMod(wtMod).desc.map(ExportCon(_).f)
                         .signalO(o collect { case ExportCon(f) ⇒ f})
@@ -171,7 +171,7 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
       mode match {
         case MethodTable ⇒ expDescP(st, _.inStatsTable, _.inColumn,
           _.inColumn, _.inColumn, WT.Export, CT.ExportDetailRow)
-        case _ ⇒ expDescP(st, _.inSubTable, _.inColumn, _.inColumn,
+        case _ ⇒ expDescP(st, _.inCpdTable, _.inColumn, _.inColumn,
           _.inColumn, WT.Export, CT.ExportDetailRow)
       }
   

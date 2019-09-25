@@ -19,7 +19,7 @@ import shapeless.ops.record._
   *
   * Look at cyby.dat.example.Sup for a detailed description about
   * the type parameters used. Also, look at the companion object and
-  * cyby.server.example.SubS for aliases with often used type parameters.
+  * cyby.server.example.CompoundS for aliases with often used type parameters.
   *
   * @tparam F:  Effect, in which fields are wrapped. Typically set
   *             to Pure for mandatory fields and Maybe if fields
@@ -32,7 +32,7 @@ import shapeless.ops.record._
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Sub[F[_],ID,SU,P,CS,FS,CR,MO](
+case class Compound[F[_],ID,SU,P,CS,FS,CR,MO](
   id:                     ID,
   name:                   F[Plain],
   structure:              F[Maybe[SU]],
@@ -45,7 +45,7 @@ case class Sub[F[_],ID,SU,P,CS,FS,CR,MO](
   modified:               MO,
 )
 
-object Sub extends DataCmp {
+object Compound extends DataCmp {
   /**
     * Path leading to a given substance in the data tree.
     */
@@ -57,9 +57,9 @@ object Sub extends DataCmp {
   type FilPath   = Fil.Id::Path
 
   /**
-    * Substances as seen by the client.
+    * Compounds as seen by the client.
     */
-  type Cli       = Sub[Pure,Id,Mol,Link[Project.AccId],List[Container.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Compound[Pure,Id,Mol,Link[Project.AccId],List[Container.Cli],List[Fil.Cli],TimeStamp,EditInfo]
 
   /**
     * Collects a list of statistics entries from a
@@ -78,7 +78,7 @@ object Sub extends DataCmp {
   val lbls@(id::name::structure::abs::casNr::project::containers::files::created::modified::HNil) = Keys[lblG.Repr].apply
   implicit lazy val toMolI: ToMol[Cli] = ToMol(_.id.v, _.structure.v.o)
 
-  implicit def eqI[F[_],ID,SU,P,CS,FS,CR,MO]: cats.Eq[Sub[F,ID,SU,P,CS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,SU:D,P:D,CS:D,FS:D,CR:D,MO:D]: D[Sub[F,ID,SU,P,CS,FS,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,SU:E,P:E,CS:E,FS:E,CR:E,MO:E]: E[Sub[F,ID,SU,P,CS,FS,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,SU,P,CS,FS,CR,MO]: cats.Eq[Compound[F,ID,SU,P,CS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,SU:D,P:D,CS:D,FS:D,CR:D,MO:D]: D[Compound[F,ID,SU,P,CS,FS,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,SU:E,P:E,CS:E,FS:E,CR:E,MO:E]: E[Compound[F,ID,SU,P,CS,FS,CR,MO]] = deriveEncoder
 }

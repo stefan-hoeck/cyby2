@@ -38,7 +38,7 @@ class FilTest extends FilImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Con-valid-1: new files with an existing path are invalid"){
-    forAll{ (s: S.Srv, a: S.Add, si: Sub.Id, ci: Container.Id) ⇒
+    forAll{ (s: S.Srv, a: S.Add, si: Compound.Id, ci: Container.Id) ⇒
       val db  = Map(s.id -> s)
       val a2  = a.copy(path = s.path)
       val pp  = ci :: si :: hnil
@@ -49,7 +49,7 @@ class FilTest extends FilImplicits {
   }
 
   property("BR-Con-valid-2: changing a file's path to an existing one is invalid"){
-    forAll{ (s: S.Srv, o: S.Srv, b: FileName, si: Sub.Id, ci: Container.Id) ⇒
+    forAll{ (s: S.Srv, o: S.Srv, b: FileName, si: Compound.Id, ci: Container.Id) ⇒
       val pp  = ci :: si :: hnil
       val s2  = s.copy(path = Pure(b))
       val db  = Map(s2.id -> s2)
@@ -102,11 +102,11 @@ class FilTest extends FilImplicits {
   //                         Util
   //----------------------------------------------------------------------
 
-  def est(st: St, s: SubS.Srv, c: ContainerS.Srv): S.EdSt =
+  def est(st: St, s: CompoundS.Srv, c: ContainerS.Srv): S.EdSt =
     extract(S.edSt(st, c.id :: s.id :: hnil))
 
   property("ConFil edEnv") {
-    forAll{ (s: SubS.Srv, c: ContainerS.Srv) ⇒
+    forAll{ (s: CompoundS.Srv, c: ContainerS.Srv) ⇒
       val st = conSt(c,s)
       val e = PathNotFound(ConP(c.id.inc :: s.id :: hnil)).e
 
@@ -116,7 +116,7 @@ class FilTest extends FilImplicits {
   }
 
   property("ConFil getSrv") {
-    forAll{ (s: SubS.Srv, c: ContainerS.Srv, b: S.Srv) ⇒
+    forAll{ (s: CompoundS.Srv, c: ContainerS.Srv, b: S.Srv) ⇒
       val st = conFilSt(b, c, s)
       val e = PathNotFound(ConFilP(b.id.inc :: c.id :: s.id :: hnil)).e
 
