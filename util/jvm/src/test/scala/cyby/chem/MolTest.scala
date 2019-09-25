@@ -15,14 +15,14 @@ class MolTest extends CyBySuite with Generators {
   property("structure isomorphism round trip"){
     forAll{ m: Mol ⇒ 
       val m2: Mol = Mol.read(m.structure.v).get
-      assert(m.isomorph(m2.mol, m2.fingerprint))
+      assert(m2 == m)
     }
   }
 
   property("structure subgraph round trip"){
     forAll{ m: Mol ⇒ 
-      val (m2,fp) = (chem readForQuery m.structure.v).toOption.get
-      assert(m.hasSubgraph(m2, fp))
+      val q = QueryMol.read(m.structure.v).get
+      assert(q isSubgraphOf m)
     }
   }
 }

@@ -71,8 +71,8 @@ trait fields extends ServerEnv {
   }
 
   private val subStructureP: RP[Option[Mol]] = s ⇒ 
-    (chem readForQuery s).toOption.map{
-      case (m,fp) ⇒ (m2: Option[Mol]) ⇒ m2.exists (_.hasSubgraph(m, fp))
+    chem.QueryMol read s map {
+      qm ⇒ (m2: Option[Mol]) ⇒ m2 exists qm.isSubgraphOf
     }
 
   private val exactStructureP: RP[Option[Mol]] = s ⇒ 

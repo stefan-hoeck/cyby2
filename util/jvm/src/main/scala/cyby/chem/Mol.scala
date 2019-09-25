@@ -7,10 +7,10 @@
 package cyby
 package chem
 
+import cats.data.EitherT
 import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat.{Mol ⇒ DMol, Formula, MolFile, Svg}
-import cyby.query.{ReadPred ⇒ RP}
 
 import io.circe.{Decoder, Encoder, HCursor, DecodingFailure}
 import io.circe.generic.JsonCodec
@@ -27,7 +27,7 @@ case class Mol(
   svg:         Svg,
   inchi:       String,
   fingerprint: BitSet,
-  mol:         Molecule,
+  mol:         MolPure,
   logP:        Option[Double],
   tpsa:        Option[Double],
   lipinski:    Option[Boolean],
@@ -45,14 +45,6 @@ case class Mol(
     fingerprint.toList,
     logP, tpsa, lipinski, smiles
   )
-
-  def isomorph(m: Molecule, fp2: BitSet): Boolean =
-    fp2.subsetOf(fingerprint) && chem.iso.isIsomorph(mol, m)
-
-  def hasSubgraph(m: Molecule, fp2: BitSet): Boolean =
-    fp2.subsetOf(fingerprint) && isSubgraph(m)
-
-  def isSubgraph(m: Molecule): Boolean = chem.iso.isSubgraph(mol, m)
 
   def toDatMol: DMol = DMol(structure, svg, inchi, mass, exactMass, formula, logP, tpsa, lipinski, smiles)
 
@@ -79,30 +71,39 @@ object Mol {
       }, some(_)
     )
 
-  def readE(m: MolFile): ErrNel[Throwable,Mol] = for {
-    p        <- readMol(m) <+> readSmiles(m)
-    (s2,mol) = p
-    svg      <- chem toSvg mol
-    inchi    <- chem toInchi mol
-    fo       <- chem formula mol
-    m        <- chem molWeight mol
-    em       <- chem exactMass mol
-    _        <- chem aromatize mol
-    _        <- chem addExplicitHydrogens mol
-    fp       <- chem calcFingerprint mol
-  } yield Mol(s2, svg, inchi, fp, mol, chem xlogP mol, chem tpsa mol, chem lipinski mol, chem.toSmiles(mol).toOption, fo, m, em)
+  def readE(m: MolFile): ErrNel[Throwable,Mol] = {
+    def run[S]: MutableMol.ResST[S,Mol] = for {
+      p        <- readMol[S](m) orElse readSmiles(m)
+      (s2,mol) = p
+      svg      <- MutableMol toSvg mol
+      inchi    <- MutableMol toInchi mol
+      fo       <- MutableMol formula mol
+      m        <- MutableMol molWeight mol
+      em       <- MutableMol exactMass mol
+      _        <- MutableMol aromatize mol
+      _        <- MutableMol addExplicitHydrogens mol
+      fp       <- MutableMol calcFingerprint mol
+      logp     <- MutableMol xlogP mol
+      tpsa     <- MutableMol tpsa mol
+      lip      <- MutableMol lipinski mol
+      smi      <- MutableMol toSmiles mol
+      mp       <- EitherT.liftF(mol.unsafeFreeze)
+    } yield Mol(s2, svg, inchi, fp, mp, logp, tpsa, lip, smi, fo, m, em)
+
+    ST.runST(new Forall[ErrNel[Throwable,Mol]]{def apply[S] = run[S].value})
+  }
 
   def toDecE[A](e: Either[Nel[Throwable],A]): Either[DecodingFailure,A] =
     e.leftMap(n ⇒ DecodingFailure.fromThrowable(n.head,Nil))
 
-  private def readMol(m: MolFile) =
-    chem readMol m.v map (m -> _)
+  private def readMol[S](m: MolFile) =
+    MutableMol.readMol[S](m.v).map (m -> _)
 
-  def readSmiles(m: MolFile) = for {
-    mol <- chem readSmiles m.v
-    _   <- chem generate2dCoords mol
-    _   <- chem kekulize mol
-    m2  <- chem writeMol mol
+  def readSmiles[S](m: MolFile) = for {
+    mol <- MutableMol.readSmiles[S](m.v)
+    _   <- MutableMol.generate2dCoords(mol)
+    _   <- MutableMol.kekulize(mol)
+    m2  <- MutableMol.writeMol(mol)
   } yield m2 -> mol
 
   implicit lazy val encI: Encoder[Mol] =
@@ -125,17 +126,24 @@ object Mol {
   lipinski:    Option[Boolean],
   smiles:      Option[String],
 ){
-  def toMol: Either[DecodingFailure,Mol] = Mol.toDecE(
-    for {
-      mol <- chem readMol structure.v
-      fo  <- chem formula mol
-      m   <- chem molWeight mol
-      em  <- chem exactMass mol
-      _   <- chem aromatize mol
-      _   <- chem addExplicitHydrogens mol
-      smi = smiles orElse chem.toSmiles(mol).toOption
-    } yield Mol(structure, svg, inchi, BitSet(fingerprint: _*), mol, logP, tpsa, lipinski, smi, fo, m, em)
-  )
+  def toMol: Either[DecodingFailure,Mol] = {
+    def run[S]: MutableMol.ResST[S,Mol] = for {
+      mol      <- MutableMol.readMol[S](structure.v)
+      fo       <- MutableMol formula mol
+      m        <- MutableMol molWeight mol
+      em       <- MutableMol exactMass mol
+      _        <- MutableMol aromatize mol
+      _        <- MutableMol addExplicitHydrogens mol
+      mp       <- EitherT.liftF(mol.unsafeFreeze)
+      smi      <- smiles.fold[MutableMol.ResST[S,Option[String]]](
+                    MutableMol.toSmiles(mol)
+                  )(s ⇒ MutableMol.pureRes[S,Option[String]](some(s)))
+    } yield Mol(structure, svg, inchi, BitSet(fingerprint: _*), mp, logP, tpsa, lipinski, smiles, fo, m, em)
+
+    Mol.toDecE(
+      ST.runST(new Forall[ErrNel[Throwable,Mol]]{def apply[S] = run[S].value})
+    )
+  }
 }
 
 object MolRepr
