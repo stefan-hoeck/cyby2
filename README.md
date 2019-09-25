@@ -83,45 +83,44 @@ Setting up the Web Server
 
 The example application is designed to be used together
 with an HTTP server like the [Apache HTTP Server](https://httpd.apache.org/).
-This web server should then be set up as a 
+This web server should be set up as a 
 as a reverse proxy forwarding certain
 calls to a locally running instance of the CyBy<sup>2</sup> server.
 The principle together with the required modules is explained
 on the [Apache webpage](https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html).
 
-After installing the web server of your choice on your system, create a
-subfolder for the CyBy<sup>2</sup> page and make sure the current
-user can write to it. For instance, when using Apache HTTP
-server under Ubuntu as user "paul":
+We describe here how to install and setup the web server under Ubuntu 
+version 18.04.1 LTS assuming a user named 'paul'.
+Installation on other derivatives of Ubuntu should be identical.
+Other Linux distributions might require sligtly different steps.
 
 ```
+  $ sudo apt install apache2
   $ sudo mkdir /var/www/html/cyby
   $ sudo chown paul /var/www/html/cyby
 ```
 
-Finish setting up the configuration of your web page as
-described in your web server's documentation. Make sure, that
-the web server is setup as a reverse proxy and forwards
-calls to "/cyby-serv/" to the locally running CyBy<sup>2</sup>-server:
-For instance, with Apache HTTP Server and the CyBy<sup>2</sup>-server
-listening on local port 2555, add the following
-to the configuration of your virtual host:
+Modify the configuration file at
+"/etc/apache2/sites-enabled/000-default.conf" so that it
+contains the following two lines containing proxy settings:
 
 ```
+<VirtualHost *:80>
+  # Other settings omitted her
+
   ProxyPass        /cyby/cyby-serv/ http://localhost:2555/
   ProxyPassReverse /cyby/cyby-serv/ http://localhost:2555/
+</VirtualHost>
 ```
 
-Make sure, that the necessary modules are enabled. For instance,
-under Ubuntu:
+We now have to enable the proxy modules and restart the web
+server.
 
 ```
   $ sudo a2enmod proxy
   $ sudo a2enmod proxy_http
+  $ sudo systemctl restart apache2
 ```
-
-Restart your web server afterwards, if necessary.
-
 
 Building and Installing the Application
 ---------------------------------------
@@ -132,7 +131,7 @@ after cloning this repository from github to a local drive, run
 the build script (build.sh) found in the project's root folder:
 
 ```
-  $ ./build.sh /path/to/web/folder
+  $ ./build.sh /path/to/web/folder/
 ```
 
 "/path/to/web/folder" is the place where the content of your
@@ -142,10 +141,11 @@ If you do this for the first time, SBT will have to download all
 needed dependencies and the Scala compilers, so this will take some time.
 
 After the build, copy the rest of the web page using
-the provided script.
+the provided script (make sure to include the trailing slash
+in the folder path).
 
 ```
-  $ ./publish_local.sh /path/to/web/folder
+  $ ./publish_local.sh /path/to/web/folder/
 ```
 
 Finally, create a directory where CyBy<sup>2</sup>'s database should
@@ -153,7 +153,7 @@ reside, and put the example data there:
 
 ```
   $ mkdir /path/to/cyby/data
-  $ cp -v example/db/* /path/to/cyby/data
+  $ cp -rv example/db/* /path/to/cyby/data
 ```
 
 
@@ -176,7 +176,13 @@ command line arguments:
 ```
 
 You can now give CyBy<sup>2</sup> a try by accessing its web page
-in your browser. Two users have been setup for you:
+in your browser. If you set up Apache Web Server as described above,
+you'll be able to access the web page at the following URL:
+
+```
+http://localhost/cyby/index.html
+```
+
 An admin account with username "admin" and password "admin"
 and a user account with username "user" and password "password".
 
