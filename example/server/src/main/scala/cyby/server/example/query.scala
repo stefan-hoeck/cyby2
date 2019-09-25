@@ -26,7 +26,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
 
   def prog(r: Request): M.Prog[Result] = r match {
     case POST -> _/_/DT(SubT) ⇒ runSubs(r)
-    case GET  -> _/_/DT(ProT) ⇒ run(ProS)(_.pros)
+    case GET  -> _/_/DT(ProT) ⇒ run(ProjectS)(_.pros)
     case GET  -> _/_/DT(StoT) ⇒ run(StoS)(_.stos)
     case GET  -> _/_/DT(SupT) ⇒ run(SupS)(_.sups)
     case GET  -> _/_/DT(MetT) ⇒ run(MetS)(_.mets)

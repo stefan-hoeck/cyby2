@@ -18,12 +18,12 @@ object SubS extends RootEditor {
   //----------------------------------------------------------------------
   
   type Id            = Sub.Id
-  type Add           = Sub[Pure,Undef,Mol,Pro.Id,Undef,Undef,Undef,Undef]
-  type Mod           = Sub[Option,Undef,Mol,Pro.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Sub[Pure,Id,Mol,Pro.Id,ContainerS.DB,SubFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = Sub[Pure,Id,Mol,Pro.Id,Undef,Undef,TimeStamp,EditInfo]
-  type SrvMod        = Sub[Option,Undef,Mol,Pro.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Sub[Pure,Id,Mol,Pro.AccId,ContainerS.AccDB,SubFilS.AccDB,TimeStamp,EditInfo]
+  type Add           = Sub[Pure,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
+  type Mod           = Sub[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef]
+  type Srv           = Sub[Pure,Id,Mol,Project.Id,ContainerS.DB,SubFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = Sub[Pure,Id,Mol,Project.Id,Undef,Undef,TimeStamp,EditInfo]
+  type SrvMod        = Sub[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,EditInfo]
+  type Acc           = Sub[Pure,Id,Mol,Project.AccId,ContainerS.AccDB,SubFilS.AccDB,TimeStamp,EditInfo]
   type Cli           = Sub.Cli
 
   //----------------------------------------------------------------------

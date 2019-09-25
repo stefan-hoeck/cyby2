@@ -38,7 +38,7 @@ class SubTest extends SubImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Sub[Option,Undef,Mol,Pro.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None)
+  val mod: S.Mod = Sub[Option,Undef,Mol,Project.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization

@@ -251,9 +251,9 @@ trait util extends DispZShared with DocEnv {
   //                      Projects
   //----------------------------------------------------------------------
 
-  def proL(p: Pro.Cli): Pure[Link[Pro.AccId]] = Pure(p.id -> p.name)
+  def proL(p: Project.Cli): Pure[Link[Project.AccId]] = Pure(p.id -> p.name)
 
-  lazy val pro1: Pro.Cli = Pro(
+  lazy val pro1: Project.Cli = Project(
     Id(1),
     nameP("Allgemeine Chemikalien"),
     useL(hock),
@@ -263,7 +263,7 @@ trait util extends DispZShared with DocEnv {
     ei
   )
 
-  lazy val pro2: Pro.Cli = Pro(
+  lazy val pro2: Project.Cli = Project(
     Id(2),
     nameP("MMP-13 Inhibitors"),
     useL(hock),
@@ -519,8 +519,8 @@ trait util extends DispZShared with DocEnv {
 
   lazy val dispEnvPro: DispEnv = deExp(Set(
     UId.DataList(ProT, RootP),
-    UId.Dat(ProP(pro2.id.to[Pro.type] :: HNil)),
-    UId.DataList(MetT, ProP(pro2.id.to[Pro.type] :: HNil)),
+    UId.Dat(ProP(pro2.id.to[Project.type] :: HNil)),
+    UId.DataList(MetT, ProP(pro2.id.to[Project.type] :: HNil)),
     UId.Dat(MetP(mmp10.id :: HNil)),
   ))
 

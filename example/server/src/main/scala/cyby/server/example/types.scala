@@ -8,7 +8,7 @@ package cyby
 package server
 package example
 
-import cyby.dat.example.{SubTreeEd, Pro}
+import cyby.dat.example.{SubTreeEd, Project}
 
 /**
   * Some utility type aliases
@@ -16,7 +16,7 @@ import cyby.dat.example.{SubTreeEd, Pro}
 trait types {
   type Err = cyby.dat.example.DataErr
 
-  type ProAuthEnv = (List[Pro.Id], AuthEnv)
+  type ProAuthEnv = (List[Project.Id], AuthEnv)
 
   type SubTree = SubTreeEd[BiodataEntryS.Ed,ContainerS.Ed,SubFilS.Ed,SubS.Ed]
 

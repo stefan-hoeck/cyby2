@@ -39,26 +39,26 @@ class UtilTest extends EditUtil {
   }
 
   property("isOwner works correctly") {
-    forAll{ (u: U.Srv, p: ProS.Srv) ⇒
+    forAll{ (u: U.Srv, p: ProjectS.Srv) ⇒
       isOwner(u,p) shouldEq (u.id =-= p.owner.v)
     }
   }
 
   property("owners have access to project") {
-    forAll{ (u: U.Srv, p: ProS.Srv) ⇒
+    forAll{ (u: U.Srv, p: ProjectS.Srv) ⇒
       if (isOwner(u,p)) assert(hasAccess(u,p))
     }
   }
 
   property("hasAccess works correctly") {
-    forAll{ (u: U.Srv, p: ProS.Srv) ⇒
+    forAll{ (u: U.Srv, p: ProjectS.Srv) ⇒
       if (!isOwner(u,p))
       hasAccess(u,p) shouldEq p.users.v.toSet(u.id)
     }
   }
 
   property("accessiblePros works correctly") {
-    forAll{ (u: U.Srv, p: ProS.DB) ⇒
+    forAll{ (u: U.Srv, p: ProjectS.DB) ⇒
       val ps = accessiblePros(u, p)
 
       if (u.level.v >= Admin) ps shouldEq p.keySet

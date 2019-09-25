@@ -48,7 +48,7 @@ trait DispZShared extends CyByZ {
   def pro = Txt.dispNav(proDets)(
     _.name.v,
     p ⇒ ProP(proId(p.id) :: HNil),
-    Pro.name,
+    Project.name,
     some(Admin),
     some(Superuser),
     List(NSSub, NSConAll, NSConNonEmpty, NSBio),
@@ -90,13 +90,13 @@ trait DispZShared extends CyByZ {
     Nil,
   )
 
-  def proDets(pr: Pro.Cli, de: DispEnv) = {
+  def proDets(pr: Project.Cli, de: DispEnv) = {
     val pp = proId(pr.id) :: HNil
     val p = ProP(pp).path
     Txt.navDets(de, p)(
-      Txt.linkRow(p, Pro.owner, pr.owner, de, some(Superuser)),
-      Txt.linksRow(p, Pro.users, pr.users, de, some(Superuser)),
-      Txt.navDetRow(p, Pro.comment, Txt text pr.comment.v.v, de, some(Superuser)),
+      Txt.linkRow(p, Project.owner, pr.owner, de, some(Superuser)),
+      Txt.linksRow(p, Project.users, pr.users, de, some(Superuser)),
+      Txt.navDetRow(p, Project.comment, Txt text pr.comment.v.v, de, some(Superuser)),
       Txt.createRow(pr.created),
       Txt.editRow(pr.modified),
     )

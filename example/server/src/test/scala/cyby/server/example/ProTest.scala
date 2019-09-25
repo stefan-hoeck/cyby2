@@ -13,7 +13,7 @@ import cats.implicits._, cyby.shapelessImplicits._
 import cyby.dat._, example._, UserLevel.{Admin,CommonUser,Guest,Superuser}
 
 trait ProImplicits extends AuthUtil with EditArbs {
-  val S = ProS
+  val S = ProjectS
   val imps = new Implicits
 }
 
@@ -21,7 +21,7 @@ class ProTest extends ProImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Pro[Option,Undef,Use.Id,Undef,Undef](None,None,None,None,None,None,None)
+  val mod: S.Mod = Project[Option,Undef,Use.Id,Undef,Undef](None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
@@ -123,14 +123,14 @@ class ProTest extends ProImplicits {
   }
 
   property("BR-Pro-valid-6: deleting a linked project is invalid"){
-    forAll{ (is: List[Pro.Id], s: S.Srv) ⇒
+    forAll{ (is: List[Project.Id], s: S.Srv) ⇒
       val err = StillLinked(ProP(s.id :: hnil))
       if (is.exists(s.id =-= _)) S.valid.del(is,s,s.id) should contain(err)
     }
   }
 
   property("BR-Pro-valid-7: deleting a project no longer linked is valid"){
-    forAll{ (is: List[Pro.Id], s: S.Srv) ⇒
+    forAll{ (is: List[Project.Id], s: S.Srv) ⇒
       if (!is.exists(s.id =-= _)) S.valid.del(is,s,s.id) shouldEq Nil
     }
   }
@@ -141,7 +141,7 @@ class ProTest extends ProImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Pro-cud-1: new projects are adjusted correctly"){
-    forAll{ (is: Set[Pro.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[Project.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -176,9 +176,9 @@ class ProTest extends ProImplicits {
 
   def est(st: St): S.EdSt = extract(S.edSt(st, hnil))
 
-  property("ProS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
+  property("ProjectS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
 
-  property("ProS getSrv") {
+  property("ProjectS getSrv") {
     forAll{ s: S.Srv ⇒
       val e = PathNotFound(ProP(s.id.inc :: hnil)).e
       val st = St.empty.copy(pros = mkDB(s)(_.id))

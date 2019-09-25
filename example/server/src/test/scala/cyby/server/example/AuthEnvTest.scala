@@ -9,18 +9,18 @@ package server
 package example
 
 import cats.implicits._
-import cyby.dat.{UserLevel,example}, example.{Pro, Unauthorized, Use}
+import cyby.dat.{UserLevel,example}, example.{Project, Unauthorized, Use}
 import UserLevel.{Superuser,CommonUser}
 
 class AuthEnvTest extends EditUtil {
   property("accAll behaves correctly") {
-    forAll{ (ae: AuthEnv, n: List[ProS.Id]) ⇒
+    forAll{ (ae: AuthEnv, n: List[ProjectS.Id]) ⇒
       ae.accAll(n) shouldEq (n.toList =-= n.filter(ae.canAccess))
     }
   }
 
   property("authAdd behaves correctly") {
-    forAll{ (ae: AuthEnv, ps: List[Pro.Id]) ⇒
+    forAll{ (ae: AuthEnv, ps: List[Project.Id]) ⇒
       val res = ae.authAdd(ps)
 
       if (!ae.accAll(ps)) res should contain(Unauthorized)
@@ -30,7 +30,7 @@ class AuthEnvTest extends EditUtil {
   }
 
   property("authMod behaves correctly") {
-    forAll{ (ae: AuthEnv, ps: List[Pro.Id], o: Option[Pro.Id]) ⇒
+    forAll{ (ae: AuthEnv, ps: List[Project.Id], o: Option[Project.Id]) ⇒
       val res = ae.authMod(ps, o)
 
       o match {
@@ -48,7 +48,7 @@ class AuthEnvTest extends EditUtil {
   }
 
   property("accPro behaves correctly") {
-    forAll{ (ae: AuthEnv, p: Pro.Id) ⇒
+    forAll{ (ae: AuthEnv, p: Project.Id) ⇒
       ae.accPro(p).nonEmpty shouldEq ae.canAccess(p)
 
       if (ae.accPro(p).nonEmpty) ae.accPro(p).get.v.v shouldEq p.v

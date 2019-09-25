@@ -31,7 +31,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case _ -> _ / _ / DT(t@MetT)   ⇒ editDec(MetS fullEd hnil, logMet, t, r)
     case _ -> _ / _ / DT(t@SupT)   ⇒ editDec(SupS fullEd hnil, logSup, t, r)
     case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
-    case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProS fullEd hnil, logPro, t, r)
+    case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProjectS fullEd hnil, logPro, t, r)
     case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(StoS fullEd hnil, logSto, t, r)
     case _ -> _ / _ / DT(t@SubT)   ⇒ editDec(edSub, logSub, t, r, delFil)
     case _ -> _ / _ / DT(FilT)     ⇒ edFile(r)
@@ -110,7 +110,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case BioFilEdit(p, ed) ⇒ logEd(s"substance ${p.tail.tail.head}, container ${p.tail.head}, biodata ${p.head}: file", ed)(_.id)
   }
 
-  def logPro(s: ProS.LoadEd): Log = logEd("pro", s)(_.id)
+  def logPro(s: ProjectS.LoadEd): Log = logEd("pro", s)(_.id)
   def logSto(s: StoS.LoadEd): Log = logEd("sto", s)(_.id)
   def logMet(s: MetS.LoadEd): Log = logEd("met", s)(_.id)
   def logSup(s: SupS.LoadEd): Log = logEd("sup", s)(_.id)

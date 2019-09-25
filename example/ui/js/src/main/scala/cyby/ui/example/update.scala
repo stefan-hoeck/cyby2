@@ -99,13 +99,13 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     private lazy val stoL = edLink(sto(_).desc)(fsto, _.id)
     implicit lazy val stoE: Editable[Link[Sto.Id]] = Editable.wrapped(stoL)
     
-    type BioE = BiodataEntry[Pure,Undef,Link[Met.Id],Link[Sup.Id],Link[Pro.AccId],Undef,Undef,Undef]
-    type ConE = Container[Pure,Undef,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],Undef,Undef,Undef,Undef]
-    type FilE = Fil[Pure,Undef,Link[Pro.AccId],Undef,Undef]
+    type BioE = BiodataEntry[Pure,Undef,Link[Met.Id],Link[Sup.Id],Link[Project.AccId],Undef,Undef,Undef]
+    type ConE = Container[Pure,Undef,Link[Sto.Id],Link[Sup.Id],Link[Project.AccId],Undef,Undef,Undef,Undef]
+    type FilE = Fil[Pure,Undef,Link[Project.AccId],Undef,Undef]
     type MetE = Met[Pure,Undef,Undef,Undef]
-    type ProE = Pro[Pure,Undef,Link[Use.Id],Undef,Undef]
+    type ProE = Project[Pure,Undef,Link[Use.Id],Undef,Undef]
     type StoE = Sto[Pure,Undef,Undef,Undef]
-    type SubE = Sub[Pure,Undef,Mol,Link[Pro.AccId],Undef,Undef,Undef,Undef]
+    type SubE = Sub[Pure,Undef,Mol,Link[Project.AccId],Undef,Undef,Undef,Undef]
     type SupE = Sup[Pure,Undef,Undef,Undef]
     type UseE = cyby.dat.example.Use[Pure,Undef,Option[Password],Undef,Undef]
 
@@ -113,7 +113,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def conE(c: Container.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
     def filE(f: Fil.Cli): FilE = f.copy(id = undef, created = undef, modified = undef)
     def metE(m: Met.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
-    def proE(p: Pro.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
+    def proE(p: Project.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
     def stoE(s: Sto.Cli): StoE = s.copy(id = undef, created = undef, modified = undef)
     def subE(s: Sub.Cli): SubE = s.copy(id = undef, containers = undef, files = undef, created = undef, modified = undef)
     def supE(s: Sup.Cli): SupE = s.copy(id = undef, created = undef, modified = undef)
@@ -140,10 +140,10 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     lazy val supC = Createable[SupE]
     lazy val useC = Createable[UseE]
 
-    case class ProEnv(p: St ⇒ Option[Pro.Cli]) {
+    case class ProEnv(p: St ⇒ Option[Project.Cli]) {
       private lazy val proL = edLink(st ⇒ proDef(p(st))(st).desc)(fpro, _.id)
-      implicit lazy val proE: Editable[Link[Pro.AccId]] = Editable.wrapped(proL)
-      implicit lazy val prosE: Editable[Nel[Link[Pro.AccId]]] = Editable.nel(proL)
+      implicit lazy val proE: Editable[Link[Project.AccId]] = Editable.wrapped(proL)
+      implicit lazy val prosE: Editable[Nel[Link[Project.AccId]]] = Editable.nel(proL)
 
       lazy val bioC = Createable[BioE]
       lazy val conC = Createable[ConE]
@@ -151,7 +151,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
       lazy val subC = Createable[SubE]
     }
 
-    def proEnv[B](f: St ⇒ Option[B])(ps: B ⇒ Link[Pro.AccId]): ProEnv =
+    def proEnv[B](f: St ⇒ Option[B])(ps: B ⇒ Link[Project.AccId]): ProEnv =
       ProEnv(st ⇒ f(st) flatMap (b ⇒ fpro(st)(ps(b)._1)))
 
     def proEnvB(p: BiodataEntry.Path): ProEnv = proEnv(fbio(_)(p))(_._1.project.v)

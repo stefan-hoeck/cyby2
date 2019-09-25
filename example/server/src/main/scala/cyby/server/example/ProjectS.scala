@@ -12,19 +12,19 @@ import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._, cyby.dat.example._
 
-object ProS extends RootEditor {
+object ProjectS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Pro.Id
-  type Add           = Pro[Pure,Undef,Use.Id,Undef,Undef]
-  type Mod           = Pro[Option,Undef,Use.Id,Undef,Undef]
-  type Srv           = Pro[Pure,Id,Use.Id,TimeStamp,EditInfo]
-  type SrvAdd        = Pro[Pure,Id,Use.Id,TimeStamp,EditInfo]
-  type SrvMod        = Pro[Option,Undef,Use.Id,Undef,EditInfo]
-  type Acc           = Pro[Pure,Pro.AccId,Use.Id,TimeStamp,EditInfo]
-  type Cli           = Pro.Cli
+  type Id            = Project.Id
+  type Add           = Project[Pure,Undef,Use.Id,Undef,Undef]
+  type Mod           = Project[Option,Undef,Use.Id,Undef,Undef]
+  type Srv           = Project[Pure,Id,Use.Id,TimeStamp,EditInfo]
+  type SrvAdd        = Project[Pure,Id,Use.Id,TimeStamp,EditInfo]
+  type SrvMod        = Project[Option,Undef,Use.Id,Undef,EditInfo]
+  type Acc           = Project[Pure,Project.AccId,Use.Id,TimeStamp,EditInfo]
+  type Cli           = Project.Cli
 
   //----------------------------------------------------------------------
   //                         Util
@@ -44,10 +44,10 @@ object ProS extends RootEditor {
       e.st.linkedPros,e.ei -> e.st.pros.keySet,e.ei,e.u)
   }
 
-  val link       = (s: St, i: Pro.AccId) ⇒ getSrv(i.to,s.root).map(t ⇒ i -> t.name.v)
+  val link       = (s: St, i: Project.AccId) ⇒ getSrv(i.to,s.root).map(t ⇒ i -> t.name.v)
 
-  lazy val asmbl    = asmblD[Acc,Pro.Cli]
-  lazy val dbasmbl  = dbAsmbl[Id,Acc,Pro.Cli](_.sortBy(_.name.v.v))(asmbl)
+  lazy val asmbl    = asmblD[Acc,Project.Cli]
+  lazy val dbasmbl  = dbAsmbl[Id,Acc,Project.Cli](_.sortBy(_.name.v.v))(asmbl)
   val cliToRes      = ProRes
 
   //----------------------------------------------------------------------

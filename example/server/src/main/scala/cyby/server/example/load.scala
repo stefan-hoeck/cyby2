@@ -25,7 +25,7 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
     settings(logger).map(St.L.sets.set(St.empty)) >>=
     load(UseT, _.uses, doLoad(UseS)(hnil))        >>=
     load(SupT, _.sups, doLoad(SupS)(hnil))        >>=
-    load(ProT, _.pros, doLoad(ProS)(hnil))        >>=
+    load(ProT, _.pros, doLoad(ProjectS)(hnil))        >>=
     load(StoT, _.stos, doLoad(StoS)(hnil))        >>=
     load(MetT, _.mets, doLoad(MetS)(hnil))        >>=
     load(SubT, _.subs, edSub)

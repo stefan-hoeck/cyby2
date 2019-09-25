@@ -26,7 +26,7 @@ case class BioStatsRes(res: EditRes[BioStats]) extends Result
 
 case class MetRes(res: EditRes[Met.Cli]) extends Result
 
-case class ProRes(res: EditRes[Pro.Cli]) extends Result
+case class ProRes(res: EditRes[Project.Cli]) extends Result
 
 case class StoRes(res: EditRes[Sto.Cli]) extends Result
 

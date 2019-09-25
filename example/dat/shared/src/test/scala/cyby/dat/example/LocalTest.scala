@@ -21,7 +21,7 @@ class LocalTest extends DataSuite {
 
   property("mol localisation") { testLoc("mol", Mol.lbls.toList) }
 
-  property("pro localisation") { testLoc("pro", Pro.lbls.toList) }
+  property("pro localisation") { testLoc("pro", Project.lbls.toList) }
 
   property("sto localisation") { testLoc("sto", Sto.lbls.toList) }
 

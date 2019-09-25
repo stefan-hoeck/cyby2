@@ -42,7 +42,7 @@ object Fil extends DataCmp{
   /**
     * Fil entries as seen by the client.
     */
-  type Cli       = Fil[Pure,Id,Link[Pro.AccId],TimeStamp,EditInfo]
+  type Cli       = Fil[Pure,Id,Link[Project.AccId],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::name::path::comment::project::created::modified::HNil) = Keys[lblG.Repr].apply

@@ -36,9 +36,9 @@ trait util {
 
   def actual(u: UseS.Srv)(id: Use.Id): Boolean = u.id === id
 
-  def isOwner(u: UseS.Srv, p: ProS.Srv): Boolean = p.owner.v === u.id
+  def isOwner(u: UseS.Srv, p: ProjectS.Srv): Boolean = p.owner.v === u.id
 
-  def hasAccess(u: UseS.Srv, p: ProS.Srv): Boolean =
+  def hasAccess(u: UseS.Srv, p: ProjectS.Srv): Boolean =
     isOwner(u,p) || p.users.v.exists(_ === u.id)
 
   def asAdmin(u: UseS.Srv): List[Err] = must(isAdmin(u))(Unauthorized)
@@ -53,10 +53,10 @@ trait util {
 
   def asSuperUser(u: UserLevel): List[Err] = must(isSuperUser(u))(Unauthorized)
 
-  def asOwner(u: UseS.Srv, p: ProS.Srv): List[Err] =
+  def asOwner(u: UseS.Srv, p: ProjectS.Srv): List[Err] =
     must(isOwner(u,p))(Unauthorized)
 
-  def accessiblePros(u: UseS.Srv, ps: ProS.DB): Set[Pro.Id] =
+  def accessiblePros(u: UseS.Srv, ps: ProjectS.DB): Set[Project.Id] =
     if (isAdmin(u)) ps.keySet
     else ps.filter{ case (_,p) ⇒ hasAccess(u,p) }.keySet
 
@@ -87,7 +87,7 @@ trait util {
 
   implicit lazy val useLA: AsmblLink[Use.Id] = asmblLink(UseS.link)
 
-  implicit lazy val proLA: AsmblLink[Pro.AccId] = asmblLink(ProS.link)
+  implicit lazy val proLA: AsmblLink[Project.AccId] = asmblLink(ProjectS.link)
 
   implicit lazy val metLA: AsmblLink[Met.Id] = asmblLink(MetS.link)
 

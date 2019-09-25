@@ -9,7 +9,7 @@ package server
 package example
 
 import cats.implicits.{none ⇒ _, _}
-import cyby.dat.{UserLevel, Found, EditRes, example, Edit, Mod}, example.Pro
+import cyby.dat.{UserLevel, Found, EditRes, example, Edit, Mod}, example.Project
 import cyby.syntax._
 
 import shapeless.{::, HNil, HList}
@@ -55,9 +55,9 @@ trait ExampleEditor extends Editor {
     * better testability.
     */
   case class ProAuth(
-    ap: Lens[Add,Pure[Pro.Id]],
-    sp: Lens[Srv,Pure[Pro.Id]],
-    mp: Lens[Mod,Option[Pro.Id]],
+    ap: Lens[Add,Pure[Project.Id]],
+    sp: Lens[Srv,Pure[Project.Id]],
+    mp: Lens[Mod,Option[Project.Id]],
   ){
     lazy val auth = AuthorizerImpl[ProAuthEnv,ProAuthEnv,UserLevel](
       (p,m)   ⇒ p._2.authAdd(ap.get(m).v :: p._1),

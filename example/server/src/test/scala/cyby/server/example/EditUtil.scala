@@ -32,7 +32,7 @@ abstract class EditUtil
   def inDB[I,A,S](a: A, s: S)(f: A ⇒ I, l: Lens[S,S] ⇒ Lens[S,Map[I,A]]): S =
     l(lens[S]).set(s)(mkDB(a)(f))
 
-  def proSt(p: ProS.Srv): St = inDB(p, St.empty)(_.id, _.pros)
+  def proSt(p: ProjectS.Srv): St = inDB(p, St.empty)(_.id, _.pros)
 
   def subSt(s: SubS.Srv): St = inDB(s, St.empty)(_.id, _.subs)
 

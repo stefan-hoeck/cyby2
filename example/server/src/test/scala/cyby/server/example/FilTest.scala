@@ -24,7 +24,7 @@ class FilTest extends FilImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, srvAddArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Fil[Option,Undef,Pro.Id,Undef,Undef](None,None,None,None,None,None,None)
+  val mod: S.Mod = Fil[Option,Undef,Project.Id,Undef,Undef](None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization

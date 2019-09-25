@@ -14,7 +14,7 @@ import org.scalacheck.{Arbitrary,derive}, derive.{MkArbitrary ⇒ MKA}
 trait Generators extends DataImplicits {
   implicit lazy val filArb = MKA[Fil.Cli].arbitrary
   implicit lazy val metArb = MKA[Met.Cli].arbitrary
-  implicit lazy val proArb = MKA[Pro.Cli].arbitrary
+  implicit lazy val proArb = MKA[Project.Cli].arbitrary
   implicit lazy val stoArb = MKA[Sto.Cli].arbitrary
   implicit lazy val supArb = MKA[Sup.Cli].arbitrary
   implicit lazy val bioArb = MKA[BiodataEntry.Cli].arbitrary

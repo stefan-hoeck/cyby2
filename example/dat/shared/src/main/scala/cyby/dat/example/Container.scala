@@ -67,7 +67,7 @@ object Container extends DataCmp {
   /**
     * Container entries as seen by the client.
     */
-  type Cli       = Container[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Container[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Project.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::location::supplier::batch::orderNr::comment::lentTo::purity::purityStr::density::concentration::amount::empty::project::bio::files::created::modified::HNil) = Keys[lblG.Repr].apply

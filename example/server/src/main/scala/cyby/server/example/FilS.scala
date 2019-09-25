@@ -53,12 +53,12 @@ trait FilEditor extends ChildEditor {
   
   type Id            = Fil.Id
   type ZCli          = Fil.Cli
-  type Add           = Fil[Pure,Undef,Pro.Id,Undef,Undef]
-  type Mod           = Fil[Option,Undef,Pro.Id,Undef,Undef]
-  type Srv           = Fil[Pure,Id,Pro.Id,TimeStamp,EditInfo]
-  type SrvAdd        = Fil[Pure,Id,Pro.Id,TimeStamp,EditInfo]
-  type SrvMod        = Fil[Option,Undef,Pro.Id,Undef,EditInfo]
-  type Acc           = Fil[Pure,Id,Pro.AccId,TimeStamp,EditInfo]
+  type Add           = Fil[Pure,Undef,Project.Id,Undef,Undef]
+  type Mod           = Fil[Option,Undef,Project.Id,Undef,Undef]
+  type Srv           = Fil[Pure,Id,Project.Id,TimeStamp,EditInfo]
+  type SrvAdd        = Fil[Pure,Id,Project.Id,TimeStamp,EditInfo]
+  type SrvMod        = Fil[Option,Undef,Project.Id,Undef,EditInfo]
+  type Acc           = Fil[Pure,Id,Project.AccId,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -66,7 +66,7 @@ trait FilEditor extends ChildEditor {
   val getId      = _.id
   val pth: Path ⇒ cyby.dat.example.Path
 
-  def proIds(e: EdSt): List[Pro.Id]
+  def proIds(e: EdSt): List[Project.Id]
 
   def envs(ee: Env, edSt: EdSt) = {
     val e   = ee loggedInEnv getSt(edSt)

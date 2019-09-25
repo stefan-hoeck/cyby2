@@ -59,7 +59,7 @@ object Sub extends DataCmp {
   /**
     * Substances as seen by the client.
     */
-  type Cli       = Sub[Pure,Id,Mol,Link[Pro.AccId],List[Container.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Sub[Pure,Id,Mol,Link[Project.AccId],List[Container.Cli],List[Fil.Cli],TimeStamp,EditInfo]
 
   /**
     * Collects a list of statistics entries from a

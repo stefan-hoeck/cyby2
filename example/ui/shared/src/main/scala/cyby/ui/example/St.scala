@@ -11,7 +11,7 @@ package example
 import cyby.dat.example._
 
 case class St(
-  pros:  List[Pro.Cli],
+  pros:  List[Project.Cli],
   stos:  List[Sto.Cli],
   sups:  List[Sup.Cli],
   mets:  List[Met.Cli],
