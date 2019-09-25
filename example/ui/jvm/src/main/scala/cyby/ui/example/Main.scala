@@ -17,8 +17,9 @@ object Main extends util with DocEnv {
   
   def main(args: Array[String]): Unit = args.toList match {
     case path::Nil ⇒ {
-      val indexF = new java.io.FileWriter(s"${path}/index.html", false)
-      val docF = new java.io.FileWriter(s"${path}/doc_${version}.html", false)
+      val pp = if (path.endsWith("/")) path else s"${path}/"
+      val indexF = new java.io.FileWriter(s"${pp}index.html", false)
+      val docF = new java.io.FileWriter(s"${pp}doc_${version}.html", false)
       try { docF.write(docHtml) }
       finally docF.close()
       try { indexF.write(index) }
