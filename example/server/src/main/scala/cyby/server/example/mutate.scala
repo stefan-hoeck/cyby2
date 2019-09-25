@@ -30,7 +30,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   def prog(r: Request): M.Prog[Result] =  r match {
     case _ -> _ / _ / DT(t@MetT)   ⇒ editDec(MethodS fullEd hnil, logMet, t, r)
     case _ -> _ / _ / DT(t@SupT)   ⇒ editDec(SupplierS fullEd hnil, logSup, t, r)
-    case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
+    case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UserS fullEd hnil, logUse, t, r)
     case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProjectS fullEd hnil, logPro, t, r)
     case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(LocationS fullEd hnil, logSto, t, r)
     case _ -> _ / _ / DT(t@CpdT)   ⇒ editDec(edCpd, logCpd, t, r, delFil)
@@ -98,7 +98,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     _   <- M set newSt
   } yield res
 
-  lazy val adjSettings = (le: EditEnv, st: St, p: (Use.Id,USettings)) ⇒
+  lazy val adjSettings = (le: EditEnv, st: St, p: (User.Id,USettings)) ⇒
     (dotag[St,Adjusted](St.L.sets.modify(st)(_ + p)), p, SettingsChanged(p._2).r)
 
   def logCpd(s: CpdTreeL): Log = s match {
@@ -114,7 +114,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   def logSto(s: LocationS.LoadEd): Log = logEd("sto", s)(_.id)
   def logMet(s: MethodS.LoadEd): Log = logEd("met", s)(_.id)
   def logSup(s: SupplierS.LoadEd): Log = logEd("sup", s)(_.id)
-  def logUse(s: UseS.LoadEd): Log = logEd("use", s)(_.id)
+  def logUse(s: UserS.LoadEd): Log = logEd("use", s)(_.id)
 }
 
 // vim: set ts=2 sw=2 et:

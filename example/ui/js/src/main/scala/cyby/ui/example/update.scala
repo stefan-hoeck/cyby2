@@ -90,8 +90,8 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     implicit lazy val metE: Editable[Link[Method.Id]] = Editable.wrapped(metL)
    
     private lazy val useL = edLink(use(_).desc)(fuse, _.id)
-    implicit lazy val useE: Editable[Link[Use.Id]] = Editable.wrapped(useL)
-    implicit lazy val usesE: Editable[Links[Use.Id]] = Editable.list(useL)
+    implicit lazy val useE: Editable[Link[User.Id]] = Editable.wrapped(useL)
+    implicit lazy val usesE: Editable[Links[User.Id]] = Editable.list(useL)
    
     private lazy val supL = edLink(sup(_).desc)(fsup, _.id)
     implicit lazy val supE: Editable[Link[Supplier.Id]] = Editable.wrapped(supL)
@@ -103,11 +103,11 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     type ConE = Container[Pure,Undef,Link[Location.Id],Link[Supplier.Id],Link[Project.AccId],Undef,Undef,Undef,Undef]
     type FilE = Fil[Pure,Undef,Link[Project.AccId],Undef,Undef]
     type MetE = Method[Pure,Undef,Undef,Undef]
-    type ProE = Project[Pure,Undef,Link[Use.Id],Undef,Undef]
+    type ProE = Project[Pure,Undef,Link[User.Id],Undef,Undef]
     type StoE = Location[Pure,Undef,Undef,Undef]
     type CpdE = Compound[Pure,Undef,Mol,Link[Project.AccId],Undef,Undef,Undef,Undef]
     type SupE = Supplier[Pure,Undef,Undef,Undef]
-    type UseE = cyby.dat.example.Use[Pure,Undef,Option[Password],Undef,Undef]
+    type UseE = cyby.dat.example.User[Pure,Undef,Option[Password],Undef,Undef]
 
     def bioE(b: BiodataEntry.Cli): BioE = b.copy(id = undef, files = undef, created = undef, modified = undef)
     def conE(c: Container.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
@@ -117,7 +117,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def stoE(s: Location.Cli): StoE = s.copy(id = undef, created = undef, modified = undef)
     def subE(s: Compound.Cli): CpdE = s.copy(id = undef, containers = undef, files = undef, created = undef, modified = undef)
     def supE(s: Supplier.Cli): SupE = s.copy(id = undef, created = undef, modified = undef)
-    def useE(u: cyby.dat.example.Use.Cli): UseE = u.copy(id = undef, password = None, created = undef, modified = undef)
+    def useE(u: cyby.dat.example.User.Cli): UseE = u.copy(id = undef, password = None, created = undef, modified = undef)
 
     lazy val fsubFilE: Compound.FilPath ⇒ St ⇒ Option[FilE] =
       p ⇒ s ⇒ fsubFil(s)(p) map (p ⇒ filE(p._1))

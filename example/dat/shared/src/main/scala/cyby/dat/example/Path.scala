@@ -45,7 +45,7 @@ case class ProP(p: Project.Path)                extends Path
 case class CpdFilP(p: Compound.FilPath)          extends Path
 case class CpdP(p: Compound.Path)       extends Path
 case class SupP(p: Supplier.Path)       extends Path
-case class UseP(p: Use.Path)       extends Path
+case class UseP(p: User.Path)       extends Path
 case class StoP(p: Location.Path)       extends Path
 
 object Path {

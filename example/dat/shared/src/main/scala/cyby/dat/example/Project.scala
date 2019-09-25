@@ -47,7 +47,7 @@ object Project extends DataCmp {
   /**
     * Projects as seen by the client.
     */
-  type Cli       = Project[Pure,AccId,Link[Use.Id],TimeStamp,EditInfo]
+  type Cli       = Project[Pure,AccId,Link[User.Id],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::name::owner::users::comment::created::modified::HNil) = Keys[lblG.Repr].apply

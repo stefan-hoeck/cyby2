@@ -30,7 +30,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     case GET  -> _/_/DT(StoT) ⇒ run(LocationS)(_.stos)
     case GET  -> _/_/DT(SupT) ⇒ run(SupplierS)(_.sups)
     case GET  -> _/_/DT(MetT) ⇒ run(MethodS)(_.mets)
-    case GET  -> _/_/DT(UseT) ⇒ run(UseS)(_.uses)
+    case GET  -> _/_/DT(UseT) ⇒ run(UserS)(_.uses)
     case r                    ⇒ M raise NotFound(r.uri.renderString)
   }
 

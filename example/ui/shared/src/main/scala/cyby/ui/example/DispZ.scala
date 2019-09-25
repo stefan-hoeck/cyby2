@@ -84,7 +84,7 @@ trait DispZShared extends CyByZ {
   def use = Txt.dispNav(useDets)(
     _.alias.v.name,
     u ⇒ UseP(useId(u.id) :: HNil),
-    Use.alias,
+    User.alias,
     some(Admin),
     some(Admin),
     Nil,
@@ -129,23 +129,23 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def useDets(u: Use.Cli, de: DispEnv) = {
+  def useDets(u: User.Cli, de: DispEnv) = {
     val p = UseP(useId(u.id) :: HNil).path
     val editLvl = if (u.id === de.creds.user.id) some(CommonUser)
                   else some(Admin)
 
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Use.firstName, Txt text u.firstName.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.lastName, Txt text u.lastName.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.email, Txt text u.email.v.v, de, editLvl),
-      Txt.navDetRow(p, Use.level, Txt text loc.dispUserLevel(u.level.v), de, Some(Admin)),
+      Txt.navDetRow(p, User.firstName, Txt text u.firstName.v.v, de, editLvl),
+      Txt.navDetRow(p, User.lastName, Txt text u.lastName.v.v, de, editLvl),
+      Txt.navDetRow(p, User.email, Txt text u.email.v.v, de, editLvl),
+      Txt.navDetRow(p, User.level, Txt text loc.dispUserLevel(u.level.v), de, Some(Admin)),
       Txt.editRow(u.modified),
 
       if (some(de.creds.user.level.v) >= editLvl) (
-        Txt.li(cls := CompType.NavDetailRow(Use.password).c)(
-          Txt.div(id := EditCont(Use.password.name, p))(
+        Txt.li(cls := CompType.NavDetailRow(User.password).c)(
+          Txt.div(id := EditCont(User.password.name, p))(
             Txt.button(
-              id := ClickEdit(Use.password.name, p),
+              id := ClickEdit(User.password.name, p),
               cls := WidgetType.EditPasswordBtn.c,
             )(Txt text loc.editPassword),
           )

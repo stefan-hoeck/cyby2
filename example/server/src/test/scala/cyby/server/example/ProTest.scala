@@ -21,7 +21,7 @@ class ProTest extends ProImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Project[Option,Undef,Use.Id,Undef,Undef](None,None,None,None,None,None,None)
+  val mod: S.Mod = Project[Option,Undef,User.Id,Undef,Undef](None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization

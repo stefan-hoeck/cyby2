@@ -25,7 +25,7 @@ trait ExampleEditor extends Editor {
   type Env         = cyby.server.example.EditEnv
   type Err         = cyby.dat.example.DataErr
   type Res         = cyby.dat.example.Result
-  type ResEnv      = UseS.Srv
+  type ResEnv      = UserS.Srv
   type Acc
 
   type MF = (Boolean,String) ⇒ Option[cyby.query.MapFilter[Id,Acc]]

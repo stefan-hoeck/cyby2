@@ -12,19 +12,19 @@ import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._, cyby.dat.example._
 
-object UseS extends RootEditor {
+object UserS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Use.Id
-  type Srv           = Use[Pure,Id,PWHash,TimeStamp,EditInfo]
-  type Add           = Use[Pure,Undef,PWHash,Undef,Undef]
-  type Mod           = Use[Option,Undef,PWHash,Undef,Undef]
-  type SrvAdd        = Use[Pure,Id,PWHash,TimeStamp,EditInfo]
-  type SrvMod        = Use[Option,Undef,PWHash,Undef,EditInfo]
-  type Acc           = Use[Pure,Use.AccId,Undef,TimeStamp,EditInfo]
-  type Cli           = Use.Cli
+  type Id            = User.Id
+  type Srv           = User[Pure,Id,PWHash,TimeStamp,EditInfo]
+  type Add           = User[Pure,Undef,PWHash,Undef,Undef]
+  type Mod           = User[Option,Undef,PWHash,Undef,Undef]
+  type SrvAdd        = User[Pure,Id,PWHash,TimeStamp,EditInfo]
+  type SrvMod        = User[Option,Undef,PWHash,Undef,EditInfo]
+  type Acc           = User[Pure,User.AccId,Undef,TimeStamp,EditInfo]
+  type Cli           = User.Cli
 
   //----------------------------------------------------------------------
   //                         Util
@@ -37,7 +37,7 @@ object UseS extends RootEditor {
   val getId      = _.id
 
   lazy val asmbl   = asmblD
-  lazy val dbasmbl = dbAsmbl[Id,Acc,Use.Cli](_.sortBy(_.alias.v.v))(asmbl)
+  lazy val dbasmbl = dbAsmbl[Id,Acc,User.Cli](_.sortBy(_.alias.v.v))(asmbl)
   val cliToRes      = UseRes
 
   def envs(ee: Env, edSt: EdSt) = {
@@ -63,7 +63,7 @@ object UseS extends RootEditor {
   //                         Authorization
   //----------------------------------------------------------------------
   
-  val auth = AuthorizerImpl[UserLevel,UseS.Srv,UseS.Srv](
+  val auth = AuthorizerImpl[UserLevel,UserS.Srv,UserS.Srv](
     (u,_)   ⇒ asAdmin(u),
 
     (u,o,n) ⇒ must(

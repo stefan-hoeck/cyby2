@@ -17,9 +17,9 @@ import java.text.SimpleDateFormat
 trait CyByZ extends ServerEnv with cyby.dat.example.ZEnv {
   type St = cyby.server.example.St
 
-  type UseIdType = cyby.dat.example.Use.type
+  type UseIdType = cyby.dat.example.User.type
 
-  type UseS = cyby.server.example.UseS.Srv
+  type UseS = cyby.server.example.UserS.Srv
 
   type Err = DataErr
 

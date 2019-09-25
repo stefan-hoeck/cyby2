@@ -29,7 +29,7 @@ class LocalTest extends DataSuite {
 
   property("sup localisation") { testLoc("sup", Supplier.lbls.toList) }
 
-  property("use localisation") { testLoc("use", Use.lbls.toList) }
+  property("use localisation") { testLoc("use", User.lbls.toList) }
 
   private def testLoc(typeName: String, symbols: List[Symbol]) =
     symbols foreach {s ⇒ assert(loc symbol s nonEmpty, s"${typeName} local: $s")}

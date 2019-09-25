@@ -15,7 +15,7 @@ case class St(
   stos:  List[Location.Cli],
   sups:  List[Supplier.Cli],
   mets:  List[Method.Cli],
-  uses:  List[Use.Cli],
+  uses:  List[User.Cli],
   subs:  List[Compound.Cli],
   bio:   List[BioStats],
 )

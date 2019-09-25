@@ -11,6 +11,6 @@ package example
 /**
   * Environment for editing requests of logged in users
   */
-case class EditEnv(env: Env[Unit], u: UseS.Srv, h: String) {
+case class EditEnv(env: Env[Unit], u: UserS.Srv, h: String) {
   def loggedInEnv(st: St): LoggedInEnv = LoggedInEnv(env.copy(st = st), u, h)
 }

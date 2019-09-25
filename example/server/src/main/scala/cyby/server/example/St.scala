@@ -19,18 +19,18 @@ case class St(
   subs: CompoundS.DB,
   sups: SupplierS.DB,
   mets: MethodS.DB,
-  uses: UseS.DB,
-  sets: Map[Use.Id,USettings],
+  uses: UserS.DB,
+  sets: Map[User.Id,USettings],
 ){
 
   //--------------------------------------------------------------------
   //                   Users and Settings
   //--------------------------------------------------------------------
   
-  def settingsFor(id: Use.Id): USettings =
+  def settingsFor(id: User.Id): USettings =
     sets get id getOrElse St.defaultSettings
 
-  lazy val names: Map[Alias, Use.Id] = 
+  lazy val names: Map[Alias, User.Id] = 
     uses.toList map { case (i,u) ⇒ u.alias.v -> i } toMap
 
   lazy val root: StEnv = HQ root this
@@ -47,7 +47,7 @@ case class St(
   def linkedStos: List[Location.Id] =
     subElems(_ ⇒ Nil, c ⇒ List(c.location), _ ⇒ Nil, _ ⇒ Nil)
  
-  def linkedUses: List[Use.Id] =
+  def linkedUses: List[User.Id] =
     pros.values.toList flatMap { p ⇒ p.owner.v :: p.users.v }
 
   def subElems[A](

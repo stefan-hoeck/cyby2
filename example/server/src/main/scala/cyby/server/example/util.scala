@@ -26,26 +26,26 @@ trait util {
 
   def isGuest(u: UserLevel): Boolean            = u >= Guest
 
-  def isAdmin(u: UseS.Srv): Boolean            = isAdmin(u.level.v)
+  def isAdmin(u: UserS.Srv): Boolean            = isAdmin(u.level.v)
 
-  def isUser(u: UseS.Srv): Boolean             = isUser(u.level.v)
+  def isUser(u: UserS.Srv): Boolean             = isUser(u.level.v)
 
-  def isSuperUser(u: UseS.Srv): Boolean        = isSuperUser(u.level.v)
+  def isSuperUser(u: UserS.Srv): Boolean        = isSuperUser(u.level.v)
 
-  def isGuest(u: UseS.Srv): Boolean            = isGuest(u.level.v)
+  def isGuest(u: UserS.Srv): Boolean            = isGuest(u.level.v)
 
-  def actual(u: UseS.Srv)(id: Use.Id): Boolean = u.id === id
+  def actual(u: UserS.Srv)(id: User.Id): Boolean = u.id === id
 
-  def isOwner(u: UseS.Srv, p: ProjectS.Srv): Boolean = p.owner.v === u.id
+  def isOwner(u: UserS.Srv, p: ProjectS.Srv): Boolean = p.owner.v === u.id
 
-  def hasAccess(u: UseS.Srv, p: ProjectS.Srv): Boolean =
+  def hasAccess(u: UserS.Srv, p: ProjectS.Srv): Boolean =
     isOwner(u,p) || p.users.v.exists(_ === u.id)
 
-  def asAdmin(u: UseS.Srv): List[Err] = must(isAdmin(u))(Unauthorized)
+  def asAdmin(u: UserS.Srv): List[Err] = must(isAdmin(u))(Unauthorized)
 
-  def asUser(u: UseS.Srv): List[Err] = must(isUser(u))(Unauthorized)
+  def asUser(u: UserS.Srv): List[Err] = must(isUser(u))(Unauthorized)
 
-  def asSuperUser(u: UseS.Srv): List[Err] = must(isSuperUser(u))(Unauthorized)
+  def asSuperUser(u: UserS.Srv): List[Err] = must(isSuperUser(u))(Unauthorized)
 
   def asAdmin(u: UserLevel): List[Err] = must(isAdmin(u))(Unauthorized)
 
@@ -53,10 +53,10 @@ trait util {
 
   def asSuperUser(u: UserLevel): List[Err] = must(isSuperUser(u))(Unauthorized)
 
-  def asOwner(u: UseS.Srv, p: ProjectS.Srv): List[Err] =
+  def asOwner(u: UserS.Srv, p: ProjectS.Srv): List[Err] =
     must(isOwner(u,p))(Unauthorized)
 
-  def accessiblePros(u: UseS.Srv, ps: ProjectS.DB): Set[Project.Id] =
+  def accessiblePros(u: UserS.Srv, ps: ProjectS.DB): Set[Project.Id] =
     if (isAdmin(u)) ps.keySet
     else ps.filter{ case (_,p) ⇒ hasAccess(u,p) }.keySet
 
@@ -85,7 +85,7 @@ trait util {
 
   implicit lazy val supLA: AsmblLink[Supplier.Id] = asmblLink(SupplierS.link)
 
-  implicit lazy val useLA: AsmblLink[Use.Id] = asmblLink(UseS.link)
+  implicit lazy val useLA: AsmblLink[User.Id] = asmblLink(UserS.link)
 
   implicit lazy val proLA: AsmblLink[Project.AccId] = asmblLink(ProjectS.link)
 
@@ -94,7 +94,7 @@ trait util {
   implicit lazy val stoLA: AsmblLink[Location.Id] = asmblLink(LocationS.link)
 
   def adjEditInfo(s: St, ei: EditInfo): EditInfo = ei match {
-    case EditInfo(t,i,_) ⇒ EditInfo(t, i, UseS.link(s,Id(i)).map(_._2).toOption)
+    case EditInfo(t,i,_) ⇒ EditInfo(t, i, UserS.link(s,Id(i)).map(_._2).toOption)
   }
 
   implicit lazy val editAsmbl: Asmbl[EditInfo,EditInfo] = Assemble.inst{

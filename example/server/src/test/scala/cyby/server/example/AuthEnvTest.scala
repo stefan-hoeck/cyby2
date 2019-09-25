@@ -9,7 +9,7 @@ package server
 package example
 
 import cats.implicits._
-import cyby.dat.{UserLevel,example}, example.{Project, Unauthorized, Use}
+import cyby.dat.{UserLevel,example}, example.{Project, Unauthorized, User}
 import UserLevel.{Superuser,CommonUser}
 
 class AuthEnvTest extends EditUtil {
@@ -56,7 +56,7 @@ class AuthEnvTest extends EditUtil {
   }
 
   property("accUse behaves correctly") {
-    forAll{ (ae: AuthEnv, i: Use.Id) ⇒
+    forAll{ (ae: AuthEnv, i: User.Id) ⇒
       if (i =-= ae.user.id) assert(ae.accUse(i).nonEmpty)
       else if (ae.lvl < Superuser) assert(ae.accUse(i).isEmpty)
       else assert(ae.accUse(i).nonEmpty)
@@ -64,7 +64,7 @@ class AuthEnvTest extends EditUtil {
   }
 
   property("creation works correctly") {
-    forAll{ (st: St, u: UseS.Srv) ⇒
+    forAll{ (st: St, u: UserS.Srv) ⇒
       AuthEnv(u, st).canAccess shouldEq accessiblePros(u, st.pros)
     }
   }

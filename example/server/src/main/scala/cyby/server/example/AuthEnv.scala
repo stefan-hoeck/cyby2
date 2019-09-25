@@ -8,14 +8,14 @@ package cyby
 package server
 package example
 
-import cyby.dat.example.{Project, Unauthorized, Use}
+import cyby.dat.example.{Project, Unauthorized, User}
 
 /**
   * Environment used for authentication and authorization
   * of users
   */
 case class AuthEnv(
-  user:      UseS.Srv,
+  user:      UserS.Srv,
   canAccess: Set[Project.Id],
 ){
   def lvl: cyby.dat.UserLevel = user.level.v
@@ -36,12 +36,12 @@ case class AuthEnv(
   val accPro: Pure[Project.Id] ⇒ Option[Pure[Project.AccId]] =
     p ⇒ if (canAccess(p.v)) Some(Pure(p.v.to)) else None
 
-  def accUse(u: Use.Id): Option[Use.AccId] =
+  def accUse(u: User.Id): Option[User.AccId] =
     if (actual(user)(u) || isSuperUser(user)) Some(u.to) else None
 }
 
 object AuthEnv{
-  def apply(u: UseS.Srv, st: St): AuthEnv = AuthEnv(u, accessiblePros(u, st.pros))
+  def apply(u: UserS.Srv, st: St): AuthEnv = AuthEnv(u, accessiblePros(u, st.pros))
 }
 
 // vim: set ts=2 sw=2 et:

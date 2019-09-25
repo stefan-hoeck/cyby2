@@ -10,7 +10,7 @@ package example
 
 import cats.implicits._
 import cyby.server.PWHash.check
-import cyby.dat.{Alias, example}, example.{InvalidCreds, Use}
+import cyby.dat.{Alias, example}, example.{InvalidCreds, User}
 
 /**
   * Authentication module
@@ -23,8 +23,8 @@ case class Auth(coreSettings: CoreSettings) extends auth[LoggedInEnv] with CyByZ
   val notLoggedIn = cyby.dat.example.NotLoggedIn
   def notFound(r: Request) = cyby.dat.example.NotFound(r.uri.path)
 
-  def mkAuth(e: Env[St], u: UseS.Srv, h: String) = LoggedInEnv(e,u,h)
-  def find(st: St, i: Use.Id) = UseS.child(st,i::hnil)
+  def mkAuth(e: Env[St], u: UserS.Srv, h: String) = LoggedInEnv(e,u,h)
+  def find(st: St, i: User.Id) = UserS.child(st,i::hnil)
 
   def doAuth(st: St, name: String, p: String) = optionToErrNel(InvalidCreds)(
     (Alias(name) >>= st.names.get >>= st.uses.get).filter(u ⇒ check(p, u.password))

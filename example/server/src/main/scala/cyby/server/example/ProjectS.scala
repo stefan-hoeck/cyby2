@@ -18,12 +18,12 @@ object ProjectS extends RootEditor {
   //----------------------------------------------------------------------
   
   type Id            = Project.Id
-  type Add           = Project[Pure,Undef,Use.Id,Undef,Undef]
-  type Mod           = Project[Option,Undef,Use.Id,Undef,Undef]
-  type Srv           = Project[Pure,Id,Use.Id,TimeStamp,EditInfo]
-  type SrvAdd        = Project[Pure,Id,Use.Id,TimeStamp,EditInfo]
-  type SrvMod        = Project[Option,Undef,Use.Id,Undef,EditInfo]
-  type Acc           = Project[Pure,Project.AccId,Use.Id,TimeStamp,EditInfo]
+  type Add           = Project[Pure,Undef,User.Id,Undef,Undef]
+  type Mod           = Project[Option,Undef,User.Id,Undef,Undef]
+  type Srv           = Project[Pure,Id,User.Id,TimeStamp,EditInfo]
+  type SrvAdd        = Project[Pure,Id,User.Id,TimeStamp,EditInfo]
+  type SrvMod        = Project[Option,Undef,User.Id,Undef,EditInfo]
+  type Acc           = Project[Pure,Project.AccId,User.Id,TimeStamp,EditInfo]
   type Cli           = Project.Cli
 
   //----------------------------------------------------------------------
@@ -64,7 +64,7 @@ object ProjectS extends RootEditor {
   //                         Authorization
   //----------------------------------------------------------------------
   
-  val auth = AuthorizerImpl[UserLevel,UseS.Srv,UserLevel](
+  val auth = AuthorizerImpl[UserLevel,UserS.Srv,UserLevel](
     (u,_)   ⇒ asSuperUser(u),
     (u,p,_) ⇒ if (isAdmin(u)) Nil else asUser(u) ::: asOwner(u,p),
     (u,_,_) ⇒ asAdmin(u),

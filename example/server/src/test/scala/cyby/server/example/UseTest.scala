@@ -13,14 +13,14 @@ import cats.implicits._, cyby.shapelessImplicits._
 import cyby.dat._, example._, UserLevel.{Admin,CommonUser,Guest}
 
 trait UseImplicits extends AuthUtil with EditArbs {
-  val S = UseS
+  val S = UserS
   val imps = new Implicits
 }
 
 class UseTest extends UseImplicits {
   import imps.loadArb
 
-  val mod: U.Mod = Use[Option,Undef,PWHash,Undef,Undef](None,None,None,None,None,None,None,None,None)
+  val mod: U.Mod = User[Option,Undef,PWHash,Undef,Undef](None,None,None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
@@ -159,14 +159,14 @@ class UseTest extends UseImplicits {
   }
 
   property("BR-Use-valid-6: deleting a linked user is invalid"){
-    forAll{ (is: List[Use.Id], u: U.Srv) ⇒
+    forAll{ (is: List[User.Id], u: U.Srv) ⇒
       val err = StillLinked(UseP(u.id :: hnil))
       if (is.exists(u.id =-= _)) U.valid.del(is,u,u.id) should contain(err)
     }
   }
 
   property("BR-Use-valid-7: deleting a user no longer linked is valid"){
-    forAll{ (is: List[Use.Id], u: U.Srv) ⇒
+    forAll{ (is: List[User.Id], u: U.Srv) ⇒
       if (!is.exists(u.id =-= _)) U.valid.del(is,u,u.id) shouldEq Nil
     }
   }
@@ -177,7 +177,7 @@ class UseTest extends UseImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Use-cud-1: new users are adjusted correctly"){
-    forAll{ (is: Set[Use.Id], u: U.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[User.Id], u: U.Add, ei: EditInfo) ⇒
       val as = U.cud.doAdd(u)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -218,9 +218,9 @@ class UseTest extends UseImplicits {
 
   def est(st: St): U.EdSt = extract(U.edSt(st, hnil))
 
-  property("UseS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
+  property("UserS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
 
-  property("UseS getSrv") {
+  property("UserS getSrv") {
     forAll{ s: U.Srv ⇒
       val e = PathNotFound(UseP(s.id.inc :: hnil)).e
       val st = St.empty.copy(uses = mkDB(s)(_.id))

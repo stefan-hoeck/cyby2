@@ -379,11 +379,11 @@ trait util extends DispZShared with DocEnv {
   //                      Users
   //----------------------------------------------------------------------
 
-  def useL(u: Use.Cli): Pure[Link[Use.Id]] = Pure(u.id.to -> u.alias.name)
+  def useL(u: User.Cli): Pure[Link[User.Id]] = Pure(u.id.to -> u.alias.name)
 
-  def usesL(us: Use.Cli*): Pure[List[Link[Use.Id]]] = us.toList traverse useL
+  def usesL(us: User.Cli*): Pure[List[Link[User.Id]]] = us.toList traverse useL
 
-  lazy val hock: Use.Cli = Use(
+  lazy val hock: User.Cli = User(
     Id(1), 
     aliasP("hock"),
     plainP("Stefan"),
@@ -394,7 +394,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val jodo: Use.Cli = Use(
+  lazy val jodo: User.Cli = User(
     Id(2), 
     aliasP("jodo"),
     plainP("John"),
@@ -405,7 +405,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val jado: Use.Cli = Use(
+  lazy val jado: User.Cli = User(
     Id(3), 
     aliasP("jado"),
     plainP("Jane"),
@@ -416,7 +416,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val pott: Use.Cli = Use(
+  lazy val pott: User.Cli = User(
     Id(4), 
     aliasP("pott"),
     plainP("Harry"),
@@ -514,7 +514,7 @@ trait util extends DispZShared with DocEnv {
 
   lazy val dispEnvUse: DispEnv = deExp(Set(
     UId.DataList(UseT, RootP),
-    UId.Dat(UseP(hock.id.to[Use.type] :: HNil)),
+    UId.Dat(UseP(hock.id.to[User.type] :: HNil)),
   ))
 
   lazy val dispEnvPro: DispEnv = deExp(Set(

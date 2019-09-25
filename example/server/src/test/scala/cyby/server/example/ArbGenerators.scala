@@ -9,14 +9,14 @@ package server
 package example
 
 import cats.implicits._
-import cyby.dat.example.{Use,USettings,Method,Project}
+import cyby.dat.example.{User,USettings,Method,Project}
 import org.scalacheck.{Gen,Arbitrary}
 
 import org.scalacheck.Shapeless._
 import org.scalacheck.derive.MkArbitrary
 
 trait ArbGenerators extends cyby.server.Generators {
-  val U = UseS
+  val U = UserS
 
   implicit lazy val useSrvA = MkArbitrary[U.Srv].arbitrary
   implicit lazy val useAddA = MkArbitrary[U.Add].arbitrary
@@ -29,7 +29,7 @@ trait ArbGenerators extends cyby.server.Generators {
   implicit lazy val subSrvA = MkArbitrary[CompoundS.Srv].arbitrary
   lazy val proSrvA = MkArbitrary[ProjectS.Srv].arbitrary
 
-  implicit lazy val uSetA: Arbitrary[Map[Use.Id,USettings]] = Arbitrary(Gen const Map())
+  implicit lazy val uSetA: Arbitrary[Map[User.Id,USettings]] = Arbitrary(Gen const Map())
   implicit lazy val stA     = MkArbitrary[St].arbitrary
   implicit lazy val authEnvA = MkArbitrary[AuthEnv].arbitrary
 

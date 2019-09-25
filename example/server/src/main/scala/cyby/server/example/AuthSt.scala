@@ -10,7 +10,7 @@ package example
 
 case class AuthSt (
   st:     St,
-  user:   UseS.Srv,
+  user:   UserS.Srv,
 ){
   lazy val env: AuthEnv = AuthEnv(user, st)
 }

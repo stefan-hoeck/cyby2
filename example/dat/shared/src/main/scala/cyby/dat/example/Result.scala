@@ -34,11 +34,11 @@ case class CpdRes(res: EditRes[Compound.Cli]) extends Result
 
 case class SupRes(res: EditRes[Supplier.Cli]) extends Result
 
-case class UseRes(res: EditRes[Use.Cli]) extends Result
+case class UseRes(res: EditRes[User.Cli]) extends Result
 
 case class ExportRes(path: String) extends Result
 
-case class LoggedIn(hash: String, user: Use.Cli, settings : USettings) extends Result
+case class LoggedIn(hash: String, user: User.Cli, settings : USettings) extends Result
 
 case class SettingsChanged(settings: USettings) extends Result
 

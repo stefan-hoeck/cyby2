@@ -16,7 +16,7 @@ package example
   */
 trait ZEnv extends CyByEnv {
   val version = "220"
-  type Use      = cyby.dat.example.Use.Cli
+  type Use      = cyby.dat.example.User.Cli
   type Result   = cyby.dat.example.Result
   type Column   = cyby.dat.example.ExportField
   type Field    = cyby.dat.example.ExportField

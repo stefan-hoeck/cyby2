@@ -16,7 +16,7 @@ import cyby.dat.example._
 trait CyByZ extends TextEnv with ZEnv {
   type St       = cyby.ui.example.St
 
-  def useId(i: Use.AccId): Use.Id = i.to
+  def useId(i: User.AccId): User.Id = i.to
   def proId(i: Project.AccId): Project.Id = i.to
 
   override def columnDesc(c: Column)       = c.desc
@@ -64,8 +64,8 @@ trait CyByZ extends TextEnv with ZEnv {
     def makePlot = "Make Plot"
   }
 
-  def modifiedSym = Use.modified
-  def createdSym = Use.created
+  def modifiedSym = User.modified
+  def createdSym = User.created
 
   //----------------------------------------------------------------------
   //                      Data Access
@@ -104,7 +104,7 @@ trait CyByZ extends TextEnv with ZEnv {
 
   lazy val fmet: St ⇒ Method.Id ⇒ Option[Method.Cli] = s ⇒ i ⇒ s.mets find (_.id === i)
 
-  lazy val fuse: St ⇒ Use.Id ⇒ Option[Use.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i.v)
+  lazy val fuse: St ⇒ User.Id ⇒ Option[User.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i.v)
 
   lazy val fsto: St ⇒ Location.Id ⇒ Option[Location.Cli] = s ⇒ i ⇒ s.stos find (_.id === i) 
 
