@@ -18,9 +18,9 @@ trait types {
 
   type ProAuthEnv = (List[Project.Id], AuthEnv)
 
-  type CpdTree = CpdTreeEd[BiodataEntryS.Ed,ContainerS.Ed,CpdFilS.Ed,CompoundS.Ed]
+  type CpdTree = CpdTreeEd[BiodataEntryS.Ed,ContainerS.Ed,CpdFileS.Ed,CompoundS.Ed]
 
-  type CpdTreeL = CpdTreeEd[BiodataEntryS.LoadEd,ContainerS.LoadEd,CpdFilS.LoadEd,CompoundS.LoadEd]
+  type CpdTreeL = CpdTreeEd[BiodataEntryS.LoadEd,ContainerS.LoadEd,CpdFileS.LoadEd,CompoundS.LoadEd]
 
   type StEnv = HQ[St,shapeless.HNil,shapeless.HNil]
 

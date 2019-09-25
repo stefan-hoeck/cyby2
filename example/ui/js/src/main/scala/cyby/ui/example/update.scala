@@ -101,7 +101,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     
     type BioE = BiodataEntry[Pure,Undef,Link[Method.Id],Link[Supplier.Id],Link[Project.AccId],Undef,Undef,Undef]
     type ConE = Container[Pure,Undef,Link[Location.Id],Link[Supplier.Id],Link[Project.AccId],Undef,Undef,Undef,Undef]
-    type FilE = Fil[Pure,Undef,Link[Project.AccId],Undef,Undef]
+    type FilE = File[Pure,Undef,Link[Project.AccId],Undef,Undef]
     type MetE = Method[Pure,Undef,Undef,Undef]
     type ProE = Project[Pure,Undef,Link[User.Id],Undef,Undef]
     type StoE = Location[Pure,Undef,Undef,Undef]
@@ -111,7 +111,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
 
     def bioE(b: BiodataEntry.Cli): BioE = b.copy(id = undef, files = undef, created = undef, modified = undef)
     def conE(c: Container.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
-    def filE(f: Fil.Cli): FilE = f.copy(id = undef, created = undef, modified = undef)
+    def filE(f: File.Cli): FilE = f.copy(id = undef, created = undef, modified = undef)
     def metE(m: Method.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
     def proE(p: Project.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
     def stoE(s: Location.Cli): StoE = s.copy(id = undef, created = undef, modified = undef)

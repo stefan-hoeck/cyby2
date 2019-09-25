@@ -23,10 +23,10 @@ object ContainerS extends ChildEditor {
   type ZCli          = Container.Cli
   type Add           = Container[Pure,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,Undef]
   type Mod           = Container[Option,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Container[Pure,Id,Location.Id,Supplier.Id,Project.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
+  type Srv           = Container[Pure,Id,Location.Id,Supplier.Id,Project.Id,BiodataEntryS.DB,ConFileS.DB,TimeStamp,EditInfo]
   type SrvAdd        = Container[Pure,Id,Location.Id,Supplier.Id,Project.Id,Undef,Undef,TimeStamp,EditInfo]
   type SrvMod        = Container[Option,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Container[Pure,Id,Location.Id,Supplier.Id,Project.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
+  type Acc           = Container[Pure,Id,Location.Id,Supplier.Id,Project.AccId,BiodataEntryS.AccDB,ConFileS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -46,7 +46,7 @@ object ContainerS extends ChildEditor {
     Envs(ae,ae,e.lvl,pp -> cs,pp -> cs,(),e.ei -> cs.keySet,e.ei,e.u)
   }
 
-  implicit lazy val filA: Asmbl[ConFilS.AccDB,List[Fil.Cli]] = ConFilS.asmbl
+  implicit lazy val filA: Asmbl[ConFileS.AccDB,List[File.Cli]] = ConFileS.asmbl
   implicit lazy val bioA: Asmbl[BiodataEntryS.AccDB,List[BiodataEntry.Cli]] = BiodataEntryS.asmbl
   lazy val asmbl = dbAsmbl[Id,Acc,Container.Cli](_.sortBy(_.location.v._2))
 
@@ -72,7 +72,7 @@ object ContainerS extends ChildEditor {
   lazy val auth = au.auth
 
   def acc(ae: AuthEnv, s: Srv) = ae.accPro(s.project) map (
-    ps ⇒ s.copy(project = ps, files = ConFilS.accDB(ae, s.files), bio = BiodataEntryS.accDB(ae, s.bio))
+    ps ⇒ s.copy(project = ps, files = ConFileS.accDB(ae, s.files), bio = BiodataEntryS.accDB(ae, s.bio))
   )
 
   //----------------------------------------------------------------------

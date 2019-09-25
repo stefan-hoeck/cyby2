@@ -13,7 +13,7 @@ import cats.implicits.{none ⇒ _, _}
 import cyby.dat.{Mol ⇒ _, _}, example._
 
 trait FilImplicits extends AuthUtil with EditArbs {
-  val S = ConFilS
+  val S = ConFileS
   val imps = new Implicits
 }
 
@@ -24,13 +24,13 @@ class FilTest extends FilImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, srvAddArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Fil[Option,Undef,Project.Id,Undef,Undef](None,None,None,None,None,None,None)
+  val mod: S.Mod = File[Option,Undef,Project.Id,Undef,Undef](None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testProAuth(ConFilS, "Fil", "files")(ConFilS.au, _.id)
+  testProAuth(ConFileS, "Fil", "files")(ConFileS.au, _.id)
 
 
   //----------------------------------------------------------------------
@@ -66,7 +66,7 @@ class FilTest extends FilImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Fil-cud-1: new files are adjusted correctly"){
-    forAll{ (is: Set[Fil.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[File.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp

@@ -54,12 +54,12 @@ object BiodataEntry extends DataCmp {
   /**
     * Path leading to a file linked to a bio entry.
     */
-  type FilPath   = Fil.Id::Path
+  type FilPath   = File.Id::Path
 
   /**
     * Bio entries as seen by the client.
     */
-  type Cli       = BiodataEntry[Pure,Id,Link[Method.Id],Link[Supplier.Id],Link[Project.AccId],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = BiodataEntry[Pure,Id,Link[Method.Id],Link[Supplier.Id],Link[Project.AccId],List[File.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::value::method::supplier::date::comment::project::files::created::modified::HNil) = Keys[lblG.Repr].apply

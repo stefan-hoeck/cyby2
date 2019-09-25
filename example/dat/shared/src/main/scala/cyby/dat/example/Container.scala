@@ -62,12 +62,12 @@ object Container extends DataCmp {
   /**
     * Path leading to a file linked to a container entry.
     */
-  type FilPath   = Fil.Id::Path
+  type FilPath   = File.Id::Path
 
   /**
     * Container entries as seen by the client.
     */
-  type Cli       = Container[Pure,Id,Link[Location.Id],Link[Supplier.Id],Link[Project.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Container[Pure,Id,Link[Location.Id],Link[Supplier.Id],Link[Project.AccId],List[BiodataEntry.Cli],List[File.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::location::supplier::batch::orderNr::comment::lentTo::purity::purityStr::density::concentration::amount::empty::project::bio::files::created::modified::HNil) = Keys[lblG.Repr].apply

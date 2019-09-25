@@ -91,7 +91,7 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
     case BioFil(_)         ⇒ dummy
   }
 
-  def fil(f: FilField): Act[Fil.Cli,CpdFilS.Acc] = f match {
+  def fil(f: FilField): Act[File.Cli,CpdFileS.Acc] = f match {
     case FilId            ⇒ id(_.id, _.id)
     case FilName          ⇒ string(_.name.v.v, _.name.v.v)
     case FilComment       ⇒ string(_.comment.v.v, _.comment.v.v)

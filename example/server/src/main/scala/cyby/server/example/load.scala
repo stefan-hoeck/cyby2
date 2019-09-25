@@ -37,9 +37,9 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
     case CpdEdit(ed)       ⇒ CompoundS.load(st, hnil, ed)
     case ConEdit(p, ed)    ⇒ ContainerS.load(st, p, ed)
     case BioEdit(p, ed)    ⇒ BiodataEntryS.load(st, p, ed)
-    case CpdFilEdit(p, ed) ⇒ CpdFilS.load(st, p, ed)
-    case ConFilEdit(p, ed) ⇒ ConFilS.load(st, p, ed)
-    case BioFilEdit(p, ed) ⇒ BioFilS.load(st, p, ed)
+    case CpdFilEdit(p, ed) ⇒ CpdFileS.load(st, p, ed)
+    case ConFilEdit(p, ed) ⇒ ConFileS.load(st, p, ed)
+    case BioFilEdit(p, ed) ⇒ BioFileS.load(st, p, ed)
   }
 }
 

@@ -76,7 +76,7 @@ trait CyByZ extends TextEnv with ZEnv {
     b     <- c.bio find (_.id === p.head)
   } yield (b,c,s)
 
-  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(File.Cli,BiodataEntry.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     (b,c,s) <- fbio(s)(p.tail)
     f       <- b.files find (_.id === p.head)
   } yield (f,b,c,s)
@@ -86,12 +86,12 @@ trait CyByZ extends TextEnv with ZEnv {
     c <- s.containers find (_.id === p.head)
   } yield c -> s
 
-  lazy val fconFil: St ⇒ Container.FilPath ⇒ Option[(Fil.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
+  lazy val fconFil: St ⇒ Container.FilPath ⇒ Option[(File.Cli,Container.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     f     <- c.files find (_.id === p.head)
   } yield (f,c,s)
 
-  lazy val fsubFil: St ⇒ Compound.FilPath ⇒ Option[(Fil.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
+  lazy val fsubFil: St ⇒ Compound.FilPath ⇒ Option[(File.Cli,Compound.Cli)] = s ⇒ p ⇒ for {
     s <- fsub(s)(p.tail.head)
     f <- s.files find (_.id === p.head)
   } yield (f,s)

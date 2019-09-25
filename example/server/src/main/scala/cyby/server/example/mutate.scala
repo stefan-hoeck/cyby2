@@ -43,9 +43,9 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case CpdEdit(e)      ⇒ m3(CompoundS.fullEd(hnil)(v,st,e))(subEd)
     case ConEdit(p,e)    ⇒ m3(ContainerS.fullEd(p)(v,st,e))(conEd(p))
     case BioEdit(p,e)    ⇒ m3(BiodataEntryS.fullEd(p)(v,st,e))(bioEd(p))
-    case CpdFilEdit(p,e) ⇒ m3(CpdFilS.fullEd(p)(v,st,e))(subFilEd(p))
-    case ConFilEdit(p,e) ⇒ m3(ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
-    case BioFilEdit(p,e) ⇒ m3(BioFilS.fullEd(p)(v,st,e))(bioFilEd(p))
+    case CpdFilEdit(p,e) ⇒ m3(CpdFileS.fullEd(p)(v,st,e))(subFilEd(p))
+    case ConFilEdit(p,e) ⇒ m3(ConFileS.fullEd(p)(v,st,e))(conFilEd(p))
+    case BioFilEdit(p,e) ⇒ m3(BioFileS.fullEd(p)(v,st,e))(bioFilEd(p))
   }
 
   def delFil(p: CpdTree): IO[Unit] = p match {
@@ -59,11 +59,11 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     e map { case (x,a,y) ⇒ (x,f(a),y) }
 
   def addFil(
-    pth: Fil.Id ⇒ Path,
+    pth: File.Id ⇒ Path,
     bs:  Array[Byte],
-    e:   DataE[(St @@ Adjusted,CpdFilS.LoadEd,Result)]
+    e:   DataE[(St @@ Adjusted,CpdFileS.LoadEd,Result)]
   )(
-    f: CpdFilS.LoadEd ⇒ CpdTreeL
+    f: CpdFileS.LoadEd ⇒ CpdTreeL
   ): M.Prog[(St @@ Adjusted,CpdTreeL,Result)] = for {
     t             <- M wrapEither e
     (st,sfl,res)  = t
@@ -72,11 +72,11 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   } yield (st,f(sfl),res)
 
   def bioEd(p: Container.Path)(ed: BiodataEntryS.LoadEd): CpdTreeL = BioEdit(p, ed)
-  def bioFilEd(p: BiodataEntry.Path)(ed: BioFilS.LoadEd): CpdTreeL = BioFilEdit(p, ed)
+  def bioFilEd(p: BiodataEntry.Path)(ed: BioFileS.LoadEd): CpdTreeL = BioFilEdit(p, ed)
   def conEd(p: Compound.Path)(ed: ContainerS.LoadEd): CpdTreeL = ConEdit(p, ed)
-  def conFilEd(p: Container.Path)(ed: ConFilS.LoadEd): CpdTreeL = ConFilEdit(p, ed)
+  def conFilEd(p: Container.Path)(ed: ConFileS.LoadEd): CpdTreeL = ConFilEdit(p, ed)
   def subEd(ed: CompoundS.LoadEd): CpdTreeL = CpdEdit(ed)
-  def subFilEd(p: Compound.Path)(ed: CpdFilS.LoadEd): CpdTreeL = CpdFilEdit(p, ed)
+  def subFilEd(p: Compound.Path)(ed: CpdFileS.LoadEd): CpdTreeL = CpdFilEdit(p, ed)
 
   def edFile(r: Request): M.Prog[Result] = for {
     v   <- M.ask
@@ -85,11 +85,11 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     (ed,bs) = pr
     t   <- ed match {
              case CpdFilEdit(p, e@Add(_)) ⇒ 
-               addFil(i ⇒ CpdFilP(i::p), bs, CpdFilS.fullEd(p)(v,st,e))(subFilEd(p))
+               addFil(i ⇒ CpdFilP(i::p), bs, CpdFileS.fullEd(p)(v,st,e))(subFilEd(p))
              case ConFilEdit(p, e@Add(_)) ⇒
-               addFil(i ⇒ ConFilP(i::p), bs, ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
+               addFil(i ⇒ ConFilP(i::p), bs, ConFileS.fullEd(p)(v,st,e))(conFilEd(p))
              case BioFilEdit(p, e@Add(_)) ⇒
-               addFil(i ⇒ BioFilP(i::p), bs, BioFilS.fullEd(p)(v,st,e))(bioFilEd(p))
+               addFil(i ⇒ BioFilP(i::p), bs, BioFileS.fullEd(p)(v,st,e))(bioFilEd(p))
              case _ ⇒ M.raise(ReadErr("error when adding file"))
            }
     (newSt,ed,res) = t

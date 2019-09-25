@@ -39,7 +39,7 @@ abstract class EditUtil
   def conSt(c: ContainerS.Srv, s: CompoundS.Srv): St =
     subSt(inDB(c, s)(_.id, _.containers))
 
-  def conFilSt(f: ConFilS.Srv, c: ContainerS.Srv, s: CompoundS.Srv): St =
+  def conFilSt(f: ConFileS.Srv, c: ContainerS.Srv, s: CompoundS.Srv): St =
     conSt(inDB(f, c)(_.id, _.files), s)
 
   def bioSt(b: BiodataEntryS.Srv, c: ContainerS.Srv, s: CompoundS.Srv): St =

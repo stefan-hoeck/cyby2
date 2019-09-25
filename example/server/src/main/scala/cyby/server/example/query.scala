@@ -101,9 +101,9 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   def expFilter(f: ExportField, st: St): CompoundS.MF = {
     def con(t: ContainerS.MF): CompoundS.MF = (b,s) ⇒ lensed(t(b,s))(CompoundS.L.containers)
     def bio(t: BiodataEntryS.MF): CompoundS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.bio))
-    def bioFil(t: BioFilS.MF): CompoundS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
-    def subFil(t: CpdFilS.MF): CompoundS.MF = (b,s) ⇒ lensed(t(b,s))(CompoundS.L.files)
-    def conFil(t: ConFilS.MF): CompoundS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.files))
+    def bioFil(t: BioFileS.MF): CompoundS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
+    def subFil(t: CpdFileS.MF): CompoundS.MF = (b,s) ⇒ lensed(t(b,s))(CompoundS.L.files)
+    def conFil(t: ConFileS.MF): CompoundS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.files))
 
     f match {
       case ExportCpd(CpdFil(ff)) ⇒ subFil(toMapFilter(field fil ff que st))
@@ -117,7 +117,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   }
 
   lazy val join: (Map[Compound.Id,CompoundS.Acc],Map[Compound.Id,CompoundS.Acc]) ⇒ Map[Compound.Id,CompoundS.Acc] = {
-    val jf = joinMaps[Fil.Id,CpdFilS.Acc]((f,_) ⇒ f)
+    val jf = joinMaps[File.Id,CpdFileS.Acc]((f,_) ⇒ f)
     val jb = joinMaps[BiodataEntry.Id,BiodataEntryS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files)))
     val jc = joinMaps[Container.Id,ContainerS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), bio = jb(a.bio,b.bio)))
 

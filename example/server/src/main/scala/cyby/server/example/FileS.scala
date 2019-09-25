@@ -13,7 +13,7 @@ import cats.implicits.{none ⇒ _, _}
 import cyby.dat._, cyby.dat.example._
 import shapeless.{::}
 
-object CpdFilS extends FilEditor {
+object CpdFileS extends FilEditor {
   val parent   = CompoundS
   val notFound = p ⇒ PathNotFound(CpdFilP(p))
   val dbL      = lens[CompoundS.Srv].files
@@ -24,7 +24,7 @@ object CpdFilS extends FilEditor {
   }
 }
 
-object ConFilS extends FilEditor {
+object ConFileS extends FilEditor {
   val notFound = p ⇒ PathNotFound(ConFilP(p))
   val parent   = ContainerS
   val dbL      = lens[ContainerS.Srv].files
@@ -35,7 +35,7 @@ object ConFilS extends FilEditor {
   }
 }
 
-object BioFilS extends FilEditor {
+object BioFileS extends FilEditor {
   val notFound = p ⇒ PathNotFound(BioFilP(p))
   val parent   = BiodataEntryS
   val dbL      = lens[BiodataEntryS.Srv].files
@@ -51,14 +51,14 @@ trait FilEditor extends ChildEditor {
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Fil.Id
-  type ZCli          = Fil.Cli
-  type Add           = Fil[Pure,Undef,Project.Id,Undef,Undef]
-  type Mod           = Fil[Option,Undef,Project.Id,Undef,Undef]
-  type Srv           = Fil[Pure,Id,Project.Id,TimeStamp,EditInfo]
-  type SrvAdd        = Fil[Pure,Id,Project.Id,TimeStamp,EditInfo]
-  type SrvMod        = Fil[Option,Undef,Project.Id,Undef,EditInfo]
-  type Acc           = Fil[Pure,Id,Project.AccId,TimeStamp,EditInfo]
+  type Id            = File.Id
+  type ZCli          = File.Cli
+  type Add           = File[Pure,Undef,Project.Id,Undef,Undef]
+  type Mod           = File[Option,Undef,Project.Id,Undef,Undef]
+  type Srv           = File[Pure,Id,Project.Id,TimeStamp,EditInfo]
+  type SrvAdd        = File[Pure,Id,Project.Id,TimeStamp,EditInfo]
+  type SrvMod        = File[Option,Undef,Project.Id,Undef,EditInfo]
+  type Acc           = File[Pure,Id,Project.AccId,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -76,13 +76,13 @@ trait FilEditor extends ChildEditor {
     Envs(ae,ae,e.lvl,pp -> fs,pp -> fs,(),e.ei -> fs.keySet,e.ei,e.u)
   }
 
-  lazy val asmbl = dbAsmbl[Id,Acc,Fil.Cli](_.sortBy(_.name.v.v))
+  lazy val asmbl = dbAsmbl[Id,Acc,File.Cli](_.sortBy(_.name.v.v))
 
   //----------------------------------------------------------------------
   //                         Valdation
   //----------------------------------------------------------------------
   
-  val exists    = (p: parent.Path) ⇒ (f: Fil.Id ,n: FileName) ⇒ FilExists(n, pth(f::p))
+  val exists    = (p: parent.Path) ⇒ (f: File.Id ,n: FileName) ⇒ FilExists(n, pth(f::p))
 
   val valid = ValidatorImpl[(ParentPath,DB),(ParentPath,DB),Unit](
     (p,f)   ⇒ uniqAdd(p._2, f.path)(_.path)(exists(p._1)),

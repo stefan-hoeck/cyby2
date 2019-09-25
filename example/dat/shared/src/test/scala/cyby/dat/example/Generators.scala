@@ -12,7 +12,7 @@ import org.scalacheck.Shapeless._
 import org.scalacheck.{Arbitrary,derive}, derive.{MkArbitrary ⇒ MKA}
 
 trait Generators extends DataImplicits {
-  implicit lazy val filArb = MKA[Fil.Cli].arbitrary
+  implicit lazy val filArb = MKA[File.Cli].arbitrary
   implicit lazy val metArb = MKA[Method.Cli].arbitrary
   implicit lazy val proArb = MKA[Project.Cli].arbitrary
   implicit lazy val stoArb = MKA[Location.Cli].arbitrary

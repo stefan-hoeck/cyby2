@@ -33,11 +33,11 @@ import io.circe.syntax._
   *   |    |
   *   |    |___ Bio (BiodataEntry.Id)
   *   |    |    |
-  *   |    |    |___ Fil (Fil.Id)
+  *   |    |    |___ Fil (File.Id)
   *   |    |
-  *   |    |___ Fil (Fil.Id)
+  *   |    |___ Fil (File.Id)
   *   |
-  *   |___ Fil (Fil.Id)
+  *   |___ Fil (File.Id)
   *
   *  The four type parameters represent the types used
   *  to edit bio entries, containers, files, and substances.

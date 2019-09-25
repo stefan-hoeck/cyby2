@@ -23,7 +23,7 @@ trait ArbGenerators extends cyby.server.Generators {
   implicit lazy val useModA = MkArbitrary[U.Mod].arbitrary
   implicit lazy val useSrvModA = MkArbitrary[U.SrvMod].arbitrary
 
-  implicit lazy val filSrvA = MkArbitrary[CpdFilS.Srv].arbitrary
+  implicit lazy val filSrvA = MkArbitrary[CpdFileS.Srv].arbitrary
   implicit lazy val bioSrvA = MkArbitrary[BiodataEntryS.Srv].arbitrary
   implicit lazy val conSrvA = MkArbitrary[ContainerS.Srv].arbitrary
   implicit lazy val subSrvA = MkArbitrary[CompoundS.Srv].arbitrary

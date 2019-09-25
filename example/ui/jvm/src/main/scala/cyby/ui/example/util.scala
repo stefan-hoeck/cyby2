@@ -217,7 +217,7 @@ trait util extends DispZShared with DocEnv {
   //                      Files
   //----------------------------------------------------------------------
 
-  lazy val fil1: Fil.Cli = Fil(
+  lazy val fil1: File.Cli = File(
     Id(1),
     nameP("a file"),
     fileNameP("file_path.pdf"),
@@ -226,7 +226,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val fil2: Fil.Cli = Fil(
+  lazy val fil2: File.Cli = File(
     Id(2),
     nameP("another file"),
     fileNameP("file_path2.pdf"),

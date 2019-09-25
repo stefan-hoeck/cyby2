@@ -18,7 +18,7 @@ import shapeless.ops.record._
   *
   * Look at cyby.dat.example.Sup for a detailed description about
   * the type parameters used. Also, look at the companion object and
-  * cyby.server.example.CpdFilS for aliases with often used type parameters.
+  * cyby.server.example.CpdFileS for aliases with often used type parameters.
   *
   * @tparam F:  Effect, in which fields are wrapped. Typically set
   *             to Pure for mandatory fields and Maybe if fields
@@ -28,7 +28,7 @@ import shapeless.ops.record._
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Fil[F[_],ID,P,CR,MO](
+case class File[F[_],ID,P,CR,MO](
   id:            ID,
   name:          F[Name],
   path:          F[FileName],
@@ -38,17 +38,17 @@ case class Fil[F[_],ID,P,CR,MO](
   modified:      MO,
 )
 
-object Fil extends DataCmp{
+object File extends DataCmp{
   /**
     * Fil entries as seen by the client.
     */
-  type Cli       = Fil[Pure,Id,Link[Project.AccId],TimeStamp,EditInfo]
+  type Cli       = File[Pure,Id,Link[Project.AccId],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::name::path::comment::project::created::modified::HNil) = Keys[lblG.Repr].apply
 
-  implicit def eqI[F[_],ID,P,CR,MO]: cats.Eq[Fil[F,ID,P,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,P:D,CR:D,MO:D]: D[Fil[F,ID,P,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,P:E,CR:E,MO:E]: E[Fil[F,ID,P,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,P,CR,MO]: cats.Eq[File[F,ID,P,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,P:D,CR:D,MO:D]: D[File[F,ID,P,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,P:E,CR:E,MO:E]: E[File[F,ID,P,CR,MO]] = deriveEncoder
 }
 

@@ -54,12 +54,12 @@ object Compound extends DataCmp {
   /**
     * Path leading to a file linked to a substance entry.
     */
-  type FilPath   = Fil.Id::Path
+  type FilPath   = File.Id::Path
 
   /**
     * Compounds as seen by the client.
     */
-  type Cli       = Compound[Pure,Id,Mol,Link[Project.AccId],List[Container.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Compound[Pure,Id,Mol,Link[Project.AccId],List[Container.Cli],List[File.Cli],TimeStamp,EditInfo]
 
   /**
     * Collects a list of statistics entries from a

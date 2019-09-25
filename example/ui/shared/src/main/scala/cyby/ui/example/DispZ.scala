@@ -403,19 +403,19 @@ trait DispZShared extends CyByZ {
   //                      Files
   //----------------------------------------------------------------------
 
-  def mkFils[P<:HList](e: ExpEnv, p: P, fs: List[Fil.Cli])(
+  def mkFils[P<:HList](e: ExpEnv, p: P, fs: List[File.Cli])(
     pth: P ⇒ Path,
-    filPth: shapeless.::[Fil.Id,P] ⇒ Path,
+    filPth: shapeless.::[File.Id,P] ⇒ Path,
   ): Node =  {
     val ppth = pth(p)
     val i = DataList(FilT, ppth).i
 
-    def mkFil(f: Fil.Cli): Node = {
+    def mkFil(f: File.Cli): Node = {
       val fpth = filPth(f.id :: p)
       val linkDets = if (e.isEditingAs(CommonUser))
                       Txt.div(cls := ConDetails.c)(
-                        Txt.conDetRow(fpth, Fil.name, Txt text f.name.v.v, some(CommonUser), e),
-                        Txt.conDetRow(fpth, Fil.path, Txt text f.path.v.v, some(CommonUser), e),
+                        Txt.conDetRow(fpth, File.name, Txt text f.name.v.v, some(CommonUser), e),
+                        Txt.conDetRow(fpth, File.path, Txt text f.path.v.v, some(CommonUser), e),
                       )
                     else
                       Txt.div(cls := ConDetails.c)(
@@ -425,14 +425,14 @@ trait DispZShared extends CyByZ {
       Txt.li(id := Dat(fpth), cls := ExplorerConRow.c)(
         linkDets,
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(fpth, Fil.project, Txt text f.project.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(fpth, File.project, Txt text f.project.v._2.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(fpth, Fil.comment, Txt text f.comment.v.v, some(CommonUser), e),
+          Txt.conDetRow(fpth, File.comment, Txt text f.comment.v.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(fpth, Fil.created, Txt timeStampNode f.created, None, e),
-          Txt.conDetRow(fpth, Fil.modified,Txt editNode f.modified, None, e),
+          Txt.conDetRow(fpth, File.created, Txt timeStampNode f.created, None, e),
+          Txt.conDetRow(fpth, File.modified,Txt editNode f.modified, None, e),
         ),
         e.ifEditingAs(Admin)(Txt.div(id := DeleteId(fpth), cls := DeleteHidden.c)()),
       )

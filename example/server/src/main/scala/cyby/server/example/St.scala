@@ -54,7 +54,7 @@ case class St(
     sub: CompoundS.Srv ⇒ List[A],
     con: ContainerS.Srv ⇒ List[A],
     bio: BiodataEntryS.Srv ⇒ List[A],
-    fil: CpdFilS.Srv ⇒ List[A],
+    fil: CpdFileS.Srv ⇒ List[A],
   ): List[A] = {
     val ss = subs.toList map (_._2)
     val cs = ss flatMap (_.containers.toList map (_._2))

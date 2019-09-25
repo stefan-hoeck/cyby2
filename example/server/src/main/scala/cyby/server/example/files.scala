@@ -19,13 +19,13 @@ case class Files(coreSettings: CoreSettings) extends FileEnv with CyByZ {
   val M = CyByMonadIO.authEnv[Unit]
 
   def prog(pth: Path): M.Prog[Response] = pth match {
-    case CpdFilP(h) ⇒ srv(h)(CpdFilS.child, pth)
-    case ConFilP(h) ⇒ srv(h)(ConFilS.child, pth)
-    case BioFilP(h) ⇒ srv(h)(BioFilS.child, pth)
+    case CpdFilP(h) ⇒ srv(h)(CpdFileS.child, pth)
+    case ConFilP(h) ⇒ srv(h)(ConFileS.child, pth)
+    case BioFilP(h) ⇒ srv(h)(BioFileS.child, pth)
     case _          ⇒ M lift notFound
   }
 
-  def srv[P](p: P)(f: (St, P) ⇒ DataE[CpdFilS.Srv], pth: Path): M.Prog[Response] =
+  def srv[P](p: P)(f: (St, P) ⇒ DataE[CpdFileS.Srv], pth: Path): M.Prog[Response] =
     for {
       fil <- M.ask map (ae ⇒ f(ae.st, p).toOption)
       _   <- M debug s"looking for file ${pth}: found ${fil}"
