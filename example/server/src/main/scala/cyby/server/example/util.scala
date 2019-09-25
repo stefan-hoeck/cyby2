@@ -73,9 +73,9 @@ trait util {
  
   def subFilPth(p: Sub.FilPath): String = s"${subPth(p.tail)}-${p.head}"
 
-  def conPth(p: Con.Path): String = s"${subPth(p.tail)}-${p.head}"
+  def conPth(p: Container.Path): String = s"${subPth(p.tail)}-${p.head}"
  
-  def conFilPth(p: Con.FilPath): String = s"${conPth(p.tail)}-${p.head}"
+  def conFilPth(p: Container.FilPath): String = s"${conPth(p.tail)}-${p.head}"
 
   def bioPth(p: BiodataEntry.Path): String = s"${conPth(p.tail)}-${p.head}"
  

@@ -52,7 +52,7 @@ case class St(
 
   def subElems[A](
     sub: SubS.Srv ⇒ List[A],
-    con: ConS.Srv ⇒ List[A],
+    con: ContainerS.Srv ⇒ List[A],
     bio: BiodataEntryS.Srv ⇒ List[A],
     fil: SubFilS.Srv ⇒ List[A],
   ): List[A] = {

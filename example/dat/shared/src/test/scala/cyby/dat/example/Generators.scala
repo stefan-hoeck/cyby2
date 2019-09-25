@@ -18,7 +18,7 @@ trait Generators extends DataImplicits {
   implicit lazy val stoArb = MKA[Sto.Cli].arbitrary
   implicit lazy val supArb = MKA[Sup.Cli].arbitrary
   implicit lazy val bioArb = MKA[BiodataEntry.Cli].arbitrary
-  implicit lazy val conArb = MKA[Con.Cli].arbitrary
+  implicit lazy val conArb = MKA[Container.Cli].arbitrary
   implicit lazy val subArb = MKA[Sub.Cli].arbitrary
   implicit lazy val useArb = MKA[Use.Cli].arbitrary
   implicit lazy val filFieldArb = shapeless.the[Arbitrary[FilField]]

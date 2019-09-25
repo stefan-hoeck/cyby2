@@ -41,7 +41,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
 
   val edSub = (v: EditEnv, st: St, p: SubTree) ⇒ p match {
     case SubEdit(e)      ⇒ m3(SubS.fullEd(hnil)(v,st,e))(subEd)
-    case ConEdit(p,e)    ⇒ m3(ConS.fullEd(p)(v,st,e))(conEd(p))
+    case ConEdit(p,e)    ⇒ m3(ContainerS.fullEd(p)(v,st,e))(conEd(p))
     case BioEdit(p,e)    ⇒ m3(BiodataEntryS.fullEd(p)(v,st,e))(bioEd(p))
     case SubFilEdit(p,e) ⇒ m3(SubFilS.fullEd(p)(v,st,e))(subFilEd(p))
     case ConFilEdit(p,e) ⇒ m3(ConFilS.fullEd(p)(v,st,e))(conFilEd(p))
@@ -71,10 +71,10 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     _             <- M lift files.insert(pth(id))(bs)
   } yield (st,f(sfl),res)
 
-  def bioEd(p: Con.Path)(ed: BiodataEntryS.LoadEd): SubTreeL = BioEdit(p, ed)
+  def bioEd(p: Container.Path)(ed: BiodataEntryS.LoadEd): SubTreeL = BioEdit(p, ed)
   def bioFilEd(p: BiodataEntry.Path)(ed: BioFilS.LoadEd): SubTreeL = BioFilEdit(p, ed)
-  def conEd(p: Sub.Path)(ed: ConS.LoadEd): SubTreeL = ConEdit(p, ed)
-  def conFilEd(p: Con.Path)(ed: ConFilS.LoadEd): SubTreeL = ConFilEdit(p, ed)
+  def conEd(p: Sub.Path)(ed: ContainerS.LoadEd): SubTreeL = ConEdit(p, ed)
+  def conFilEd(p: Container.Path)(ed: ConFilS.LoadEd): SubTreeL = ConFilEdit(p, ed)
   def subEd(ed: SubS.LoadEd): SubTreeL = SubEdit(ed)
   def subFilEd(p: Sub.Path)(ed: SubFilS.LoadEd): SubTreeL = SubFilEdit(p, ed)
 

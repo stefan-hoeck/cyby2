@@ -14,19 +14,19 @@ import cyby.dat._, cyby.dat.example._
 /**
   * CRUD of containers
   */
-object ConS extends ChildEditor {
+object ContainerS extends ChildEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Con.Id
-  type ZCli          = Con.Cli
-  type Add           = Con[Pure,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
-  type Mod           = Con[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = Con[Pure,Id,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,TimeStamp,EditInfo]
-  type SrvMod        = Con[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
+  type Id            = Container.Id
+  type ZCli          = Container.Cli
+  type Add           = Container[Pure,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
+  type Mod           = Container[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
+  type Srv           = Container[Pure,Id,Sto.Id,Sup.Id,Pro.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = Container[Pure,Id,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,TimeStamp,EditInfo]
+  type SrvMod        = Container[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,EditInfo]
+  type Acc           = Container[Pure,Id,Sto.Id,Sup.Id,Pro.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -48,13 +48,13 @@ object ConS extends ChildEditor {
 
   implicit lazy val filA: Asmbl[ConFilS.AccDB,List[Fil.Cli]] = ConFilS.asmbl
   implicit lazy val bioA: Asmbl[BiodataEntryS.AccDB,List[BiodataEntry.Cli]] = BiodataEntryS.asmbl
-  lazy val asmbl = dbAsmbl[Id,Acc,Con.Cli](_.sortBy(_.location.v._2))
+  lazy val asmbl = dbAsmbl[Id,Acc,Container.Cli](_.sortBy(_.location.v._2))
 
   //----------------------------------------------------------------------
   //                         Valdation
   //----------------------------------------------------------------------
 
-  val exists = (p: Sub.Path) ⇒ (i: Con.Id,n: Plain) ⇒ BatchExists(n, i::p)
+  val exists = (p: Sub.Path) ⇒ (i: Container.Id,n: Plain) ⇒ BatchExists(n, i::p)
   val bo   = (b: Plain) ⇒ if (b.v.nonEmpty) some(b) else none[Plain]
   val bsrv = (s: Srv) ⇒ s.batch map bo
 

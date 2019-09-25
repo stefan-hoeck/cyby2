@@ -77,11 +77,11 @@ class BioTest extends BioImplicits {
   //                         Util
   //----------------------------------------------------------------------
 
-  def est(st: St, s: SubS.Srv, c: ConS.Srv): S.EdSt =
+  def est(st: St, s: SubS.Srv, c: ContainerS.Srv): S.EdSt =
     extract(S.edSt(st, c.id :: s.id :: hnil))
 
   property("BiodataEntryS edEnv") {
-    forAll{ (s: SubS.Srv, c: ConS.Srv) ⇒
+    forAll{ (s: SubS.Srv, c: ContainerS.Srv) ⇒
       val st = conSt(c,s)
       val e = PathNotFound(ConP(c.id.inc :: s.id :: hnil)).e
 
@@ -91,7 +91,7 @@ class BioTest extends BioImplicits {
   }
 
   property("BiodataEntryS getSrv") {
-    forAll{ (s: SubS.Srv, c: ConS.Srv, b: S.Srv) ⇒
+    forAll{ (s: SubS.Srv, c: ContainerS.Srv, b: S.Srv) ⇒
       val st = bioSt(b, c, s)
       val e = PathNotFound(BioP(b.id.inc :: c.id :: s.id :: hnil)).e
 

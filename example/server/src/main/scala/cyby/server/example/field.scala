@@ -56,9 +56,9 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
     case SubContainers     ⇒ dummy
   }
 
-  def con(f: ConField): Act[Con.Cli, ConS.Acc] = con_(f, identity)
+  def con(f: ConField): Act[Container.Cli, ContainerS.Acc] = con_(f, identity)
 
-  def con_[A](f: ConField, g: A ⇒ Con.Cli): Act[A, ConS.Acc] = f match {
+  def con_[A](f: ConField, g: A ⇒ Container.Cli): Act[A, ContainerS.Acc] = f match {
     case ConLocation       ⇒ loc(g(_).location.v, _.location.v)
     case ConSupplier       ⇒ sup(g(_).supplier.v, _.supplier.v)
     case ConProject        ⇒ pro(g(_).project.v, _.project.v)

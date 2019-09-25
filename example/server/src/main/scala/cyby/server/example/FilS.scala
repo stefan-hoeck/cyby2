@@ -26,8 +26,8 @@ object SubFilS extends FilEditor {
 
 object ConFilS extends FilEditor {
   val notFound = p ⇒ PathNotFound(ConFilP(p))
-  val parent   = ConS
-  val dbL      = lens[ConS.Srv].files
+  val parent   = ContainerS
+  val dbL      = lens[ContainerS.Srv].files
   val pth      = ConFilP
 
   def proIds(e: EdSt) = e.nodes match {

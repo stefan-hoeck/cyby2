@@ -18,9 +18,9 @@ trait types {
 
   type ProAuthEnv = (List[Pro.Id], AuthEnv)
 
-  type SubTree = SubTreeEd[BiodataEntryS.Ed,ConS.Ed,SubFilS.Ed,SubS.Ed]
+  type SubTree = SubTreeEd[BiodataEntryS.Ed,ContainerS.Ed,SubFilS.Ed,SubS.Ed]
 
-  type SubTreeL = SubTreeEd[BiodataEntryS.LoadEd,ConS.LoadEd,SubFilS.LoadEd,SubS.LoadEd]
+  type SubTreeL = SubTreeEd[BiodataEntryS.LoadEd,ContainerS.LoadEd,SubFilS.LoadEd,SubS.LoadEd]
 
   type StEnv = HQ[St,shapeless.HNil,shapeless.HNil]
 

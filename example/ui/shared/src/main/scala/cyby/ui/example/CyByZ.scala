@@ -38,7 +38,7 @@ trait CyByZ extends TextEnv with ZEnv {
   val SubStrL = SubStr.length
   def subIdString(s: Sub.Id): String = s"${SubStr}${s}"
   
-  def statsIdString(p: (Con.Id,Sub.Id)): String = s"${BioStats}${p._1}_${p._2}"
+  def statsIdString(p: (Container.Id,Sub.Id)): String = s"${BioStats}${p._1}_${p._2}"
   def statsId(s: BioStats) = s.path.head -> s.path.tail.head
 
   //----------------------------------------------------------------------
@@ -71,22 +71,22 @@ trait CyByZ extends TextEnv with ZEnv {
   //                      Data Access
   //----------------------------------------------------------------------
 
-  lazy val fbio: St ⇒ BiodataEntry.Path ⇒ Option[(BiodataEntry.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbio: St ⇒ BiodataEntry.Path ⇒ Option[(BiodataEntry.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     b     <- c.bio find (_.id === p.head)
   } yield (b,c,s)
 
-  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     (b,c,s) <- fbio(s)(p.tail)
     f       <- b.files find (_.id === p.head)
   } yield (f,b,c,s)
 
-  lazy val fcon: St ⇒ Con.Path ⇒ Option[(Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fcon: St ⇒ Container.Path ⇒ Option[(Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     s <- fsub(s)(p.tail.head)
     c <- s.containers find (_.id === p.head)
   } yield c -> s
 
-  lazy val fconFil: St ⇒ Con.FilPath ⇒ Option[(Fil.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fconFil: St ⇒ Container.FilPath ⇒ Option[(Fil.Cli,Container.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     f     <- c.files find (_.id === p.head)
   } yield (f,c,s)

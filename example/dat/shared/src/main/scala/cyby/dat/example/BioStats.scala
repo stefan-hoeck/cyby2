@@ -14,9 +14,9 @@ import shapeless.HNil
 
 @io.circe.generic.JsonCodec case class BioStats(
   sub:   Sub.Cli,
-  con:   Con.Cli,
+  con:   Container.Cli,
 ){
-  def path: Con.Path = con.id :: sub.id :: HNil
+  def path: Container.Path = con.id :: sub.id :: HNil
 
   lazy val stats: Map[Met.Id,Stats] =
      con.bio.groupBy(_.method._1).flatMap(stats)

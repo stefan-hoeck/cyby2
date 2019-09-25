@@ -27,7 +27,7 @@ import cyby.dat.{Plain, CasNr, Mol, FileName, Name}
   def nel: Nel[DataErr] = Nel of e
 }
 
-case class BatchExists(b: Plain, p: Con.Path) extends DataErr
+case class BatchExists(b: Plain, p: Container.Path) extends DataErr
 case class CasNrExists(c: CasNr, p: Sub.Path) extends DataErr
 case class Exists(n: Name, p: Path) extends DataErr
 case class SubExists(n: Plain, p: Sub.Path) extends DataErr

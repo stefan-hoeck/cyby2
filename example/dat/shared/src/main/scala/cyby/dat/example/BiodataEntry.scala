@@ -49,7 +49,7 @@ object BiodataEntry extends DataCmp {
   /**
     * Path leading to a given bio entry in the data tree.
     */
-  type Path      = Id::Con.Path
+  type Path      = Id::Container.Path
 
   /**
     * Path leading to a file linked to a bio entry.

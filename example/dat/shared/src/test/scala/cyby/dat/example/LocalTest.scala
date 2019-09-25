@@ -13,7 +13,7 @@ class LocalTest extends DataSuite {
 
   property("bio localisation") { testLoc("bio", BiodataEntry.lbls.toList) }
 
-  property("con localisation") { testLoc("con", Con.lbls.toList) }
+  property("con localisation") { testLoc("con", Container.lbls.toList) }
 
   property("fil localisation") { testLoc("fil", Fil.lbls.toList) }
 

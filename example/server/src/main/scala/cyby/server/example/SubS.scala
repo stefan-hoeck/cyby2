@@ -20,10 +20,10 @@ object SubS extends RootEditor {
   type Id            = Sub.Id
   type Add           = Sub[Pure,Undef,Mol,Pro.Id,Undef,Undef,Undef,Undef]
   type Mod           = Sub[Option,Undef,Mol,Pro.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Sub[Pure,Id,Mol,Pro.Id,ConS.DB,SubFilS.DB,TimeStamp,EditInfo]
+  type Srv           = Sub[Pure,Id,Mol,Pro.Id,ContainerS.DB,SubFilS.DB,TimeStamp,EditInfo]
   type SrvAdd        = Sub[Pure,Id,Mol,Pro.Id,Undef,Undef,TimeStamp,EditInfo]
   type SrvMod        = Sub[Option,Undef,Mol,Pro.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Sub[Pure,Id,Mol,Pro.AccId,ConS.AccDB,SubFilS.AccDB,TimeStamp,EditInfo]
+  type Acc           = Sub[Pure,Id,Mol,Pro.AccId,ContainerS.AccDB,SubFilS.AccDB,TimeStamp,EditInfo]
   type Cli           = Sub.Cli
 
   //----------------------------------------------------------------------
@@ -43,7 +43,7 @@ object SubS extends RootEditor {
   }
 
   implicit lazy val filA: Asmbl[SubFilS.AccDB,List[Fil.Cli]] = SubFilS.asmbl
-  implicit lazy val conA: Asmbl[ConS.AccDB,List[Con.Cli]] = ConS.asmbl
+  implicit lazy val conA: Asmbl[ContainerS.AccDB,List[Container.Cli]] = ContainerS.asmbl
   lazy val asmbl = asmblD[Acc,Sub.Cli]
   lazy val dbasmbl = dbAsmbl[Id,Acc,Sub.Cli](identity)(asmbl)
   val cliToRes = SubRes
@@ -93,7 +93,7 @@ object SubS extends RootEditor {
   lazy val auth = au.auth
 
   def acc(ae: AuthEnv, s: Srv) = ae.accPro(s.project) map (
-    ps ⇒ s.copy(project = ps, files = ConFilS.accDB(ae, s.files), containers = ConS.accDB(ae, s.containers))
+    ps ⇒ s.copy(project = ps, files = ConFilS.accDB(ae, s.files), containers = ContainerS.accDB(ae, s.containers))
   )
 
   //----------------------------------------------------------------------

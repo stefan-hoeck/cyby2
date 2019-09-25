@@ -71,13 +71,13 @@ case class Export(coreSettings: CoreSettings)
 
   private def apply[A](
     sub:    SField ⇒ Sub.Cli ⇒ A,
-    con:    CField ⇒ Con.Cli ⇒ A,
+    con:    CField ⇒ Container.Cli ⇒ A,
     bio:    BField ⇒ BiodataEntry.Cli ⇒ A,
     stats:  (String,Option[Double]) ⇒ A,
     s:      Sub.Cli,
     fields: List[(ExportField,String)],
   ): List[List[A]] = {
-    def exp(c: Option[Con.Cli], b: Option[BiodataEntry.Cli], st: Option[BioStats]): List[A] = fields.flatMap{
+    def exp(c: Option[Container.Cli], b: Option[BiodataEntry.Cli], st: Option[BioStats]): List[A] = fields.flatMap{
       case (ExportSub(f),n) ⇒ List(sub(f)(s))
       case (ExportCon(f),n) ⇒ c map con(f) toList
       case (ExportBio(f),n) ⇒ b map bio(f) toList

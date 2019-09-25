@@ -141,7 +141,7 @@ trait util extends DispZShared with DocEnv {
   //                      Containers
   //----------------------------------------------------------------------
 
-  lazy val con1: Con.Cli = Con(
+  lazy val con1: Container.Cli = Container(
     Id(1),
     Pure(stoL(rt107)),
     supL(sup1),
@@ -161,7 +161,7 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  lazy val con2: Con.Cli = Con(
+  lazy val con2: Container.Cli = Container(
     Id(1),
     Pure(stoL(rt109)),
     supL(sup1),
@@ -186,14 +186,14 @@ trait util extends DispZShared with DocEnv {
     btch: String,
     mmp10: List[Double],
     mmp13: List[Double],
-  ): Con.Cli = con3.copy(
+  ): Container.Cli = con3.copy(
     id = Id(i),
     batch = plainP(btch),
     bio   = mmp10.zipWithIndex.map(bioMMP10) :::
             mmp13.zipWithIndex.map(bioMMP13)
   )
 
-  lazy val con3: Con.Cli = Con(
+  lazy val con3: Container.Cli = Container(
     Id(3),
     Pure(stoL(rt109)),
     supL(sup3),
@@ -307,7 +307,7 @@ trait util extends DispZShared with DocEnv {
   def statsSub(
     i: Long,
     smiles: String,
-    cons: Con.Cli*
+    cons: Container.Cli*
   ): Sub.Cli = Sub(
     Id(i),
     plainP(""),

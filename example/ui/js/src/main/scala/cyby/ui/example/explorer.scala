@@ -178,7 +178,7 @@ case class ExplorerZ(
     }
 
     def qcon(f: ConField, st: St): WidgetDesc[Unit,String,String] = f match {
-      case ConId            ⇒ txtQ(RP.id_[Con.type])
+      case ConId            ⇒ txtQ(RP.id_[Container.type])
       case ConAmount        ⇒ txtQ(RP.double_)
       case ConPurity        ⇒ txtQ(RP.double_)
       case ConPurityStr     ⇒ stringQ
@@ -225,21 +225,21 @@ case class ExplorerZ(
 
   object Format extends ColumnControl with ExpDom
 
-  object BioZ extends Controller[BioStats,(Con.Id,Sub.Id)](_.bio, hui, url) {
+  object BioZ extends Controller[BioStats,(Container.Id,Sub.Id)](_.bio, hui, url) {
 
     private val BioStats = "biostats"
     private val BioStatsL = BioStats.length
   
-    def adjQuery(ids: List[(Con.Id,Sub.Id)]) = q ⇒ q
+    def adjQuery(ids: List[(Container.Id,Sub.Id)]) = q ⇒ q
   
     def read(s: String) =
       if (s startsWith BioStats) s drop BioStatsL split "_" toList match {
-        case a::b::Nil ⇒ (Read[Con.Id] read a, Read[Sub.Id] read b).mapN((_,_))
+        case a::b::Nil ⇒ (Read[Container.Id] read a, Read[Sub.Id] read b).mapN((_,_))
         case _         ⇒ None
       }
       else None
   
-    def toIdString(p: (Con.Id,Sub.Id)) = statsIdString(p)
+    def toIdString(p: (Container.Id,Sub.Id)) = statsIdString(p)
   
     def getId(s: BioStats) = statsId(s)
 

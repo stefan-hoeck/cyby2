@@ -13,7 +13,7 @@ import cats.implicits.{none ⇒ _, _}, cyby.shapelessImplicits._
 import cyby.dat.{Mol ⇒ _, _}, example._
 
 trait ConImplicits extends AuthUtil with EditArbs {
-  val S = ConS
+  val S = ContainerS
   val imps = new Implicits
 }
 
@@ -24,13 +24,13 @@ class ConTest extends ConImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Con[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)
+  val mod: S.Mod = Container[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testProAuth(ConS, "Con", "containers")(ConS.au, _.id)
+  testProAuth(ContainerS, "Con", "containers")(ContainerS.au, _.id)
 
 
   //----------------------------------------------------------------------
@@ -70,7 +70,7 @@ class ConTest extends ConImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Con-cud-1: new containers are adjusted correctly"){
-    forAll{ (is: Set[Con.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[Container.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -123,7 +123,7 @@ class ConTest extends ConImplicits {
 
   def est(st: St, s: SubS.Srv): S.EdSt = extract(S.edSt(st, s.id :: hnil))
 
-  property("ConS edEnv") {
+  property("ContainerS edEnv") {
     forAll{ s: SubS.Srv ⇒
       val st = subSt(s)
       val e = PathNotFound(SubP(s.id.inc :: hnil)).e
@@ -133,7 +133,7 @@ class ConTest extends ConImplicits {
     }
   }
 
-  property("ConS getSrv") {
+  property("ContainerS getSrv") {
     forAll{ (s: SubS.Srv, c: S.Srv) ⇒
       val st = conSt(c, s)
       val e = PathNotFound(ConP(c.id.inc :: s.id :: hnil)).e

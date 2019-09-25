@@ -32,10 +32,10 @@ object BiodataEntryS extends ChildEditor {
   //                         Util
   //----------------------------------------------------------------------
 
-  val parent     = ConS
+  val parent     = ContainerS
   val notFound   = p ⇒ PathNotFound(BioP(p))
 
-  val dbL        = lens[ConS.Srv].bio
+  val dbL        = lens[ContainerS.Srv].bio
   val getId      = _.id
 
   def envs(ee: Env, edSt: EdSt) = {

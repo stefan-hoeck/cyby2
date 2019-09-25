@@ -100,7 +100,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     implicit lazy val stoE: Editable[Link[Sto.Id]] = Editable.wrapped(stoL)
     
     type BioE = BiodataEntry[Pure,Undef,Link[Met.Id],Link[Sup.Id],Link[Pro.AccId],Undef,Undef,Undef]
-    type ConE = Con[Pure,Undef,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],Undef,Undef,Undef,Undef]
+    type ConE = Container[Pure,Undef,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],Undef,Undef,Undef,Undef]
     type FilE = Fil[Pure,Undef,Link[Pro.AccId],Undef,Undef]
     type MetE = Met[Pure,Undef,Undef,Undef]
     type ProE = Pro[Pure,Undef,Link[Use.Id],Undef,Undef]
@@ -110,7 +110,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     type UseE = cyby.dat.example.Use[Pure,Undef,Option[Password],Undef,Undef]
 
     def bioE(b: BiodataEntry.Cli): BioE = b.copy(id = undef, files = undef, created = undef, modified = undef)
-    def conE(c: Con.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
+    def conE(c: Container.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
     def filE(f: Fil.Cli): FilE = f.copy(id = undef, created = undef, modified = undef)
     def metE(m: Met.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
     def proE(p: Pro.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
@@ -122,7 +122,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     lazy val fsubFilE: Sub.FilPath ⇒ St ⇒ Option[FilE] =
       p ⇒ s ⇒ fsubFil(s)(p) map (p ⇒ filE(p._1))
 
-    lazy val fconFilE: Con.FilPath ⇒ St ⇒ Option[FilE] =
+    lazy val fconFilE: Container.FilPath ⇒ St ⇒ Option[FilE] =
       p ⇒ s ⇒ fconFil(s)(p) map (p ⇒ filE(p._1))
 
     lazy val fbioFilE: BiodataEntry.FilPath ⇒ St ⇒ Option[FilE] =
@@ -131,7 +131,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     lazy val fbioE: BiodataEntry.Path ⇒ St ⇒ Option[BioE] =
       p ⇒ s ⇒ fbio(s)(p) map (p ⇒ bioE(p._1))
 
-    lazy val fconE: Con.Path ⇒ St ⇒ Option[ConE] =
+    lazy val fconE: Container.Path ⇒ St ⇒ Option[ConE] =
       p ⇒ s ⇒ fcon(s)(p) map (p ⇒ conE(p._1))
 
     lazy val metC = Createable[MetE]
@@ -155,7 +155,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
       ProEnv(st ⇒ f(st) flatMap (b ⇒ fpro(st)(ps(b)._1)))
 
     def proEnvB(p: BiodataEntry.Path): ProEnv = proEnv(fbio(_)(p))(_._1.project.v)
-    def proEnvC(p: Con.Path): ProEnv = proEnv(fcon(_)(p))(_._1.project.v)
+    def proEnvC(p: Container.Path): ProEnv = proEnv(fcon(_)(p))(_._1.project.v)
     def proEnvS(p: Sub.Path): ProEnv = proEnv(fsub(_)(p.head))(_.project.v)
 
     def proEnv: ProEnv = ProEnv(_ ⇒ None)

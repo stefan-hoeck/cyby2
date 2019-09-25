@@ -18,7 +18,7 @@ import shapeless.ops.record._
   *
   * Look at cyby.dat.example.Sup for a detailed description about
   * the type parameters used. Also, look at the companion object and
-  * cyby.server.example.ConS for aliases with often used type parameters.
+  * cyby.server.example.ContainerS for aliases with often used type parameters.
   *
   * @tparam F:  Effect, in which fields are wrapped. Typically set
   *             to Pure for mandatory fields and Maybe if fields
@@ -32,7 +32,7 @@ import shapeless.ops.record._
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Con[F[_],ID,LO,SU,P,BS,FS,CR,MO](
+case class Container[F[_],ID,LO,SU,P,BS,FS,CR,MO](
   id:            ID,
   location:      F[LO],
   supplier:      F[SU],
@@ -53,7 +53,7 @@ case class Con[F[_],ID,LO,SU,P,BS,FS,CR,MO](
   modified:      MO,
 )
 
-object Con extends DataCmp {
+object Container extends DataCmp {
   /**
     * Path leading to a given container in the data tree.
     */
@@ -67,14 +67,14 @@ object Con extends DataCmp {
   /**
     * Container entries as seen by the client.
     */
-  type Cli       = Con[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Container[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::location::supplier::batch::orderNr::comment::lentTo::purity::purityStr::density::concentration::amount::empty::project::bio::files::created::modified::HNil) = Keys[lblG.Repr].apply
 
   def isLent(c: Cli): Boolean = c.lentTo.v.v.trim.nonEmpty
 
-  implicit def eqI[F[_],ID,LO,SU,P,BS,FS,CR,MO]: cats.Eq[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,LO:D,SU:D,P:D,BS:D,FS:D,CR:D,MO:D]: D[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,LO:E,SU:E,P:E,BS:E,FS:E,CR:E,MO:E]: E[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,LO,SU,P,BS,FS,CR,MO]: cats.Eq[Container[F,ID,LO,SU,P,BS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,LO:D,SU:D,P:D,BS:D,FS:D,CR:D,MO:D]: D[Container[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,LO:E,SU:E,P:E,BS:E,FS:E,CR:E,MO:E]: E[Container[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveEncoder
 }

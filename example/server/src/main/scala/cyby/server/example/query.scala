@@ -86,8 +86,8 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     case _                 ⇒ _ sortBy (_.sub.id)
   }
 
-  private def statsPred(p: Met.Id, tpe: StatsType): RP[ConS.Acc] = {
-    def stats(c: ConS.Acc): Map[Met.Id,Stats] =
+  private def statsPred(p: Met.Id, tpe: StatsType): RP[ContainerS.Acc] = {
+    def stats(c: ContainerS.Acc): Map[Met.Id,Stats] =
        c.bio.toList.map(_._2).groupBy(_.method.v).flatMap(mp)
 
     def mp(p: (Met.Id,List[BiodataEntryS.Acc])): Map[Met.Id,Stats] = p match {
@@ -99,11 +99,11 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   }
 
   def expFilter(f: ExportField, st: St): SubS.MF = {
-    def con(t: ConS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.containers)
-    def bio(t: BiodataEntryS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ConS.L.bio))
+    def con(t: ContainerS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.containers)
+    def bio(t: BiodataEntryS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.bio))
     def bioFil(t: BioFilS.MF): SubS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
     def subFil(t: SubFilS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.files)
-    def conFil(t: ConFilS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ConS.L.files))
+    def conFil(t: ConFilS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ContainerS.L.files))
 
     f match {
       case ExportSub(SubFil(ff)) ⇒ subFil(toMapFilter(field fil ff que st))
@@ -119,7 +119,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
   lazy val join: (Map[Sub.Id,SubS.Acc],Map[Sub.Id,SubS.Acc]) ⇒ Map[Sub.Id,SubS.Acc] = {
     val jf = joinMaps[Fil.Id,SubFilS.Acc]((f,_) ⇒ f)
     val jb = joinMaps[BiodataEntry.Id,BiodataEntryS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files)))
-    val jc = joinMaps[Con.Id,ConS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), bio = jb(a.bio,b.bio)))
+    val jc = joinMaps[Container.Id,ContainerS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), bio = jb(a.bio,b.bio)))
 
     joinMaps[Sub.Id,SubS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), containers = jc(a.containers,b.containers)))
   }

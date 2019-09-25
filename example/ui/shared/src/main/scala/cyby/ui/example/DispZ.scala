@@ -255,24 +255,24 @@ trait DispZShared extends CyByZ {
   //                      Containers
   //----------------------------------------------------------------------
 
-  def mkCon(e: ExpEnv, pth: Sub.Path)(c: Con.Cli): Node =  {
+  def mkCon(e: ExpEnv, pth: Sub.Path)(c: Container.Cli): Node =  {
     val cpth = c.id :: pth
     val p = ConP(cpth).path
-    val ename = Con.empty.name
+    val ename = Container.empty.name
 
     val purityDets =
       if (e isEditingAs CommonUser)
         nodes(
-          Txt.conDetRow(p, Con.purity, Txt text s"${c.purity.v}", some(CommonUser), e),
-          Txt.conDetRow(p, Con.purityStr, Txt text c.purityStr.v.v, some(CommonUser), e)
+          Txt.conDetRow(p, Container.purity, Txt text s"${c.purity.v}", some(CommonUser), e),
+          Txt.conDetRow(p, Container.purityStr, Txt text c.purityStr.v.v, some(CommonUser), e)
         )
       else
-        Txt.conDetRow(p, Con.purity, Txt text purity(c), some(CommonUser), e)
+        Txt.conDetRow(p, Container.purity, Txt text purity(c), some(CommonUser), e)
 
     Txt.li(id := Dat(p), cls := ExplorerConRow.c)(
       Txt.div(id := EditCont(ename, p), cls := ConIconCell.c){
         val flaskCls = if (c.empty) FlaskEmpty.c
-                       else if (Con isLent c) FlaskLent.c
+                       else if (Container isLent c) FlaskLent.c
                        else Flask.c
 
         val flaskI = if (e.mode.isEditing)
@@ -292,27 +292,27 @@ trait DispZShared extends CyByZ {
       Txt.ul(cls := ConRestCell.c)(
         Txt.li(cls := ExplorerConRow.c)(
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.location, Txt text c.location.v._2.v, some(CommonUser), e),
-            Txt.conDetRow(p, Con.project, Txt text c.project.v._2.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.location, Txt text c.location.v._2.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.project, Txt text c.project.v._2.v, some(CommonUser), e),
           ),
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.comment, Txt text c.comment.v.v, some(CommonUser), e),
-            Txt.conDetRow(p, Con.lentTo, Txt text c.lentTo.v.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.comment, Txt text c.comment.v.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.lentTo, Txt text c.lentTo.v.v, some(CommonUser), e),
           ),
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.supplier, Txt text c.supplier.v._2.v, some(CommonUser), e),
-            Txt.conDetRow(p, Con.batch, Txt text c.batch.v.v, some(CommonUser), e),
-            Txt.conDetRow(p, Con.orderNr, Txt text c.orderNr.v.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.supplier, Txt text c.supplier.v._2.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.batch, Txt text c.batch.v.v, some(CommonUser), e),
+            Txt.conDetRow(p, Container.orderNr, Txt text c.orderNr.v.v, some(CommonUser), e),
           ),
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.amount, Txt text s"${c.amount.v}", some(CommonUser), e),
+            Txt.conDetRow(p, Container.amount, Txt text s"${c.amount.v}", some(CommonUser), e),
             purityDets,
-            Txt.conDetRow(p, Con.density, Txt text s"${c.density.v}", some(CommonUser), e),
-            Txt.conDetRow(p, Con.concentration, Txt text s"${c.concentration.v}", some(CommonUser), e),
+            Txt.conDetRow(p, Container.density, Txt text s"${c.density.v}", some(CommonUser), e),
+            Txt.conDetRow(p, Container.concentration, Txt text s"${c.concentration.v}", some(CommonUser), e),
           ),
           Txt.div(cls := ConDetails.c)(
-            Txt.conDetRow(p, Con.created, Txt timeStampNode c.created, None, e),
-            Txt.conDetRow(p, Con.modified, Txt editNode c.modified, None, e),
+            Txt.conDetRow(p, Container.created, Txt timeStampNode c.created, None, e),
+            Txt.conDetRow(p, Container.modified, Txt editNode c.modified, None, e),
           ),
           e.ifEditingAs(Admin)(Txt.div(id := DeleteId(p), cls := DeleteHidden.c)()),
         ),
@@ -322,7 +322,7 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def mkCons(e: ExpEnv, pth: Sub.Path, cons: List[Con.Cli]): Node =  {
+  def mkCons(e: ExpEnv, pth: Sub.Path, cons: List[Container.Cli]): Node =  {
     val p = SubP(pth).path
     val i = DataList(ConT,p).i
 
@@ -342,9 +342,9 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def location(c: Con.Cli) = Txt text c.location.v._2.v
+  def location(c: Container.Cli) = Txt text c.location.v._2.v
 
-  def purity(c: Con.Cli) = c.purityStr.v.v match {
+  def purity(c: Container.Cli) = c.purityStr.v.v match {
     case "" ⇒ s"${c.purity.v}"
     case s  ⇒ s"${c.purity.v} ($s)"
   }
@@ -353,14 +353,14 @@ trait DispZShared extends CyByZ {
   //                      Bio Data
   //----------------------------------------------------------------------
 
-  def mkBios(e: ExpEnv, conP: Con.Path, bs: List[BiodataEntry.Cli]): Node =  {
+  def mkBios(e: ExpEnv, conP: Container.Path, bs: List[BiodataEntry.Cli]): Node =  {
     val p = ConP(conP).path
     val i = DataList(BioT, p).i
 
     nodes(
       Txt.li(cls := ExplorerConRowHeader.c)(
         Txt.expBtn(e.exp, i),
-        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Con.bio} (${bs.size})"),
+        Txt.h1(cls := Title(TitleType.ConRow))(Txt text s"${loc name Container.bio} (${bs.size})"),
         e.ifEditingAs(CommonUser)(Txt.div(id := Create(BioT,p), cls := AddHidden.c)()),
       ),
       Txt.ul(
@@ -373,7 +373,7 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def mkBio(e: ExpEnv, conP: Con.Path)(b: BiodataEntry.Cli): Node = {
+  def mkBio(e: ExpEnv, conP: Container.Path)(b: BiodataEntry.Cli): Node = {
     val bioP = b.id :: conP
     val p = BioP(bioP).path
 

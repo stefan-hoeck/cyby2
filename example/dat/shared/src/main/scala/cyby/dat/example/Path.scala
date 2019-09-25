@@ -38,8 +38,8 @@ sealed trait Path {
 case object RootP                           extends Path
 case class BioFilP(p: BiodataEntry.FilPath) extends Path
 case class BioP(p: BiodataEntry.Path)       extends Path
-case class ConFilP(p: Con.FilPath)          extends Path
-case class ConP(p: Con.Path)                extends Path
+case class ConFilP(p: Container.FilPath)          extends Path
+case class ConP(p: Container.Path)                extends Path
 case class MetP(p: Met.Path)                extends Path
 case class ProP(p: Pro.Path)                extends Path
 case class SubFilP(p: Sub.FilPath)          extends Path
