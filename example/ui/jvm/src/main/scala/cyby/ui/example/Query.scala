@@ -344,7 +344,7 @@ object Query extends util with QueryDocEnv {
   def conRow(f: ConField, q: Node, comp: Option[QComp] = None, neg: Boolean = false) =
     queryRow(comp, neg, queryF(f.ef), q)
 
-  def statsRow(m: Met.Cli, q: String, comp: Option[QComp] = None) =
+  def statsRow(m: Method.Cli, q: String, comp: Option[QComp] = None) =
     queryRow(comp, false, queryF(ExportStats(m.id, MeanStat)),
       txtQ(RP.double_, q))
 

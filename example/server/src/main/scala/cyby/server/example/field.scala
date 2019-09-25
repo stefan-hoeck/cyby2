@@ -38,7 +38,7 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
   private def sup[A,B](g: A ⇒ Link[Sup.Id], h: B ⇒ Sup.Id): Act[A,B] =
     link(g, h, _.supList)(_.name.v, _.id, RP.id_)
 
-  private def met[A,B](g: A ⇒ Link[Met.Id], h: B ⇒ Met.Id): Act[A,B] =
+  private def met[A,B](g: A ⇒ Link[Method.Id], h: B ⇒ Method.Id): Act[A,B] =
     link(g, h, _.metList)(_.name.v, _.id, RP.id_)
 
   def sub(f: SubField): Act[Sub.Cli,SubS.Acc] = sub_(f, identity)

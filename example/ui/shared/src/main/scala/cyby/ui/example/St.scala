@@ -14,7 +14,7 @@ case class St(
   pros:  List[Project.Cli],
   stos:  List[Sto.Cli],
   sups:  List[Sup.Cli],
-  mets:  List[Met.Cli],
+  mets:  List[Method.Cli],
   uses:  List[Use.Cli],
   subs:  List[Sub.Cli],
   bio:   List[BioStats],

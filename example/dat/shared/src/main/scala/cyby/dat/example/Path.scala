@@ -40,7 +40,7 @@ case class BioFilP(p: BiodataEntry.FilPath) extends Path
 case class BioP(p: BiodataEntry.Path)       extends Path
 case class ConFilP(p: Container.FilPath)          extends Path
 case class ConP(p: Container.Path)                extends Path
-case class MetP(p: Met.Path)                extends Path
+case class MetP(p: Method.Path)                extends Path
 case class ProP(p: Project.Path)                extends Path
 case class SubFilP(p: Sub.FilPath)          extends Path
 case class SubP(p: Sub.Path)       extends Path

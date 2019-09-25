@@ -11,8 +11,8 @@ package example
 import tagInstances._
 
 class DataTest extends DataSuite with Generators {
-  checkLaws("Met eqv", EqLaws[Met.Cli].eqv)
-  checkLaws("Met json", JsonLaws[Met.Cli].fromToStripped)
+  checkLaws("Met eqv", EqLaws[Method.Cli].eqv)
+  checkLaws("Met json", JsonLaws[Method.Cli].fromToStripped)
 
   checkLaws("Fil eqv", EqLaws[Fil.Cli].eqv)
   checkLaws("Fil json", JsonLaws[Fil.Cli].fromToStripped)

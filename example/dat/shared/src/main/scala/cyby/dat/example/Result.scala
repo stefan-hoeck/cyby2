@@ -24,7 +24,7 @@ case object BioDataValidated extends Result
 
 case class BioStatsRes(res: EditRes[BioStats]) extends Result
 
-case class MetRes(res: EditRes[Met.Cli]) extends Result
+case class MetRes(res: EditRes[Method.Cli]) extends Result
 
 case class ProRes(res: EditRes[Project.Cli]) extends Result
 

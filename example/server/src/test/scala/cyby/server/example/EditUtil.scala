@@ -47,7 +47,7 @@ abstract class EditUtil
 
   def stoSt(s: StoS.Srv): St = inDB(s, St.empty)(_.id, _.stos)
 
-  def metSt(s: MetS.Srv): St = inDB(s, St.empty)(_.id, _.mets)
+  def metSt(s: MethodS.Srv): St = inDB(s, St.empty)(_.id, _.mets)
 }
 
 // vim: set ts=2 sw=2 et:

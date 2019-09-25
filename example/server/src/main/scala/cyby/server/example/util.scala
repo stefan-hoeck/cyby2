@@ -89,7 +89,7 @@ trait util {
 
   implicit lazy val proLA: AsmblLink[Project.AccId] = asmblLink(ProjectS.link)
 
-  implicit lazy val metLA: AsmblLink[Met.Id] = asmblLink(MetS.link)
+  implicit lazy val metLA: AsmblLink[Method.Id] = asmblLink(MethodS.link)
 
   implicit lazy val stoLA: AsmblLink[Sto.Id] = asmblLink(StoS.link)
 

@@ -18,7 +18,7 @@ case class St(
   stos: StoS.DB,
   subs: SubS.DB,
   sups: SupS.DB,
-  mets: MetS.DB,
+  mets: MethodS.DB,
   uses: UseS.DB,
   sets: Map[Use.Id,USettings],
 ){
@@ -41,7 +41,7 @@ case class St(
   def linkedPros: List[Project.Id] =
     subElems(x ⇒ List(x.project),x ⇒ List(x.project),x ⇒ List(x.project),x ⇒ List(x.project))
 
-  def linkedMets: List[Met.Id] =
+  def linkedMets: List[Method.Id] =
     subElems(_ ⇒ Nil, _ ⇒ Nil, b ⇒ List(b.method), _ ⇒ Nil)
 
   def linkedStos: List[Sto.Id] =
@@ -72,7 +72,7 @@ case class St(
   //                  Lists of Data Objects
   //--------------------------------------------------------------------
 
-  lazy val metList: List[MetS.Srv] = mets.values.toList
+  lazy val metList: List[MethodS.Srv] = mets.values.toList
 
   lazy val proList: List[ProjectS.Srv] = pros.values.toList
 

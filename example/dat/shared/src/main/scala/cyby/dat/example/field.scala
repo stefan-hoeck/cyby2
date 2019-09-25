@@ -233,7 +233,7 @@ case class ExportBio(fld: BioField) extends ExportField(BioT){
   def desc = fld.desc
 }
 
-case class ExportStats(mid: Met.Id, stat: StatsType)
+case class ExportStats(mid: Method.Id, stat: StatsType)
   extends ExportField(StatsT){
   override lazy val toString = s"stats:${mid}:${stat}"
   def desc = F.StatsDesc
@@ -258,7 +258,7 @@ object ExportField {
     case "con"::f::Nil ⇒ Read[ConField].read(f) map ExportCon.apply
     case "bio"::f::Nil ⇒ Read[BioField].read(f) map ExportBio.apply
     case "stats"::m::s::Nil ⇒
-      (Read[Met.Id].read(m), Read[StatsType].read(s)).mapN(ExportStats.apply)
+      (Read[Method.Id].read(m), Read[StatsType].read(s)).mapN(ExportStats.apply)
     case _             ⇒ None
   }
 }

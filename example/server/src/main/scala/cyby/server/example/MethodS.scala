@@ -12,19 +12,19 @@ import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._, cyby.dat.example._
 
-object MetS extends RootEditor {
+object MethodS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Met.Id
-  type Add           = Met[Pure,Undef,Undef,Undef]
-  type Mod           = Met[Option,Undef,Undef,Undef]
-  type Srv           = Met[Pure,Id,TimeStamp,EditInfo]
-  type SrvAdd        = Met[Pure,Id,TimeStamp,EditInfo]
-  type SrvMod        = Met[Option,Undef,Undef,EditInfo]
+  type Id            = Method.Id
+  type Add           = Method[Pure,Undef,Undef,Undef]
+  type Mod           = Method[Option,Undef,Undef,Undef]
+  type Srv           = Method[Pure,Id,TimeStamp,EditInfo]
+  type SrvAdd        = Method[Pure,Id,TimeStamp,EditInfo]
+  type SrvMod        = Method[Option,Undef,Undef,EditInfo]
   type Acc           = Srv
-  type Cli           = Met.Cli
+  type Cli           = Method.Cli
 
   //----------------------------------------------------------------------
   //                         Util
@@ -45,8 +45,8 @@ object MetS extends RootEditor {
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(t ⇒ i -> t.name.v)
 
-  lazy val asmbl = asmblD[Acc,Met.Cli]
-  lazy val dbasmbl = dbAsmbl[Id,Acc,Met.Cli](_.sortBy(_.name.v.v))(asmbl)
+  lazy val asmbl = asmblD[Acc,Method.Cli]
+  lazy val dbasmbl = dbAsmbl[Id,Acc,Method.Cli](_.sortBy(_.name.v.v))(asmbl)
   val cliToRes      = MetRes
 
   //----------------------------------------------------------------------

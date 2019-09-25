@@ -27,7 +27,7 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
     load(SupT, _.sups, doLoad(SupS)(hnil))        >>=
     load(ProT, _.pros, doLoad(ProjectS)(hnil))        >>=
     load(StoT, _.stos, doLoad(StoS)(hnil))        >>=
-    load(MetT, _.mets, doLoad(MetS)(hnil))        >>=
+    load(MetT, _.mets, doLoad(MethodS)(hnil))        >>=
     load(SubT, _.subs, edSub)
 
   def doLoad(e: ExampleEditor)(p: e.ParentPath)(implicit D: Decoder[e.LoadEd]): Editor =

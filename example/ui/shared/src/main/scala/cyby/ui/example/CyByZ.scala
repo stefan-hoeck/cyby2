@@ -102,7 +102,7 @@ trait CyByZ extends TextEnv with ZEnv {
 
   lazy val fsup: St ⇒ Sup.Id ⇒ Option[Sup.Cli] = s ⇒ i ⇒ s.sups find (_.id === i)
 
-  lazy val fmet: St ⇒ Met.Id ⇒ Option[Met.Cli] = s ⇒ i ⇒ s.mets find (_.id === i)
+  lazy val fmet: St ⇒ Method.Id ⇒ Option[Method.Cli] = s ⇒ i ⇒ s.mets find (_.id === i)
 
   lazy val fuse: St ⇒ Use.Id ⇒ Option[Use.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i.v)
 

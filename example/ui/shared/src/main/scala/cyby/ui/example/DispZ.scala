@@ -57,7 +57,7 @@ trait DispZShared extends CyByZ {
   def met = Txt.dispNav(metDets)(
     _.name.v,
     m ⇒ MetP(m.id :: HNil),
-    Met.name,
+    Method.name,
     some(Admin),
     some(CommonUser),
     List(NSBio),
@@ -66,7 +66,7 @@ trait DispZShared extends CyByZ {
   def sto = Txt.dispNav(stoDets)(
     _.name.v,
     m ⇒ StoP(m.id :: HNil),
-    Met.name,
+    Method.name,
     some(Admin),
     some(CommonUser),
     List(NSConAll, NSConNonEmpty),
@@ -120,10 +120,10 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def metDets(m: Met.Cli, de: DispEnv) = {
+  def metDets(m: Method.Cli, de: DispEnv) = {
     val p = MetP(m.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Met.comment, Txt text m.comment.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Method.comment, Txt text m.comment.v.v, de, some(CommonUser)),
       Txt.createRow(m.created),
       Txt.editRow(m.modified),
     )

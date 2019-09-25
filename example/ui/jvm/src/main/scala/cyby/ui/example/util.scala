@@ -51,7 +51,7 @@ trait util extends DispZShared with DocEnv {
   ): Node = {
     def dt(d: DataType) = dataType(expP, d, mod)
   
-    def stats(m: Met.Id, s: StatsType): Node =
+    def stats(m: Method.Id, s: StatsType): Node =
       nodes(metMod(mets.find(_.id === m).get, mod), statsType(s, mod))
 
     def wrap(s: Node) = Txt.div(Txt.cls := ct.c)(s)
@@ -81,9 +81,9 @@ trait util extends DispZShared with DocEnv {
 
   def loc(s: Sto.Cli) = linksA(List(rt107, rt109), s, WT.Query)(_.name.v.v)
 
-  def met(m: Met.Cli) = metMod(m, WT.Query)
+  def met(m: Method.Cli) = metMod(m, WT.Query)
 
-  def metMod(m: Met.Cli, f: WT ⇒ WT) = linksA(mets, m, f)(_.name.v.v)
+  def metMod(m: Method.Cli, f: WT ⇒ WT) = linksA(mets, m, f)(_.name.v.v)
 
   //----------------------------------------------------------------------
   //                      Example Data
@@ -117,7 +117,7 @@ trait util extends DispZShared with DocEnv {
   //                      Bio
   //----------------------------------------------------------------------
 
-  def bio(met: Met.Cli, p: (Double, Int)): BiodataEntry.Cli = BiodataEntry(
+  def bio(met: Method.Cli, p: (Double, Int)): BiodataEntry.Cli = BiodataEntry(
     Id(p._2),
     Pure(p._1 / 100D),
     metL(met),
@@ -239,13 +239,13 @@ trait util extends DispZShared with DocEnv {
   //                      Methods
   //----------------------------------------------------------------------
 
-  def metL(m: Met.Cli): Pure[Link[Met.Id]] = Pure(m.id -> m.name)
+  def metL(m: Method.Cli): Pure[Link[Method.Id]] = Pure(m.id -> m.name)
 
-  lazy val mmp10: Met.Cli =
-    Met(Id(1), nameP("MMP-10 IC50"), plainP("MMP-10 IC50 inhibition"), ts, ei)
+  lazy val mmp10: Method.Cli =
+    Method(Id(1), nameP("MMP-10 IC50"), plainP("MMP-10 IC50 inhibition"), ts, ei)
 
-  lazy val mmp13: Met.Cli =
-    Met(Id(2), nameP("MMP-13 IC50"), plainP("MMP-13 IC50 inhibition"), ts, ei)
+  lazy val mmp13: Method.Cli =
+    Method(Id(2), nameP("MMP-13 IC50"), plainP("MMP-13 IC50 inhibition"), ts, ei)
 
   //----------------------------------------------------------------------
   //                      Projects

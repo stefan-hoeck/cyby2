@@ -9,7 +9,7 @@ package server
 package example
 
 import cats.implicits._
-import cyby.dat.example.{Use,USettings,Met,Project}
+import cyby.dat.example.{Use,USettings,Method,Project}
 import org.scalacheck.{Gen,Arbitrary}
 
 import org.scalacheck.Shapeless._
@@ -33,7 +33,7 @@ trait ArbGenerators extends cyby.server.Generators {
   implicit lazy val stA     = MkArbitrary[St].arbitrary
   implicit lazy val authEnvA = MkArbitrary[AuthEnv].arbitrary
 
-  implicit lazy val metPA   = Arbitrary((arb[Met.Id],arb[Project.Path]).mapN(_ :: _))
+  implicit lazy val metPA   = Arbitrary((arb[Method.Id],arb[Project.Path]).mapN(_ :: _))
   implicit lazy val proPA   = Arbitrary(arb[Project.Id] map (_ :: hnil))
 }
 

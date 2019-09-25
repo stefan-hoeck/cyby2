@@ -28,7 +28,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   def readErr(s: String) = ReadErr(s)
 
   def prog(r: Request): M.Prog[Result] =  r match {
-    case _ -> _ / _ / DT(t@MetT)   ⇒ editDec(MetS fullEd hnil, logMet, t, r)
+    case _ -> _ / _ / DT(t@MetT)   ⇒ editDec(MethodS fullEd hnil, logMet, t, r)
     case _ -> _ / _ / DT(t@SupT)   ⇒ editDec(SupS fullEd hnil, logSup, t, r)
     case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
     case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProjectS fullEd hnil, logPro, t, r)
@@ -112,7 +112,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
 
   def logPro(s: ProjectS.LoadEd): Log = logEd("pro", s)(_.id)
   def logSto(s: StoS.LoadEd): Log = logEd("sto", s)(_.id)
-  def logMet(s: MetS.LoadEd): Log = logEd("met", s)(_.id)
+  def logMet(s: MethodS.LoadEd): Log = logEd("met", s)(_.id)
   def logSup(s: SupS.LoadEd): Log = logEd("sup", s)(_.id)
   def logUse(s: UseS.LoadEd): Log = logEd("use", s)(_.id)
 }

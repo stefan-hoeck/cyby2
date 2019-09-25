@@ -55,8 +55,8 @@ case class Export(coreSettings: CoreSettings)
       case Odf ⇒ zipOds(strings(ss)(odf(fs), OVT.prefix :: odfHeader(fs), List(OVT.postfix)), fn)
     }
 
-  private def statsName(st: St)(m: Met.Id, s: StatsType): String =
-    MetS.link(st,m)
+  private def statsName(st: St)(m: Method.Id, s: StatsType): String =
+    MethodS.link(st,m)
       .fold(_ ⇒ s locName LocEnUS, m ⇒ s"${m._2} (${s locName LocEnUS})")
     
   private def locName(st: St)(f: ExportField): (ExportField,String) = f match {

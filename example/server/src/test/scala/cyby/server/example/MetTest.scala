@@ -13,7 +13,7 @@ import cats.implicits._, cyby.shapelessImplicits._
 import cyby.dat._, example._
 
 trait MetImplicits extends AuthUtil with EditArbs {
-  val S = MetS
+  val S = MethodS
   val imps = new Implicits
 }
 
@@ -21,13 +21,13 @@ class MetTest extends MetImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Met[Option,Undef,Undef,Undef](None,None,None,None,None)
+  val mod: S.Mod = Method[Option,Undef,Undef,Undef](None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testCommonAuth(MetS, "Met", "methods")(MetS.auth, _.id)
+  testCommonAuth(MethodS, "Met", "methods")(MethodS.auth, _.id)
 
   //----------------------------------------------------------------------
   //                         Valdation
@@ -68,7 +68,7 @@ class MetTest extends MetImplicits {
   }
 
   property("BR-Met-valid-5: deleting a linked method is invalid"){
-    forAll{ (is: List[Met.Id], s: S.Srv) ⇒
+    forAll{ (is: List[Method.Id], s: S.Srv) ⇒
       val err = StillLinked(MetP(s.id :: hnil))
 
       if (is.exists(s.id =-= _)) S.valid.del(is,s,s.id) should contain(err)
@@ -82,7 +82,7 @@ class MetTest extends MetImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Met-cud-1: new methods are adjusted correctly"){
-    forAll{ (is: Set[Met.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[Method.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -119,9 +119,9 @@ class MetTest extends MetImplicits {
 
   def est(st: St): S.EdSt = extract(S.edSt(st, hnil))
 
-  property("MetS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
+  property("MethodS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
 
-  property("MetS getSrv") {
+  property("MethodS getSrv") {
     forAll{ s: S.Srv ⇒
       val e = PathNotFound(MetP(s.id.inc :: hnil)).e
       val st = St.empty.copy(mets = mkDB(s)(_.id))

@@ -21,12 +21,12 @@ object BiodataEntryS extends ChildEditor {
   
   type Id            = BiodataEntry.Id
   type ZCli          = BiodataEntry.Cli
-  type Add           = BiodataEntry[Pure,Undef,Met.Id,Sup.Id,Project.Id,Undef,Undef,Undef]
-  type Mod           = BiodataEntry[Option,Undef,Met.Id,Sup.Id,Project.Id,Undef,Undef,Undef]
-  type Srv           = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Project.Id,BioFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Project.Id,Undef,TimeStamp,EditInfo]
-  type SrvMod        = BiodataEntry[Option,Undef,Met.Id,Sup.Id,Project.Id,Undef,Undef,EditInfo]
-  type Acc           = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Project.AccId,BioFilS.AccDB,TimeStamp,EditInfo]
+  type Add           = BiodataEntry[Pure,Undef,Method.Id,Sup.Id,Project.Id,Undef,Undef,Undef]
+  type Mod           = BiodataEntry[Option,Undef,Method.Id,Sup.Id,Project.Id,Undef,Undef,Undef]
+  type Srv           = BiodataEntry[Pure,Id,Method.Id,Sup.Id,Project.Id,BioFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = BiodataEntry[Pure,Id,Method.Id,Sup.Id,Project.Id,Undef,TimeStamp,EditInfo]
+  type SrvMod        = BiodataEntry[Option,Undef,Method.Id,Sup.Id,Project.Id,Undef,Undef,EditInfo]
+  type Acc           = BiodataEntry[Pure,Id,Method.Id,Sup.Id,Project.AccId,BioFilS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util

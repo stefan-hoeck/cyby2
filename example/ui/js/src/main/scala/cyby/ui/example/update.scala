@@ -87,7 +87,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
       : Html[Src[Option[Load]]] = p.filC.addFil(cs,FilT,b)(f)
 
     private lazy val metL = edLink(met(_).desc)(fmet, _.id)
-    implicit lazy val metE: Editable[Link[Met.Id]] = Editable.wrapped(metL)
+    implicit lazy val metE: Editable[Link[Method.Id]] = Editable.wrapped(metL)
    
     private lazy val useL = edLink(use(_).desc)(fuse, _.id)
     implicit lazy val useE: Editable[Link[Use.Id]] = Editable.wrapped(useL)
@@ -99,10 +99,10 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     private lazy val stoL = edLink(sto(_).desc)(fsto, _.id)
     implicit lazy val stoE: Editable[Link[Sto.Id]] = Editable.wrapped(stoL)
     
-    type BioE = BiodataEntry[Pure,Undef,Link[Met.Id],Link[Sup.Id],Link[Project.AccId],Undef,Undef,Undef]
+    type BioE = BiodataEntry[Pure,Undef,Link[Method.Id],Link[Sup.Id],Link[Project.AccId],Undef,Undef,Undef]
     type ConE = Container[Pure,Undef,Link[Sto.Id],Link[Sup.Id],Link[Project.AccId],Undef,Undef,Undef,Undef]
     type FilE = Fil[Pure,Undef,Link[Project.AccId],Undef,Undef]
-    type MetE = Met[Pure,Undef,Undef,Undef]
+    type MetE = Method[Pure,Undef,Undef,Undef]
     type ProE = Project[Pure,Undef,Link[Use.Id],Undef,Undef]
     type StoE = Sto[Pure,Undef,Undef,Undef]
     type SubE = Sub[Pure,Undef,Mol,Link[Project.AccId],Undef,Undef,Undef,Undef]
@@ -112,7 +112,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     def bioE(b: BiodataEntry.Cli): BioE = b.copy(id = undef, files = undef, created = undef, modified = undef)
     def conE(c: Container.Cli): ConE = c.copy(id = undef, bio = undef, files = undef, created = undef, modified = undef)
     def filE(f: Fil.Cli): FilE = f.copy(id = undef, created = undef, modified = undef)
-    def metE(m: Met.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
+    def metE(m: Method.Cli): MetE = m.copy(id = undef, created = undef, modified = undef)
     def proE(p: Project.Cli): ProE = p.copy(id = undef, created = undef, modified = undef)
     def stoE(s: Sto.Cli): StoE = s.copy(id = undef, created = undef, modified = undef)
     def subE(s: Sub.Cli): SubE = s.copy(id = undef, containers = undef, files = undef, created = undef, modified = undef)

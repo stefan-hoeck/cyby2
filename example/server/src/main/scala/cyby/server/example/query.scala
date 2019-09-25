@@ -29,7 +29,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     case GET  -> _/_/DT(ProT) ⇒ run(ProjectS)(_.pros)
     case GET  -> _/_/DT(StoT) ⇒ run(StoS)(_.stos)
     case GET  -> _/_/DT(SupT) ⇒ run(SupS)(_.sups)
-    case GET  -> _/_/DT(MetT) ⇒ run(MetS)(_.mets)
+    case GET  -> _/_/DT(MetT) ⇒ run(MethodS)(_.mets)
     case GET  -> _/_/DT(UseT) ⇒ run(UseS)(_.uses)
     case r                    ⇒ M raise NotFound(r.uri.renderString)
   }
@@ -86,11 +86,11 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     case _                 ⇒ _ sortBy (_.sub.id)
   }
 
-  private def statsPred(p: Met.Id, tpe: StatsType): RP[ContainerS.Acc] = {
-    def stats(c: ContainerS.Acc): Map[Met.Id,Stats] =
+  private def statsPred(p: Method.Id, tpe: StatsType): RP[ContainerS.Acc] = {
+    def stats(c: ContainerS.Acc): Map[Method.Id,Stats] =
        c.bio.toList.map(_._2).groupBy(_.method.v).flatMap(mp)
 
-    def mp(p: (Met.Id,List[BiodataEntryS.Acc])): Map[Met.Id,Stats] = p match {
+    def mp(p: (Method.Id,List[BiodataEntryS.Acc])): Map[Method.Id,Stats] = p match {
       case (mid,Nil)    ⇒ Map.empty
       case (mid,h::t)   ⇒ Map(mid -> Stats(Nel(h,t).map(_.value.v)))
     }
