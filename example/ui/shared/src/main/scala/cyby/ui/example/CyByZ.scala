@@ -106,7 +106,7 @@ trait CyByZ extends TextEnv with ZEnv {
 
   lazy val fuse: St ⇒ Use.Id ⇒ Option[Use.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i.v)
 
-  lazy val fsto: St ⇒ Sto.Id ⇒ Option[Sto.Cli] = s ⇒ i ⇒ s.stos find (_.id === i) 
+  lazy val fsto: St ⇒ Location.Id ⇒ Option[Location.Cli] = s ⇒ i ⇒ s.stos find (_.id === i) 
 
   // ---------------------------------------------------------------
   //                      Load State

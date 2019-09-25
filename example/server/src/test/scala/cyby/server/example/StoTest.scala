@@ -13,7 +13,7 @@ import cats.implicits._, cyby.shapelessImplicits._
 import cyby.dat._, example._
 
 trait StoImplicits extends AuthUtil with EditArbs {
-  val S = StoS
+  val S = LocationS
   val imps = new Implicits
 }
 
@@ -21,13 +21,13 @@ class StoTest extends StoImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Sto[Option,Undef,Undef,Undef](None,None,None,None,None)
+  val mod: S.Mod = Location[Option,Undef,Undef,Undef](None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testCommonAuth(StoS, "Sto", "storage locations")(StoS.auth, _.id)
+  testCommonAuth(LocationS, "Sto", "storage locations")(LocationS.auth, _.id)
 
   //----------------------------------------------------------------------
   //                         Valdation
@@ -68,7 +68,7 @@ class StoTest extends StoImplicits {
   }
 
   property("BR-Sto-valid-5: deleting a linked storage locations is invalid"){
-    forAll{ (is: List[Sto.Id], s: S.Srv) ⇒
+    forAll{ (is: List[Location.Id], s: S.Srv) ⇒
       val err = StillLinked(StoP(s.id :: hnil))
 
       if (is.exists(s.id =-= _)) S.valid.del(is,s,s.id) should contain(err)
@@ -82,7 +82,7 @@ class StoTest extends StoImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Sto-cud-1: new storage locations are adjusted correctly"){
-    forAll{ (is: Set[Sto.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[Location.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -119,9 +119,9 @@ class StoTest extends StoImplicits {
 
   def est(st: St): S.EdSt = extract(S.edSt(st, hnil))
 
-  property("StoS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
+  property("LocationS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
 
-  property("StoS getSrv") {
+  property("LocationS getSrv") {
     forAll{ s: S.Srv ⇒
       val e = PathNotFound(StoP(s.id.inc :: hnil)).e
       val st = St.empty.copy(stos = mkDB(s)(_.id))

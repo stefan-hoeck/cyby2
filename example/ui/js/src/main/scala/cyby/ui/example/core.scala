@@ -83,7 +83,7 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
    
     def met(st: St): SelectDesc[Method.Cli] = link(st.mets)(_.name.v.v)
    
-    def sto(st: St): SelectDesc[Sto.Cli] = link(st.stos)(_.name.v.v)
+    def sto(st: St): SelectDesc[Location.Cli] = link(st.stos)(_.name.v.v)
 
     // ---------------------------------------------------------------
     // Query
@@ -108,7 +108,7 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
       qlink(Read[Use.Id].read, use(_).query.desc)(fuse, _.toString, _.id.to)
 
     lazy val qsto: St ⇒ WidgetDesc[Unit,String,String] =
-      qlink(Read[Sto.Id].read, sto(_).query.desc)(fsto, _.toString, _.id)
+      qlink(Read[Location.Id].read, sto(_).query.desc)(fsto, _.toString, _.id)
 
     lazy val qmet: St ⇒ WidgetDesc[Unit,String,String] =
       qlink(Read[Method.Id].read, met(_).query.desc)(fmet, _.toString, _.id)

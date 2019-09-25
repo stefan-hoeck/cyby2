@@ -32,7 +32,7 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
   private def pro[A,B](g: A ⇒ Link[Project.AccId], h: B ⇒ Project.AccId): Act[A,B] =
     link(g, h, _.proList)(_.name.v, _.id.to, RP.id_)
 
-  private def loc[A,B](g: A ⇒ Link[Sto.Id], h: B ⇒ Sto.Id): Act[A,B] =
+  private def loc[A,B](g: A ⇒ Link[Location.Id], h: B ⇒ Location.Id): Act[A,B] =
     link(g, h, _.stoList)(_.name.v, _.id, RP.id_)
 
   private def sup[A,B](g: A ⇒ Link[Sup.Id], h: B ⇒ Sup.Id): Act[A,B] =

@@ -45,7 +45,7 @@ abstract class EditUtil
   def bioSt(b: BiodataEntryS.Srv, c: ContainerS.Srv, s: SubS.Srv): St =
     conSt(inDB(b, c)(_.id, _.bio), s)
 
-  def stoSt(s: StoS.Srv): St = inDB(s, St.empty)(_.id, _.stos)
+  def stoSt(s: LocationS.Srv): St = inDB(s, St.empty)(_.id, _.stos)
 
   def metSt(s: MethodS.Srv): St = inDB(s, St.empty)(_.id, _.mets)
 }

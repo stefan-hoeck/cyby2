@@ -91,7 +91,7 @@ trait util {
 
   implicit lazy val metLA: AsmblLink[Method.Id] = asmblLink(MethodS.link)
 
-  implicit lazy val stoLA: AsmblLink[Sto.Id] = asmblLink(StoS.link)
+  implicit lazy val stoLA: AsmblLink[Location.Id] = asmblLink(LocationS.link)
 
   def adjEditInfo(s: St, ei: EditInfo): EditInfo = ei match {
     case EditInfo(t,i,_) ⇒ EditInfo(t, i, UseS.link(s,Id(i)).map(_._2).toOption)

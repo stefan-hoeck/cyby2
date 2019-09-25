@@ -111,10 +111,10 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def stoDets(s: Sto.Cli, de: DispEnv) = {
+  def stoDets(s: Location.Cli, de: DispEnv) = {
     val p = StoP(s.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Sto.comment, Txt text s.comment.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Location.comment, Txt text s.comment.v.v, de, some(CommonUser)),
       Txt.createRow(s.created),
       Txt.editRow(s.modified),
     )

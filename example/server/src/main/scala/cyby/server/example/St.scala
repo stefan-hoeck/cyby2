@@ -15,7 +15,7 @@ import cyby.dat.{Mol ⇒ DMol, _}, example._
   */
 case class St(
   pros: ProjectS.DB,
-  stos: StoS.DB,
+  stos: LocationS.DB,
   subs: SubS.DB,
   sups: SupS.DB,
   mets: MethodS.DB,
@@ -44,7 +44,7 @@ case class St(
   def linkedMets: List[Method.Id] =
     subElems(_ ⇒ Nil, _ ⇒ Nil, b ⇒ List(b.method), _ ⇒ Nil)
 
-  def linkedStos: List[Sto.Id] =
+  def linkedStos: List[Location.Id] =
     subElems(_ ⇒ Nil, c ⇒ List(c.location), _ ⇒ Nil, _ ⇒ Nil)
  
   def linkedUses: List[Use.Id] =
@@ -78,7 +78,7 @@ case class St(
 
   lazy val supList: List[SupS.Srv] = sups.values.toList
 
-  lazy val stoList: List[StoS.Srv] = stos.values.toList
+  lazy val stoList: List[LocationS.Srv] = stos.values.toList
 }
 
 object St {

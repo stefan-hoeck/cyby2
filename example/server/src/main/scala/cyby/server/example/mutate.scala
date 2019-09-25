@@ -32,7 +32,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case _ -> _ / _ / DT(t@SupT)   ⇒ editDec(SupS fullEd hnil, logSup, t, r)
     case _ -> _ / _ / DT(t@UseT)   ⇒ editDec(UseS fullEd hnil, logUse, t, r)
     case _ -> _ / _ / DT(t@ProT)   ⇒ editDec(ProjectS fullEd hnil, logPro, t, r)
-    case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(StoS fullEd hnil, logSto, t, r)
+    case _ -> _ / _ / DT(t@StoT)   ⇒ editDec(LocationS fullEd hnil, logSto, t, r)
     case _ -> _ / _ / DT(t@SubT)   ⇒ editDec(edSub, logSub, t, r, delFil)
     case _ -> _ / _ / DT(FilT)     ⇒ edFile(r)
     case _ -> _ / _ / "settings"   ⇒ decoding(mutate(adjSettings)(storeSettings))(r)
@@ -111,7 +111,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
   }
 
   def logPro(s: ProjectS.LoadEd): Log = logEd("pro", s)(_.id)
-  def logSto(s: StoS.LoadEd): Log = logEd("sto", s)(_.id)
+  def logSto(s: LocationS.LoadEd): Log = logEd("sto", s)(_.id)
   def logMet(s: MethodS.LoadEd): Log = logEd("met", s)(_.id)
   def logSup(s: SupS.LoadEd): Log = logEd("sup", s)(_.id)
   def logUse(s: UseS.LoadEd): Log = logEd("use", s)(_.id)

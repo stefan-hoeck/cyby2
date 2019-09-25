@@ -79,7 +79,7 @@ trait util extends DispZShared with DocEnv {
 
   val mets = List(mmp10, mmp13)
 
-  def loc(s: Sto.Cli) = linksA(List(rt107, rt109), s, WT.Query)(_.name.v.v)
+  def loc(s: Location.Cli) = linksA(List(rt107, rt109), s, WT.Query)(_.name.v.v)
 
   def met(m: Method.Cli) = metMod(m, WT.Query)
 
@@ -354,11 +354,11 @@ trait util extends DispZShared with DocEnv {
   //                      Storage Locations
   //----------------------------------------------------------------------
 
-  def stoL(s: Sto.Cli): Link[Sto.Id] = s.id -> s.name
+  def stoL(s: Location.Cli): Link[Location.Id] = s.id -> s.name
 
-  lazy val rt107: Sto.Cli = Sto(Id(1), nameP("RT107, Cabinet 1"), plainP(""), ts, ei)
+  lazy val rt107: Location.Cli = Location(Id(1), nameP("RT107, Cabinet 1"), plainP(""), ts, ei)
 
-  lazy val rt109: Sto.Cli = Sto(Id(2), nameP("RT109, Cabinet 1"), plainP(""), ts, ei)
+  lazy val rt109: Location.Cli = Location(Id(2), nameP("RT109, Cabinet 1"), plainP(""), ts, ei)
 
 
   //----------------------------------------------------------------------

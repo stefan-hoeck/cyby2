@@ -12,19 +12,19 @@ import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._, cyby.dat.example._
 
-object StoS extends RootEditor {
+object LocationS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Sto.Id
-  type Add           = Sto[Pure,Undef,Undef,Undef]
-  type Mod           = Sto[Option,Undef,Undef,Undef]
-  type Srv           = Sto[Pure,Id,TimeStamp,EditInfo]
-  type SrvAdd        = Sto[Pure,Id,TimeStamp,EditInfo]
-  type SrvMod        = Sto[Option,Undef,Undef,EditInfo]
+  type Id            = Location.Id
+  type Add           = Location[Pure,Undef,Undef,Undef]
+  type Mod           = Location[Option,Undef,Undef,Undef]
+  type Srv           = Location[Pure,Id,TimeStamp,EditInfo]
+  type SrvAdd        = Location[Pure,Id,TimeStamp,EditInfo]
+  type SrvMod        = Location[Option,Undef,Undef,EditInfo]
   type Acc           = Srv
-  type Cli           = Sto.Cli
+  type Cli           = Location.Cli
 
   //----------------------------------------------------------------------
   //                         Util
@@ -45,8 +45,8 @@ object StoS extends RootEditor {
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(t ⇒ i -> t.name.v)
 
-  lazy val asmbl = asmblD[Acc,Sto.Cli]
-  lazy val dbasmbl = dbAsmbl[Id,Acc,Sto.Cli](_.sortBy(_.name.v.v))(asmbl)
+  lazy val asmbl = asmblD[Acc,Location.Cli]
+  lazy val dbasmbl = dbAsmbl[Id,Acc,Location.Cli](_.sortBy(_.name.v.v))(asmbl)
   val cliToRes      = StoRes
 
   //----------------------------------------------------------------------

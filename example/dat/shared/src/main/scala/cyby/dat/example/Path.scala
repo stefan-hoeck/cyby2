@@ -46,7 +46,7 @@ case class SubFilP(p: Sub.FilPath)          extends Path
 case class SubP(p: Sub.Path)       extends Path
 case class SupP(p: Sup.Path)       extends Path
 case class UseP(p: Use.Path)       extends Path
-case class StoP(p: Sto.Path)       extends Path
+case class StoP(p: Location.Path)       extends Path
 
 object Path {
   def unapply(s: String): Option[Path] = read(s)

@@ -28,7 +28,7 @@ case class MetRes(res: EditRes[Method.Cli]) extends Result
 
 case class ProRes(res: EditRes[Project.Cli]) extends Result
 
-case class StoRes(res: EditRes[Sto.Cli]) extends Result
+case class StoRes(res: EditRes[Location.Cli]) extends Result
 
 case class SubRes(res: EditRes[Sub.Cli]) extends Result
 
