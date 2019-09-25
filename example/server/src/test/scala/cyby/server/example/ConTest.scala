@@ -24,7 +24,7 @@ class ConTest extends ConImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Container[Option,Undef,Location.Id,Sup.Id,Project.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)
+  val mod: S.Mod = Container[Option,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization

@@ -28,7 +28,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     case POST -> _/_/DT(CpdT) ⇒ runCpds(r)
     case GET  -> _/_/DT(ProT) ⇒ run(ProjectS)(_.pros)
     case GET  -> _/_/DT(StoT) ⇒ run(LocationS)(_.stos)
-    case GET  -> _/_/DT(SupT) ⇒ run(SupS)(_.sups)
+    case GET  -> _/_/DT(SupT) ⇒ run(SupplierS)(_.sups)
     case GET  -> _/_/DT(MetT) ⇒ run(MethodS)(_.mets)
     case GET  -> _/_/DT(UseT) ⇒ run(UseS)(_.uses)
     case r                    ⇒ M raise NotFound(r.uri.renderString)

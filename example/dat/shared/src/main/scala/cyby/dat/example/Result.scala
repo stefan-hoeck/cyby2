@@ -32,7 +32,7 @@ case class StoRes(res: EditRes[Location.Cli]) extends Result
 
 case class CpdRes(res: EditRes[Compound.Cli]) extends Result
 
-case class SupRes(res: EditRes[Sup.Cli]) extends Result
+case class SupRes(res: EditRes[Supplier.Cli]) extends Result
 
 case class UseRes(res: EditRes[Use.Cli]) extends Result
 

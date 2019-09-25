@@ -16,7 +16,7 @@ trait Generators extends DataImplicits {
   implicit lazy val metArb = MKA[Method.Cli].arbitrary
   implicit lazy val proArb = MKA[Project.Cli].arbitrary
   implicit lazy val stoArb = MKA[Location.Cli].arbitrary
-  implicit lazy val supArb = MKA[Sup.Cli].arbitrary
+  implicit lazy val supArb = MKA[Supplier.Cli].arbitrary
   implicit lazy val bioArb = MKA[BiodataEntry.Cli].arbitrary
   implicit lazy val conArb = MKA[Container.Cli].arbitrary
   implicit lazy val subArb = MKA[Compound.Cli].arbitrary

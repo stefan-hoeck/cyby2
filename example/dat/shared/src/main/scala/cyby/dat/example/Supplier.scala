@@ -26,7 +26,7 @@ import shapeless.ops.record._
   *
   * First, look at the description of the type parameters below, and
   * then have a look at the specified type aliases in Sup's companion
-  * object and at cyby.server.example.SupS.
+  * object and at cyby.server.example.SupplierS.
   *
   * @tparam F:  Effect, in which fields are wrapped. Typically set
   *             to Pure for mandatory fields and Maybe if fields
@@ -35,7 +35,7 @@ import shapeless.ops.record._
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Sup[F[_],ID,CR,MO](
+case class Supplier[F[_],ID,CR,MO](
   id:           ID,
   name:         F[Name],
   address:      F[Plain],
@@ -45,10 +45,10 @@ case class Sup[F[_],ID,CR,MO](
 
 /**
   * In the companion object we implement important typeclasses and
-  * provide often used type aliases. Aliases {{{Sup.Id}}} and
-  * {{{Sup.AccId}}} are specified in trait {{{cyby.dat.DataCmp}}}.
+  * provide often used type aliases. Aliases {{{Supplier.Id}}} and
+  * {{{Supplier.AccId}}} are specified in trait {{{cyby.dat.DataCmp}}}.
   */
-object Sup extends DataCmp {
+object Supplier extends DataCmp {
   /**
     * Path leading to a given instance of Sup in the data tree.
     */
@@ -57,14 +57,14 @@ object Sup extends DataCmp {
   /**
     * Suppliers as seen by the client.
     */
-  type Cli       = Sup[Pure,Id,TimeStamp,EditInfo]
+  type Cli       = Supplier[Pure,Id,TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
 
   val lbls@(id::name::address::created::modified::HNil) = Keys[lblG.Repr].apply
 
-  implicit def eqI[F[_],ID,CR,MO]: cats.Eq[Sup[F,ID,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,CR:D,MO:D]: D[Sup[F,ID,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,CR:E,MO:E]: E[Sup[F,ID,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,CR,MO]: cats.Eq[Supplier[F,ID,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,CR:D,MO:D]: D[Supplier[F,ID,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,CR:E,MO:E]: E[Supplier[F,ID,CR,MO]] = deriveEncoder
 }
 

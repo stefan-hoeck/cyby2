@@ -59,7 +59,7 @@ object BiodataEntry extends DataCmp {
   /**
     * Bio entries as seen by the client.
     */
-  type Cli       = BiodataEntry[Pure,Id,Link[Method.Id],Link[Sup.Id],Link[Project.AccId],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = BiodataEntry[Pure,Id,Link[Method.Id],Link[Supplier.Id],Link[Project.AccId],List[Fil.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::value::method::supplier::date::comment::project::files::created::modified::HNil) = Keys[lblG.Repr].apply

@@ -21,12 +21,12 @@ object ContainerS extends ChildEditor {
   
   type Id            = Container.Id
   type ZCli          = Container.Cli
-  type Add           = Container[Pure,Undef,Location.Id,Sup.Id,Project.Id,Undef,Undef,Undef,Undef]
-  type Mod           = Container[Option,Undef,Location.Id,Sup.Id,Project.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Container[Pure,Id,Location.Id,Sup.Id,Project.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = Container[Pure,Id,Location.Id,Sup.Id,Project.Id,Undef,Undef,TimeStamp,EditInfo]
-  type SrvMod        = Container[Option,Undef,Location.Id,Sup.Id,Project.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Container[Pure,Id,Location.Id,Sup.Id,Project.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
+  type Add           = Container[Pure,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,Undef]
+  type Mod           = Container[Option,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,Undef]
+  type Srv           = Container[Pure,Id,Location.Id,Supplier.Id,Project.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = Container[Pure,Id,Location.Id,Supplier.Id,Project.Id,Undef,Undef,TimeStamp,EditInfo]
+  type SrvMod        = Container[Option,Undef,Location.Id,Supplier.Id,Project.Id,Undef,Undef,Undef,EditInfo]
+  type Acc           = Container[Pure,Id,Location.Id,Supplier.Id,Project.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util

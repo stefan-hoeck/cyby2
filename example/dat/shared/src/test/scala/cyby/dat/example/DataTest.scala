@@ -35,8 +35,8 @@ class DataTest extends DataSuite with Generators {
   checkLaws("Cpd eqv", EqLaws[Compound.Cli].eqv)
   checkLaws("Cpd json", JsonLaws[Compound.Cli].fromToStripped)
 
-  checkLaws("Sup eqv", EqLaws[Sup.Cli].eqv)
-  checkLaws("Sup json", JsonLaws[Sup.Cli].fromToStripped)
+  checkLaws("Sup eqv", EqLaws[Supplier.Cli].eqv)
+  checkLaws("Sup json", JsonLaws[Supplier.Cli].fromToStripped)
 
   checkLaws("FilField eqv", EqLaws[FilField].eqv)
   checkLaws("FilField json", JsonLaws[FilField].fromToStripped)

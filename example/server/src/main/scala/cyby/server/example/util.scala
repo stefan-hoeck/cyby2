@@ -83,7 +83,7 @@ trait util {
 
   lazy val notFound: IO[Response] = NotFound()
 
-  implicit lazy val supLA: AsmblLink[Sup.Id] = asmblLink(SupS.link)
+  implicit lazy val supLA: AsmblLink[Supplier.Id] = asmblLink(SupplierS.link)
 
   implicit lazy val useLA: AsmblLink[Use.Id] = asmblLink(UseS.link)
 

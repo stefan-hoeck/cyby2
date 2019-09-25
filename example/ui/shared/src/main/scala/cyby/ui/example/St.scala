@@ -13,7 +13,7 @@ import cyby.dat.example._
 case class St(
   pros:  List[Project.Cli],
   stos:  List[Location.Cli],
-  sups:  List[Sup.Cli],
+  sups:  List[Supplier.Cli],
   mets:  List[Method.Cli],
   uses:  List[Use.Cli],
   subs:  List[Compound.Cli],

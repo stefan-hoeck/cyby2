@@ -13,7 +13,7 @@ import cats.implicits._, cyby.shapelessImplicits._
 import cyby.dat._, example._
 
 trait SupImplicits extends AuthUtil with EditArbs {
-  val S = SupS
+  val S = SupplierS
   val imps = new Implicits
 }
 
@@ -21,13 +21,13 @@ class SupTest extends SupImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Sup[Option,Undef,Undef,Undef](None,None,None,None,None)
+  val mod: S.Mod = Supplier[Option,Undef,Undef,Undef](None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testCommonAuth(SupS, "Sup", "suppliers")(SupS.auth, _.id)
+  testCommonAuth(SupplierS, "Sup", "suppliers")(SupplierS.auth, _.id)
 
   //----------------------------------------------------------------------
   //                         Valdation
@@ -68,7 +68,7 @@ class SupTest extends SupImplicits {
   }
 
   property("BR-Sup-valid-5: deleting a linked supplier is invalid"){
-    forAll{ (is: List[Sup.Id], s: S.Srv) ⇒
+    forAll{ (is: List[Supplier.Id], s: S.Srv) ⇒
       val err = StillLinked(SupP(s.id :: hnil))
 
       if (is.exists(s.id =-= _)) S.valid.del(is,s,s.id) should contain(err)
@@ -82,7 +82,7 @@ class SupTest extends SupImplicits {
   //----------------------------------------------------------------------
 
   property("BR-Sup-cud-1: new suppliers are adjusted correctly"){
-    forAll{ (is: Set[Sup.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[Supplier.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -119,9 +119,9 @@ class SupTest extends SupImplicits {
 
   def est(st: St): S.EdSt = extract(S.edSt(st, hnil))
 
-  property("SupS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
+  property("SupplierS edEnv") { est(St.empty).nodes shouldEq (St.empty :: hnil) }
 
-  property("SupS getSrv") {
+  property("SupplierS getSrv") {
     forAll{ s: S.Srv ⇒
       val e = PathNotFound(SupP(s.id.inc :: hnil)).e
       val st = St.empty.copy(sups = mkDB(s)(_.id))

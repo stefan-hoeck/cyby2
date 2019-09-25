@@ -12,7 +12,7 @@ import cats.implicits.{none ⇒ _, _}
 
 import cyby.dat._, cyby.dat.example._
 
-object SupS extends RootEditor {
+object SupplierS extends RootEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
@@ -20,14 +20,14 @@ object SupS extends RootEditor {
   /**
     * ID used to identify suppliers
     */
-  type Id            = Sup.Id
+  type Id            = Supplier.Id
 
   /**
     * Data needed to create a new supplier as sent
     * by the client. ID, time of creation and information
     * about last modification cannot be specified.
     */
-  type Add           = Sup[Pure,Undef,Undef,Undef]
+  type Add           = Supplier[Pure,Undef,Undef,Undef]
 
   /**
     * Data needed to modify an existing supplier as sent by the client
@@ -35,7 +35,7 @@ object SupS extends RootEditor {
     * Neither is the supplier's ID. This is provided by
     * the wrapping {{{cyby.dat.Mod}}}.
     */
-  type Mod           = Sup[Option,Undef,Undef,Undef]
+  type Mod           = Supplier[Option,Undef,Undef,Undef]
 
   /**
     * Datatype used to store suppliers in memory at the server.
@@ -43,7 +43,7 @@ object SupS extends RootEditor {
     * that this is not the case for more complex data trees like
     * compounds or containers.
     */
-  type Srv           = Sup[Pure,Id,TimeStamp,EditInfo]
+  type Srv           = Supplier[Pure,Id,TimeStamp,EditInfo]
 
   /**
     * Information to create a new supplier as stored on
@@ -51,7 +51,7 @@ object SupS extends RootEditor {
     * server (ID, time of creation, information about last
     * modification) has to be specified.
     */
-  type SrvAdd        = Sup[Pure,Id,TimeStamp,EditInfo]
+  type SrvAdd        = Supplier[Pure,Id,TimeStamp,EditInfo]
 
   /**
     * Data needed to modify an existing supplier as stored on disk.
@@ -59,14 +59,14 @@ object SupS extends RootEditor {
     * the server. Neither the time of creation nor the supplier's ID
     * can be changed.
     */
-  type SrvMod        = Sup[Option,Undef,Undef,EditInfo]
+  type SrvMod        = Supplier[Option,Undef,Undef,EditInfo]
 
   type Acc           = Srv
 
   /**
     * Suppliers as seen by the client.
     */
-  type Cli           = Sup.Cli
+  type Cli           = Supplier.Cli
 
   //----------------------------------------------------------------------
   //                         Util
@@ -105,8 +105,8 @@ object SupS extends RootEditor {
 
   val link       = (s: St, i: Id) ⇒ child(s,i::hnil).map(t ⇒ i -> t.name.v)
 
-  lazy val asmbl = asmblD[Acc,Sup.Cli]
-  lazy val dbasmbl = dbAsmbl[Id,Acc,Sup.Cli](_.sortBy(_.name.v.v))(asmbl)
+  lazy val asmbl = asmblD[Acc,Supplier.Cli]
+  lazy val dbasmbl = dbAsmbl[Id,Acc,Supplier.Cli](_.sortBy(_.name.v.v))(asmbl)
   val cliToRes      = SupRes
 
   //----------------------------------------------------------------------

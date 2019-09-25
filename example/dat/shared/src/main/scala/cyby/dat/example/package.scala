@@ -17,7 +17,7 @@ import Comp.{Or, And}
   * This module provides core data types plus functionality
   * shared between client and server. For a detailed introduction
   * about the concepts used for defining flexible data types,
-  * see type Sup.
+  * see type Supplier.
   *
   * @TODO: Look for redundant stuff and move to CyByEnv
   */

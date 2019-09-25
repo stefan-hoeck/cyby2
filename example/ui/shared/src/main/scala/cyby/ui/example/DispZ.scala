@@ -75,7 +75,7 @@ trait DispZShared extends CyByZ {
   def sup = Txt.dispNav(supDets)(
     _.name.v,
     s ⇒ SupP(s.id :: HNil),
-    Sup.name,
+    Supplier.name,
     some(Admin),
     some(CommonUser),
     List(NSConAll, NSConNonEmpty,NSBio),
@@ -102,10 +102,10 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def supDets(s: Sup.Cli, de: DispEnv) = {
+  def supDets(s: Supplier.Cli, de: DispEnv) = {
     val p = SupP(s.id :: HNil)
     Txt.navDets(de, p)(
-      Txt.navDetRow(p, Sup.address, Txt text s.address.v.v, de, some(CommonUser)),
+      Txt.navDetRow(p, Supplier.address, Txt text s.address.v.v, de, some(CommonUser)),
       Txt.createRow(s.created),
       Txt.editRow(s.modified),
     )

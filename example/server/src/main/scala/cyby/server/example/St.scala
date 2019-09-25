@@ -17,7 +17,7 @@ case class St(
   pros: ProjectS.DB,
   stos: LocationS.DB,
   subs: CompoundS.DB,
-  sups: SupS.DB,
+  sups: SupplierS.DB,
   mets: MethodS.DB,
   uses: UseS.DB,
   sets: Map[Use.Id,USettings],
@@ -35,7 +35,7 @@ case class St(
 
   lazy val root: StEnv = HQ root this
 
-  def linkedSups: List[Sup.Id] =
+  def linkedSups: List[Supplier.Id] =
     subElems(_ ⇒ Nil, c ⇒ List(c.supplier), b ⇒ List(b.supplier), _ ⇒ Nil)
 
   def linkedPros: List[Project.Id] =
@@ -76,7 +76,7 @@ case class St(
 
   lazy val proList: List[ProjectS.Srv] = pros.values.toList
 
-  lazy val supList: List[SupS.Srv] = sups.values.toList
+  lazy val supList: List[SupplierS.Srv] = sups.values.toList
 
   lazy val stoList: List[LocationS.Srv] = stos.values.toList
 }

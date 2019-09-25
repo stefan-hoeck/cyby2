@@ -365,15 +365,15 @@ trait util extends DispZShared with DocEnv {
   //                      Suppliers
   //----------------------------------------------------------------------
 
-  def supL(t: Sup.Cli): Link[Sup.Id] = t.id.to -> t.name
+  def supL(t: Supplier.Cli): Link[Supplier.Id] = t.id.to -> t.name
 
-  def supsL(ts: Sup.Cli*): Pure[List[Link[Sup.Id]]] = Pure(ts.toList map supL)
+  def supsL(ts: Supplier.Cli*): Pure[List[Link[Supplier.Id]]] = Pure(ts.toList map supL)
 
-  lazy val sup1: Sup.Cli = Sup(Id(1), nameP("Sigma Aldrich"), plainP(""), ts, ei)
+  lazy val sup1: Supplier.Cli = Supplier(Id(1), nameP("Sigma Aldrich"), plainP(""), ts, ei)
 
-  lazy val sup2: Sup.Cli = Sup(Id(2), nameP("Acros"), plainP(""), ts, ei)
+  lazy val sup2: Supplier.Cli = Supplier(Id(2), nameP("Acros"), plainP(""), ts, ei)
 
-  lazy val sup3: Sup.Cli = Sup(Id(3), nameP("React. Biol."), plainP(""), ts, ei)
+  lazy val sup3: Supplier.Cli = Supplier(Id(3), nameP("React. Biol."), plainP(""), ts, ei)
 
   //----------------------------------------------------------------------
   //                      Users
