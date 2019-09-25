@@ -25,17 +25,17 @@ import shapeless.ops.record._
   *             to Pure for mandatory fields and Maybe if fields
   *             are optional.
   * @tparam ID: ID of the data object
-  * @tparam ST: Type of structure field
+  * @tparam SU: Type of structure field
   * @tparam P:  Type of project field
   * @tparam CS: Type of containers field
   * @tparam FS: Type of files field
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Sub[F[_],ID,ST,P,CS,FS,CR,MO](
+case class Sub[F[_],ID,SU,P,CS,FS,CR,MO](
   id:                     ID,
   name:                   F[Plain],
-  structure:              F[Maybe[ST]],
+  structure:              F[Maybe[SU]],
   abs:                    F[Boolean],
   casNr:                  F[CasNr],
   project:                F[P],
@@ -78,7 +78,7 @@ object Sub extends DataCmp {
   val lbls@(id::name::structure::abs::casNr::project::containers::files::created::modified::HNil) = Keys[lblG.Repr].apply
   implicit lazy val toMolI: ToMol[Cli] = ToMol(_.id.v, _.structure.v.o)
 
-  implicit def eqI[F[_],ID,ST,P,CS,FS,CR,MO]: cats.Eq[Sub[F,ID,ST,P,CS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,ST:D,P:D,CS:D,FS:D,CR:D,MO:D]: D[Sub[F,ID,ST,P,CS,FS,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,ST:E,P:E,CS:E,FS:E,CR:E,MO:E]: E[Sub[F,ID,ST,P,CS,FS,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,SU,P,CS,FS,CR,MO]: cats.Eq[Sub[F,ID,SU,P,CS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,SU:D,P:D,CS:D,FS:D,CR:D,MO:D]: D[Sub[F,ID,SU,P,CS,FS,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,SU:E,P:E,CS:E,FS:E,CR:E,MO:E]: E[Sub[F,ID,SU,P,CS,FS,CR,MO]] = deriveEncoder
 }

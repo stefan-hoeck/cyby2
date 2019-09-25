@@ -42,7 +42,7 @@ abstract class EditUtil
   def conFilSt(f: ConFilS.Srv, c: ConS.Srv, s: SubS.Srv): St =
     conSt(inDB(f, c)(_.id, _.files), s)
 
-  def bioSt(b: BioS.Srv, c: ConS.Srv, s: SubS.Srv): St =
+  def bioSt(b: BiodataEntryS.Srv, c: ConS.Srv, s: SubS.Srv): St =
     conSt(inDB(b, c)(_.id, _.bio), s)
 
   def stoSt(s: StoS.Srv): St = inDB(s, St.empty)(_.id, _.stos)

@@ -90,7 +90,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
     def stats(c: ConS.Acc): Map[Met.Id,Stats] =
        c.bio.toList.map(_._2).groupBy(_.method.v).flatMap(mp)
 
-    def mp(p: (Met.Id,List[BioS.Acc])): Map[Met.Id,Stats] = p match {
+    def mp(p: (Met.Id,List[BiodataEntryS.Acc])): Map[Met.Id,Stats] = p match {
       case (mid,Nil)    ⇒ Map.empty
       case (mid,h::t)   ⇒ Map(mid -> Stats(Nel(h,t).map(_.value.v)))
     }
@@ -100,8 +100,8 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
 
   def expFilter(f: ExportField, st: St): SubS.MF = {
     def con(t: ConS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.containers)
-    def bio(t: BioS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ConS.L.bio))
-    def bioFil(t: BioFilS.MF): SubS.MF = bio((b,s) ⇒ lensed(t(b,s))(BioS.L.files))
+    def bio(t: BiodataEntryS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ConS.L.bio))
+    def bioFil(t: BioFilS.MF): SubS.MF = bio((b,s) ⇒ lensed(t(b,s))(BiodataEntryS.L.files))
     def subFil(t: SubFilS.MF): SubS.MF = (b,s) ⇒ lensed(t(b,s))(SubS.L.files)
     def conFil(t: ConFilS.MF): SubS.MF = con((b,s) ⇒ lensed(t(b,s))(ConS.L.files))
 
@@ -118,7 +118,7 @@ case class Query(coreSettings: CoreSettings) extends CyByZ {
 
   lazy val join: (Map[Sub.Id,SubS.Acc],Map[Sub.Id,SubS.Acc]) ⇒ Map[Sub.Id,SubS.Acc] = {
     val jf = joinMaps[Fil.Id,SubFilS.Acc]((f,_) ⇒ f)
-    val jb = joinMaps[Bio.Id,BioS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files)))
+    val jb = joinMaps[BiodataEntry.Id,BiodataEntryS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files)))
     val jc = joinMaps[Con.Id,ConS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), bio = jb(a.bio,b.bio)))
 
     joinMaps[Sub.Id,SubS.Acc]((a,b) ⇒ a.copy(files = jf(a.files,b.files), containers = jc(a.containers,b.containers)))

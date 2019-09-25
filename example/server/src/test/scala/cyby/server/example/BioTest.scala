@@ -13,7 +13,7 @@ import cats.implicits.{none ⇒ _, _}
 import cyby.dat.{Mol ⇒ _, _}, example._
 
 trait BioImplicits extends AuthUtil with EditArbs {
-  val S = BioS
+  val S = BiodataEntryS
   val imps = new Implicits
 }
 
@@ -24,20 +24,20 @@ class BioTest extends BioImplicits {
   import imps.{idArb ⇒ _, modArb ⇒ _, _}
   implicit val smA: org.scalacheck.Arbitrary[S.Mod] = imps.modArb
 
-  val mod: S.Mod = Bio[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None)
+  val mod: S.Mod = BiodataEntry[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef](None,None,None,None,None,None,None,None,None,None)
 
   //----------------------------------------------------------------------
   //                         Authorization
   //----------------------------------------------------------------------
 
-  testProAuth(BioS, "Bio", "biodata")(BioS.au, _.id)
+  testProAuth(BiodataEntryS, "Bio", "biodata")(BiodataEntryS.au, _.id)
 
   //----------------------------------------------------------------------
   //                         Editing
   //----------------------------------------------------------------------
 
   property("BR-Bio-cud-1: new biodata are adjusted correctly"){
-    forAll{ (is: Set[Bio.Id], s: S.Add, ei: EditInfo) ⇒
+    forAll{ (is: Set[BiodataEntry.Id], s: S.Add, ei: EditInfo) ⇒
       val as = S.cud.doAdd(s)(ei -> is)
       is shouldNot contain(as.id)
       as.created shouldEq ei.timestamp
@@ -80,7 +80,7 @@ class BioTest extends BioImplicits {
   def est(st: St, s: SubS.Srv, c: ConS.Srv): S.EdSt =
     extract(S.edSt(st, c.id :: s.id :: hnil))
 
-  property("BioS edEnv") {
+  property("BiodataEntryS edEnv") {
     forAll{ (s: SubS.Srv, c: ConS.Srv) ⇒
       val st = conSt(c,s)
       val e = PathNotFound(ConP(c.id.inc :: s.id :: hnil)).e
@@ -90,7 +90,7 @@ class BioTest extends BioImplicits {
     }
   }
 
-  property("BioS getSrv") {
+  property("BiodataEntryS getSrv") {
     forAll{ (s: SubS.Srv, c: ConS.Srv, b: S.Srv) ⇒
       val st = bioSt(b, c, s)
       val e = PathNotFound(BioP(b.id.inc :: c.id :: s.id :: hnil)).e

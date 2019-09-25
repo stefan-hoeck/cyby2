@@ -53,7 +53,7 @@ case class St(
   def subElems[A](
     sub: SubS.Srv ⇒ List[A],
     con: ConS.Srv ⇒ List[A],
-    bio: BioS.Srv ⇒ List[A],
+    bio: BiodataEntryS.Srv ⇒ List[A],
     fil: SubFilS.Srv ⇒ List[A],
   ): List[A] = {
     val ss = subs.toList map (_._2)

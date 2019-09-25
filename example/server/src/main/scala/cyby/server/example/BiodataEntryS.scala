@@ -14,19 +14,19 @@ import cyby.dat._, cyby.dat.example._
 /**
   * CRUD of bio data
   */
-object BioS extends ChildEditor {
+object BiodataEntryS extends ChildEditor {
   //----------------------------------------------------------------------
   //                         Types
   //----------------------------------------------------------------------
   
-  type Id            = Bio.Id
-  type ZCli          = Bio.Cli
-  type Add           = Bio[Pure,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef]
-  type Mod           = Bio[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef]
-  type Srv           = Bio[Pure,Id,Met.Id,Sup.Id,Pro.Id,BioFilS.DB,TimeStamp,EditInfo]
-  type SrvAdd        = Bio[Pure,Id,Met.Id,Sup.Id,Pro.Id,Undef,TimeStamp,EditInfo]
-  type SrvMod        = Bio[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,EditInfo]
-  type Acc           = Bio[Pure,Id,Met.Id,Sup.Id,Pro.AccId,BioFilS.AccDB,TimeStamp,EditInfo]
+  type Id            = BiodataEntry.Id
+  type ZCli          = BiodataEntry.Cli
+  type Add           = BiodataEntry[Pure,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef]
+  type Mod           = BiodataEntry[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,Undef]
+  type Srv           = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Pro.Id,BioFilS.DB,TimeStamp,EditInfo]
+  type SrvAdd        = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Pro.Id,Undef,TimeStamp,EditInfo]
+  type SrvMod        = BiodataEntry[Option,Undef,Met.Id,Sup.Id,Pro.Id,Undef,Undef,EditInfo]
+  type Acc           = BiodataEntry[Pure,Id,Met.Id,Sup.Id,Pro.AccId,BioFilS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -47,7 +47,7 @@ object BioS extends ChildEditor {
   }
 
   implicit lazy val filA: Asmbl[BioFilS.AccDB,List[Fil.Cli]] = BioFilS.asmbl
-  lazy val asmbl = dbAsmbl[Id,Acc,Bio.Cli](_.sortBy(_.method.v._2.v))
+  lazy val asmbl = dbAsmbl[Id,Acc,BiodataEntry.Cli](_.sortBy(_.method.v._2.v))
 
   //----------------------------------------------------------------------
   //                         Valdation

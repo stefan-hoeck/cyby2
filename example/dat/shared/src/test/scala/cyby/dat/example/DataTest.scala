@@ -26,8 +26,8 @@ class DataTest extends DataSuite with Generators {
   checkLaws("Use eqv", EqLaws[Use.Cli].eqv)
   checkLaws("Use json", JsonLaws[Use.Cli].fromToStripped)
 
-  checkLaws("Bio eqv", EqLaws[Bio.Cli].eqv)
-  checkLaws("Bio json", JsonLaws[Bio.Cli].fromToStripped)
+  checkLaws("Bio eqv", EqLaws[BiodataEntry.Cli].eqv)
+  checkLaws("Bio json", JsonLaws[BiodataEntry.Cli].fromToStripped)
 
   checkLaws("Con eqv", EqLaws[Con.Cli].eqv)
   checkLaws("Con json", JsonLaws[Con.Cli].fromToStripped)

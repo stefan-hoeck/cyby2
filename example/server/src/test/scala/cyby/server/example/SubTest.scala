@@ -21,7 +21,7 @@ trait SubImplicits extends AuthUtil with EditArbs {
 
   lazy val subP: Gen[Sub.Path] = arb[Sub.Id] map (_ :: hnil)
   lazy val conP: Gen[Con.Path] = (arb[Con.Id],subP).mapN(_ :: _)
-  lazy val bioP: Gen[Bio.Path] = (arb[Bio.Id],conP).mapN(_ :: _)
+  lazy val bioP: Gen[BiodataEntry.Path] = (arb[BiodataEntry.Id],conP).mapN(_ :: _)
 
   implicit lazy val treeArb: Arbitrary[SubTreeL] = Arbitrary(Gen.frequency(
     5 -> imps.loadArb.arbitrary.map(SubEdit(_) : SubTreeL),

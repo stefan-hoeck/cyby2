@@ -21,7 +21,7 @@ import shapeless.HNil
   lazy val stats: Map[Met.Id,Stats] =
      con.bio.groupBy(_.method._1).flatMap(stats)
 
-  private def stats(p: (Met.Id,List[Bio.Cli])): Map[Met.Id,Stats] = p match {
+  private def stats(p: (Met.Id,List[BiodataEntry.Cli])): Map[Met.Id,Stats] = p match {
     case (pth,Nil)    ⇒ Map.empty
     case (pth,h::t)   ⇒ Map(pth -> Stats(Nel(h,t).map(_.value.v)))
   }

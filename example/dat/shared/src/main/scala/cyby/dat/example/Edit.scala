@@ -24,14 +24,14 @@ import io.circe.syntax._
   * Below is a schema of the substance tree's structure. In parentheses
   * are the types of IDs leading to elements of a given type.
   * In order to access a bio entry, for instance, we need its ID (of
-  * type Bio.Id) together with the ID of its parent container (type Con.Id)
+  * type BiodataEntry.Id) together with the ID of its parent container (type Con.Id)
   * and the ID of the container's parent compound (type Sub.Id).
   *
   *   Sub (Sub.Id)
   *   |
   *   |___ Con (Con.Id)
   *   |    |
-  *   |    |___ Bio (Bio.Id)
+  *   |    |___ Bio (BiodataEntry.Id)
   *   |    |    |
   *   |    |    |___ Fil (Fil.Id)
   *   |    |
@@ -61,12 +61,12 @@ case class SubFilEdit[B,C,F,S](p: Sub.Path, ed: F) extends SubTreeEd[B,C,F,S]
 
 case class ConFilEdit[B,C,F,S](p: Con.Path, ed: F) extends SubTreeEd[B,C,F,S]
 
-case class BioFilEdit[B,C,F,S](p: Bio.Path, ed: F) extends SubTreeEd[B,C,F,S]
+case class BioFilEdit[B,C,F,S](p: BiodataEntry.Path, ed: F) extends SubTreeEd[B,C,F,S]
 
 object SubTreeEd {
   def bioJson(p: Con.Path)(j: J): J = BioEdit[J,J,J,J](p,j).e.asJson
 
-  def bioFilJson(p: Bio.Path)(j: J): J = BioFilEdit[J,J,J,J](p,j).e.asJson
+  def bioFilJson(p: BiodataEntry.Path)(j: J): J = BioFilEdit[J,J,J,J](p,j).e.asJson
 
   def conJson(p: Sub.Path)(j: J): J = ConEdit[J,J,J,J](p,j).e.asJson
 

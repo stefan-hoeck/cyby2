@@ -353,7 +353,7 @@ trait DispZShared extends CyByZ {
   //                      Bio Data
   //----------------------------------------------------------------------
 
-  def mkBios(e: ExpEnv, conP: Con.Path, bs: List[Bio.Cli]): Node =  {
+  def mkBios(e: ExpEnv, conP: Con.Path, bs: List[BiodataEntry.Cli]): Node =  {
     val p = ConP(conP).path
     val i = DataList(BioT, p).i
 
@@ -373,25 +373,25 @@ trait DispZShared extends CyByZ {
     )
   }
 
-  def mkBio(e: ExpEnv, conP: Con.Path)(b: Bio.Cli): Node = {
+  def mkBio(e: ExpEnv, conP: Con.Path)(b: BiodataEntry.Cli): Node = {
     val bioP = b.id :: conP
     val p = BioP(bioP).path
 
     nodes(
       Txt.li(id := Dat(p), cls := ExplorerConRow.c)(
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(p, Bio.value, Txt text b.value.v.toString, some(CommonUser), e),
-          Txt.conDetRow(p, Bio.method, Txt text b.method.v._2.v, some(CommonUser), e),
-          Txt.conDetRow(p, Bio.date, Txt dateNode b.date.v.v, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.value, Txt text b.value.v.toString, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.method, Txt text b.method.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.date, Txt dateNode b.date.v.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(p, Bio.supplier, Txt text b.supplier.v._2.v, some(CommonUser), e),
-          Txt.conDetRow(p, Bio.project, Txt text b.project.v._2.v, some(CommonUser), e),
-          Txt.conDetRow(p, Bio.comment, Txt text b.comment.v.v, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.supplier, Txt text b.supplier.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.project, Txt text b.project.v._2.v, some(CommonUser), e),
+          Txt.conDetRow(p, BiodataEntry.comment, Txt text b.comment.v.v, some(CommonUser), e),
         ),
         Txt.div(cls := ConDetails.c)(
-          Txt.conDetRow(p, Bio.created, Txt timeStampNode b.created, None, e),
-          Txt.conDetRow(p, Bio.modified, Txt editNode b.modified, None, e),
+          Txt.conDetRow(p, BiodataEntry.created, Txt timeStampNode b.created, None, e),
+          Txt.conDetRow(p, BiodataEntry.modified, Txt editNode b.modified, None, e),
         ),
         e.ifEditingAs(Admin)(Txt.div(id := DeleteId(p), cls := DeleteHidden.c)()),
       ),

@@ -11,7 +11,7 @@ package example
 class LocalTest extends DataSuite {
   object loc extends LocEnUS
 
-  property("bio localisation") { testLoc("bio", Bio.lbls.toList) }
+  property("bio localisation") { testLoc("bio", BiodataEntry.lbls.toList) }
 
   property("con localisation") { testLoc("con", Con.lbls.toList) }
 

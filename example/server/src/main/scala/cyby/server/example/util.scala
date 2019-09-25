@@ -77,9 +77,9 @@ trait util {
  
   def conFilPth(p: Con.FilPath): String = s"${conPth(p.tail)}-${p.head}"
 
-  def bioPth(p: Bio.Path): String = s"${conPth(p.tail)}-${p.head}"
+  def bioPth(p: BiodataEntry.Path): String = s"${conPth(p.tail)}-${p.head}"
  
-  def bioFilPth(p: Bio.FilPath): String = s"${bioPth(p.tail)}-${p.head}"
+  def bioFilPth(p: BiodataEntry.FilPath): String = s"${bioPth(p.tail)}-${p.head}"
 
   lazy val notFound: IO[Response] = NotFound()
 

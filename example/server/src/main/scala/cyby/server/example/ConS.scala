@@ -23,10 +23,10 @@ object ConS extends ChildEditor {
   type ZCli          = Con.Cli
   type Add           = Con[Pure,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
   type Mod           = Con[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,Undef]
-  type Srv           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.Id,BioS.DB,ConFilS.DB,TimeStamp,EditInfo]
+  type Srv           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.Id,BiodataEntryS.DB,ConFilS.DB,TimeStamp,EditInfo]
   type SrvAdd        = Con[Pure,Id,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,TimeStamp,EditInfo]
   type SrvMod        = Con[Option,Undef,Sto.Id,Sup.Id,Pro.Id,Undef,Undef,Undef,EditInfo]
-  type Acc           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.AccId,BioS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
+  type Acc           = Con[Pure,Id,Sto.Id,Sup.Id,Pro.AccId,BiodataEntryS.AccDB,ConFilS.AccDB,TimeStamp,EditInfo]
 
   //----------------------------------------------------------------------
   //                         Util
@@ -47,7 +47,7 @@ object ConS extends ChildEditor {
   }
 
   implicit lazy val filA: Asmbl[ConFilS.AccDB,List[Fil.Cli]] = ConFilS.asmbl
-  implicit lazy val bioA: Asmbl[BioS.AccDB,List[Bio.Cli]] = BioS.asmbl
+  implicit lazy val bioA: Asmbl[BiodataEntryS.AccDB,List[BiodataEntry.Cli]] = BiodataEntryS.asmbl
   lazy val asmbl = dbAsmbl[Id,Acc,Con.Cli](_.sortBy(_.location.v._2))
 
   //----------------------------------------------------------------------
@@ -72,7 +72,7 @@ object ConS extends ChildEditor {
   lazy val auth = au.auth
 
   def acc(ae: AuthEnv, s: Srv) = ae.accPro(s.project) map (
-    ps ⇒ s.copy(project = ps, files = ConFilS.accDB(ae, s.files), bio = BioS.accDB(ae, s.bio))
+    ps ⇒ s.copy(project = ps, files = ConFilS.accDB(ae, s.files), bio = BiodataEntryS.accDB(ae, s.bio))
   )
 
   //----------------------------------------------------------------------

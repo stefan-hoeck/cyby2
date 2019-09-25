@@ -36,7 +36,7 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
   val edSub: Editor = s ⇒ st ⇒ parseAndDecodeE[SubTreeL](s) flatMap {
     case SubEdit(ed)       ⇒ SubS.load(st, hnil, ed)
     case ConEdit(p, ed)    ⇒ ConS.load(st, p, ed)
-    case BioEdit(p, ed)    ⇒ BioS.load(st, p, ed)
+    case BioEdit(p, ed)    ⇒ BiodataEntryS.load(st, p, ed)
     case SubFilEdit(p, ed) ⇒ SubFilS.load(st, p, ed)
     case ConFilEdit(p, ed) ⇒ ConFilS.load(st, p, ed)
     case BioFilEdit(p, ed) ⇒ BioFilS.load(st, p, ed)

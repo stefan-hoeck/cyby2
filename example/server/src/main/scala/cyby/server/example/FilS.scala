@@ -37,8 +37,8 @@ object ConFilS extends FilEditor {
 
 object BioFilS extends FilEditor {
   val notFound = p ⇒ PathNotFound(BioFilP(p))
-  val parent   = BioS
-  val dbL      = lens[BioS.Srv].files
+  val parent   = BiodataEntryS
+  val dbL      = lens[BiodataEntryS.Srv].files
   val pth      = BioFilP
 
   def proIds(e: EdSt) = e.nodes match {

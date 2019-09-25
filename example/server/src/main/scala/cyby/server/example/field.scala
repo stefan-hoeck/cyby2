@@ -78,7 +78,7 @@ case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fiel
     case ConFil(_)         ⇒ dummy
   }
 
-  def bio(f: BioField): Act[Bio.Cli, BioS.Acc] = f match {
+  def bio(f: BioField): Act[BiodataEntry.Cli, BiodataEntryS.Acc] = f match {
     case BioMethod         ⇒ met(_.method.v, _.method.v)
     case BioSupplier       ⇒ sup(_.supplier.v, _.supplier.v)
     case BioDate           ⇒ dateAct(_.date.v, _.date.v)

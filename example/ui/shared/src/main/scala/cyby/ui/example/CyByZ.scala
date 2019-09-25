@@ -71,12 +71,12 @@ trait CyByZ extends TextEnv with ZEnv {
   //                      Data Access
   //----------------------------------------------------------------------
 
-  lazy val fbio: St ⇒ Bio.Path ⇒ Option[(Bio.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbio: St ⇒ BiodataEntry.Path ⇒ Option[(BiodataEntry.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     (c,s) <- fcon(s)(p.tail)
     b     <- c.bio find (_.id === p.head)
   } yield (b,c,s)
 
-  lazy val fbioFil: St ⇒ Bio.FilPath ⇒ Option[(Fil.Cli,Bio.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
+  lazy val fbioFil: St ⇒ BiodataEntry.FilPath ⇒ Option[(Fil.Cli,BiodataEntry.Cli,Con.Cli,Sub.Cli)] = s ⇒ p ⇒ for {
     (b,c,s) <- fbio(s)(p.tail)
     f       <- b.files find (_.id === p.head)
   } yield (f,b,c,s)

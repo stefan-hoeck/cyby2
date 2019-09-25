@@ -198,7 +198,7 @@ case class ExplorerZ(
     }
 
     def qbio(f: BioField, st: St): WidgetDesc[Unit,String,String] = f match {
-      case BioId           ⇒ txtQ(RP.id_[Bio.type])
+      case BioId           ⇒ txtQ(RP.id_[BiodataEntry.type])
       case BioValue        ⇒ txtQ(RP.double_)
       case BioMethod       ⇒ qmet(st)
       case BioSupplier     ⇒ qsup(st)
@@ -211,7 +211,7 @@ case class ExplorerZ(
     }
 
     def qfil(f: FilField, st: St): WidgetDesc[Unit,String,String] = f match {
-      case FilId           ⇒ txtQ(RP.id_[Bio.type])
+      case FilId           ⇒ txtQ(RP.id_[BiodataEntry.type])
       case FilName         ⇒ stringQ
       case FilPath         ⇒ stringQ
       case FilComment      ⇒ stringQ

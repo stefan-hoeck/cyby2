@@ -117,7 +117,7 @@ trait util extends DispZShared with DocEnv {
   //                      Bio
   //----------------------------------------------------------------------
 
-  def bio(met: Met.Cli, p: (Double, Int)): Bio.Cli = Bio(
+  def bio(met: Met.Cli, p: (Double, Int)): BiodataEntry.Cli = BiodataEntry(
     Id(p._2),
     Pure(p._1 / 100D),
     metL(met),
@@ -129,13 +129,13 @@ trait util extends DispZShared with DocEnv {
     ts, ei
   )
 
-  def bioMMP10(p: (Double, Int)): Bio.Cli = bio(mmp10, p)
+  def bioMMP10(p: (Double, Int)): BiodataEntry.Cli = bio(mmp10, p)
 
-  def bioMMP13(p: (Double, Int)): Bio.Cli = bio(mmp13, p)
+  def bioMMP13(p: (Double, Int)): BiodataEntry.Cli = bio(mmp13, p)
 
-  lazy val bio1: Bio.Cli = bioMMP10(1.25 -> 1)
+  lazy val bio1: BiodataEntry.Cli = bioMMP10(1.25 -> 1)
 
-  lazy val bio2: Bio.Cli = bioMMP13(10.17 -> 2)
+  lazy val bio2: BiodataEntry.Cli = bioMMP13(10.17 -> 2)
 
   //----------------------------------------------------------------------
   //                      Containers

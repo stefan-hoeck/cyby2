@@ -24,7 +24,7 @@ import shapeless.ops.record._
   *             to Pure for mandatory fields and Maybe if fields
   *             are optional.
   * @tparam ID: ID of the data object
-  * @tparam ST: Type of location field
+  * @tparam LO: Type of location field
   * @tparam SU: Type of supplier field
   * @tparam P:  Type of project field
   * @tparam BS: Type of bio field
@@ -32,9 +32,9 @@ import shapeless.ops.record._
   * @tparam CR: Information about when the object was created
   * @tparam MO: Information about the last modification
   */
-case class Con[F[_],ID,ST,SU,P,BS,FS,CR,MO](
+case class Con[F[_],ID,LO,SU,P,BS,FS,CR,MO](
   id:            ID,
-  location:      F[ST],
+  location:      F[LO],
   supplier:      F[SU],
   batch:         F[Plain],
   orderNr:       F[Plain],
@@ -67,14 +67,14 @@ object Con extends DataCmp {
   /**
     * Container entries as seen by the client.
     */
-  type Cli       = Con[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],List[Bio.Cli],List[Fil.Cli],TimeStamp,EditInfo]
+  type Cli       = Con[Pure,Id,Link[Sto.Id],Link[Sup.Id],Link[Pro.AccId],List[BiodataEntry.Cli],List[Fil.Cli],TimeStamp,EditInfo]
 
   val lblG = LabelledGeneric[Cli]
   val lbls@(id::location::supplier::batch::orderNr::comment::lentTo::purity::purityStr::density::concentration::amount::empty::project::bio::files::created::modified::HNil) = Keys[lblG.Repr].apply
 
   def isLent(c: Cli): Boolean = c.lentTo.v.v.trim.nonEmpty
 
-  implicit def eqI[F[_],ID,ST,SU,P,BS,FS,CR,MO]: cats.Eq[Con[F,ID,ST,SU,P,BS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
-  implicit def decI[F[_]:D1,ID:D,ST:D,SU:D,P:D,BS:D,FS:D,CR:D,MO:D]: D[Con[F,ID,ST,SU,P,BS,FS,CR,MO]] = deriveDecoder
-  implicit def encI[F[_]:E1,ID:E,ST:E,SU:E,P:E,BS:E,FS:E,CR:E,MO:E]: E[Con[F,ID,ST,SU,P,BS,FS,CR,MO]] = deriveEncoder
+  implicit def eqI[F[_],ID,LO,SU,P,BS,FS,CR,MO]: cats.Eq[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = cats.Eq.fromUniversalEquals
+  implicit def decI[F[_]:D1,ID:D,LO:D,SU:D,P:D,BS:D,FS:D,CR:D,MO:D]: D[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveDecoder
+  implicit def encI[F[_]:E1,ID:E,LO:E,SU:E,P:E,BS:E,FS:E,CR:E,MO:E]: E[Con[F,ID,LO,SU,P,BS,FS,CR,MO]] = deriveEncoder
 }
