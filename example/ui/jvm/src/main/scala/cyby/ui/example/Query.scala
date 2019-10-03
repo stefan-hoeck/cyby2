@@ -8,7 +8,7 @@ package cyby
 package ui
 package example
 
-import cyby.query.{Comp ⇒ QComp, ReadPred ⇒ RP, Contains}
+import cyby.query.{Comp ⇒ QComp, ReadPred ⇒ RP, Contains, Fingerprint}
 import cyby.dat._, example._
 import cyby.ui.{IconType ⇒ IT, DocType ⇒ DT, CompType ⇒ CT, WidgetType ⇒ WT}
 
@@ -263,6 +263,20 @@ object Query extends util with QueryDocEnv {
     ),
     exampleQ(subRow(CpdName, stringQ(Contains, "^3-Amino"))),
 
+    h4(cls := DT.H4.c)(raw("Similarity Searches")),
+    div(cls := DT.Paragraph.c)(
+      raw(s"""
+      ${cyby} supports filtering compounds by similarity with
+      a given structure. For this, the Tanimoto coefficient of
+      fingerprints is calculated.
+      The supported fingerprints for the time being are:
+      ${pubChemLink},
+      CDK Extended (default fingerprint used for substructure searches in ${cyby}) and
+      MACCS (J. Chem. Inf. Comput. Sci. 2002, 42, 1273-1280).
+      """)
+    ),
+    exampleQ(similarityEx(Fingerprint.PubChem, ">= 0.85", "c1ccncc1CC(=O)C")),
+
     h3(id := UId.CombiningQueriesDoc, cls := DT.H3.c)(raw("Combining Queries")),
     div(cls := DT.Paragraph.c)(
       raw(s"""
@@ -332,7 +346,11 @@ object Query extends util with QueryDocEnv {
     ),
   )
 
+  def similarityEx(fp: Fingerprint, q: String, m: String) = {
+    val mol = chem.Mol.read(m).get.toDatMol
 
+    subRow(CpdMol(Mol.Similarity), simQ(fp, q, mol))
+  }
 
   def idExmpl(s: String) = subRow(CpdId, txtQ(RP.id_[Compound.type], s))
 
@@ -368,4 +386,7 @@ object Query extends util with QueryDocEnv {
     conRow(ConCreated, dateQ(">=", "2019-01-01")),
     subRow(CpdCreated, dateQ(">=", "2019-01-01"), some(QComp.And), true)
   )
+
+  lazy val pubChemLink =
+    extLink("https://astro.temple.edu/~tua87106/list_fingerprints.pdf", "PubChem")
 }
