@@ -9,7 +9,7 @@ package ui
 
 import cats.Eq, cats.implicits._
 import cyby.dat.{Add ⇒ _, _}
-import cyby.query.{Comp ⇒ QComp, StringQPrefixes, QPrefixes}
+import cyby.query.{Comp ⇒ QComp, StringQPrefixes, QPrefixes, Fingerprint}
 import cyby.dat.format.{Color, Gradient}
 import cyby.export.{Format ⇒ EFormat, Sdf}
 
@@ -126,6 +126,9 @@ trait DocEnv extends TextEnv {
 
   def comparator(sel: QComp, f: WT ⇒ WT): Node =
     selectEnum(f(WT.ComparatorSel), loc.queryComp, sel)
+
+  def fingerprint(sel: Fingerprint, f: WT ⇒ WT): Node =
+    selectEnum(f(WT.FingerprintSel), loc.fingerprint, sel)
 
   def negator(sel: Boolean, f: WT ⇒ WT): Node =
     select(List(false, true), f(WT.NegatorSel), sel)(loc.negators)

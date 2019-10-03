@@ -15,6 +15,9 @@ import scala.util.control.NonFatal
 import scala.concurrent.ExecutionContext
 import java.util.concurrent.Executors
 
+import fs2.io.file.{readAll, writeAll}
+import fs2.text.{utf8Encode, utf8Decode}
+
 trait util {
   val hnil: shapeless.HNil = shapeless.HNil
 
@@ -40,12 +43,25 @@ trait util {
       case e@NonFatal(_) ⇒ logger.log(e.toString, Error).unsafeRunSync()
     }
   }
+  
+  private def getPath(s: String) = java.nio.file.Paths get s
+
+  def transformLines(
+    in: String,
+    out: String
+  )(f: String ⇒ IO[String])(implicit c: ContextShift[IO]): fs2.Stream[IO,Unit] =
+    blocking.flatMap { b ⇒ 
+      utf8Lines(in).evalMap(f)
+                   .intersperse("\n")
+                   .through(utf8Encode)
+                   .through(writeAll[IO](getPath(out),b))
+    }
 
   def utf8Lines(p: String)(implicit c: ContextShift[IO]): fs2.Stream[IO,String] =
     blocking.flatMap { b ⇒
-      fs2.io.file.readAll[IO](java.nio.file.Paths get p, b, 4096)
-          .through(fs2.text.utf8Decode)
-          .through(fs2.text.lines)
+      readAll[IO](getPath(p), b, 4096)
+        .through(utf8Decode)
+        .through(fs2.text.lines)
     }
 
   def allLines(p: String)(implicit c: ContextShift[IO]): IO[List[String]] =

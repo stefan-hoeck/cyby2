@@ -89,6 +89,7 @@ object Mol {
   case object ExactStructure extends Field(false, true)
   case object SubStructure   extends Field(false, true)
   case object NoStructure    extends Field(false, true)
+  case object Similarity     extends Field(false, true)
   case object Svg            extends Field(false, false)
   case object Smiles         extends Field()
   case object Inchi          extends Field()
@@ -102,7 +103,7 @@ object Mol {
   object Field extends EnumHelper[Field] {
     val name = "cyby.dat.Mol.Field"
     def encode(f: Field) = lowerHeadEncode(f)
-    lazy val values = Nel.of(Structure, SubStructure, ExactStructure, NoStructure, Svg, Smiles, Inchi, Mass, ExactMass, Formula, LogP, Tpsa, Lipinski)
+    lazy val values = Nel.of(Structure, SubStructure, Similarity, ExactStructure, NoStructure, Svg, Smiles, Inchi, Mass, ExactMass, Formula, LogP, Tpsa, Lipinski)
   }
 }
 

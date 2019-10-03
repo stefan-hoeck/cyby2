@@ -13,8 +13,6 @@ package dat
 trait DataCmp {
   type Id = cyby.Id[this.type]
 
-  type AccId = cyby.Id[this.type @@ HasAccess]
-
   type Cli
 
   /**

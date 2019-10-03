@@ -734,6 +734,12 @@ trait DomEnv extends CoreEnv {
       */
     lazy val exportFormat: SelectDesc[export.Format] =
       selDescEnum(WT.ExportFormatSel, loc.exportFormat)
+      
+    /**
+      * SelectDesc for fingerprints
+      */
+    lazy val fingerprint: SelectDesc[Fingerprint] =
+      selDescEnum(WT.FingerprintSel, loc.fingerprint)
 
     /**
       * SelectDesc for query comparators
@@ -1087,6 +1093,7 @@ trait DomEnv extends CoreEnv {
       case Mol.Structure      ⇒ molQ
       case Mol.ExactStructure ⇒ molQ
       case Mol.SubStructure   ⇒ molQ
+      case Mol.Similarity     ⇒ simQ
       case Mol.NoStructure    ⇒ emptyQ
       case Mol.Svg            ⇒ noQ
     }
@@ -1109,6 +1116,28 @@ trait DomEnv extends CoreEnv {
                else  within(d)(comparator.query.desc.signalO(ini))
     } yield vs switch onFirstChild(p).head.asF(dummy)
 
+    /**
+      * Similarity searches
+      */
+    lazy val simQ: WidgetDesc[Unit,String,String] = WidgetDesc{os ⇒
+      val (of,oq,om) = os flatMap Fingerprint.splitQuery match {
+        case Some((f,_,q,m)) ⇒ (some(f),some(q),some(m))
+        case None            ⇒ (none,none,none)
+      }
+
+      val coeffQ: WidgetDesc[Unit,String,String] =
+        string.revalidate(s ⇒ RP.double_(s) as s, loc.predicateMsg)
+              .widget(WT.SimilarityCoefficient)
+              .desc.mapEl(_ ⇒ unit)
+
+      for {
+        d   <- div(cls := CT.SimilarityQuery.c)
+        l   <- within(d)(li(cls := CT.SimilarityRow.c))
+        fp  <- within(l)(fingerprint.query.desc.signalO(of))
+        c   <- within(l)(coeffQ.signalO(oq))
+        mol <- within(d)(molQ.signalO(om))
+      } yield unit -> (fp,c,mol).mapN2((fp2,c2,m2) ⇒ Fingerprint.encodeSimilarity(fp2,c2,MolFile fromString m2))
+    }
   }
 }
 

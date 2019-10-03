@@ -8,9 +8,10 @@ package cyby
 package ui
 
 import cats.implicits._
-import cyby.query.{Comp ⇒ QComp, ReadPred ⇒ RP}
+import cyby.dat.Mol
+import cyby.query.{Comp ⇒ QComp, ReadPred ⇒ RP, Fingerprint}
 import cyby.ui.{IconType ⇒ IT, CompType ⇒ CT, WidgetType ⇒ WT, TitleType ⇒ TT}
-import msf.js.{SelectEntry, InputType, Node, nodes}
+import msf.js.{SelectEntry, InputType, Node, nodes, raw}
 import InputType.Text
 
 trait QueryDocEnv extends DocEnv {
@@ -74,6 +75,15 @@ trait QueryDocEnv extends DocEnv {
       Txt.span(cls := CT.QueryParenTxt.c)(Txt text ")")
     )
   )
+
+  def simQ(fp: Fingerprint, q: String, m: Mol): Node =
+    Txt.div(cls := CT.SimilarityQuery.c)(
+      Txt.div(cls := CT.SimilarityRow.c)(
+        fingerprint(fp, WT.Query),
+        Txt.input(Text, cls := WT.SimilarityCoefficient.c, value := RP.double_(q).as(q).get),
+      ),
+      Txt.div(cls := CT.SimilarityQuerySvgDoc.c)(raw(m.svg.v)),
+    )
 
   def txtQ[A](rp: RP[A], s: String): Node =
     Txt.input(Text, cls := WT.Query(WT.Text).c, value := rp(s).as(s).get)

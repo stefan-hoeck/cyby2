@@ -27,6 +27,8 @@ case class Mol(
   svg:         Svg,
   inchi:       String,
   fingerprint: BitSet,
+  maccs:       BitSet,
+  pubChem:     BitSet,
   mol:         MolPure,
   logP:        Option[Double],
   tpsa:        Option[Double],
@@ -43,6 +45,8 @@ case class Mol(
     svg,
     inchi,
     fingerprint.toList,
+    some(maccs.toList),
+    some(pubChem.toList),
     logP, tpsa, lipinski, smiles
   )
 
@@ -64,7 +68,7 @@ object Mol {
   implicit val readI: Read[Mol] = Read.inst(s ⇒ s"Not a Molecule: $s")(s ⇒ read(s))
 
   def read(s: String): Option[Mol] =
-    readE(MolFile fromString MolFile.unescape(s)).fold[Option[Mol]](
+    readE(MolFile fromString s).fold[Option[Mol]](
       nel ⇒ {
         nel.toList foreach{ e ⇒  println(s"Error when reading molecule ${s}: ${e}") }
         none[Mol]
@@ -81,14 +85,16 @@ object Mol {
       m        <- MutableMol molWeight mol
       em       <- MutableMol exactMass mol
       _        <- MutableMol aromatize mol
+      maccs    <- MutableMol maccs mol
       _        <- MutableMol addExplicitHydrogens mol
-      fp       <- MutableMol calcFingerprint mol
+      fp       <- MutableMol extendedFingerprint mol
+      pubChem  <- MutableMol pubchem mol
       logp     <- MutableMol xlogP mol
       tpsa     <- MutableMol tpsa mol
       lip      <- MutableMol lipinski mol
       smi      <- MutableMol toSmiles mol
       mp       <- EitherT.liftF(mol.unsafeFreeze)
-    } yield Mol(s2, svg, inchi, fp, mp, logp, tpsa, lip, smi, fo, m, em)
+    } yield Mol(s2, svg, inchi, fp, maccs.getOrElse(BitSet.empty), pubChem.getOrElse(BitSet.empty), mp, logp, tpsa, lip, smi, fo, m, em)
 
     ST.runST(new Forall[ErrNel[Throwable,Mol]]{def apply[S] = run[S].value})
   }
@@ -121,6 +127,8 @@ object Mol {
   svg:         Svg,
   inchi:       String,
   fingerprint: List[Int],
+  maccs:       Option[List[Int]],
+  pubChem:     Option[List[Int]],
   logP:        Option[Double],
   tpsa:        Option[Double],
   lipinski:    Option[Boolean],
@@ -133,12 +141,36 @@ object Mol {
       m        <- MutableMol molWeight mol
       em       <- MutableMol exactMass mol
       _        <- MutableMol aromatize mol
+
+      mac      <- maccs.fold[MutableMol.ResST[S,Option[BitSet]]](
+                    MutableMol.maccs(mol)
+                  )(s ⇒ MutableMol.pureRes[S,Option[BitSet]](Some(BitSet(s: _*))))
+
       _        <- MutableMol addExplicitHydrogens mol
+
+      pub      <- pubChem.fold[MutableMol.ResST[S,Option[BitSet]]](
+                    MutableMol.pubchem(mol)
+                  )(s ⇒ MutableMol.pureRes[S,Option[BitSet]](Some(BitSet(s: _*))))
       mp       <- EitherT.liftF(mol.unsafeFreeze)
       smi      <- smiles.fold[MutableMol.ResST[S,Option[String]]](
                     MutableMol.toSmiles(mol)
                   )(s ⇒ MutableMol.pureRes[S,Option[String]](some(s)))
-    } yield Mol(structure, svg, inchi, BitSet(fingerprint: _*), mp, logP, tpsa, lipinski, smiles, fo, m, em)
+    } yield Mol(
+      structure,
+      svg,
+      inchi,
+      BitSet(fingerprint: _*),
+      mac getOrElse BitSet.empty,
+      pub getOrElse BitSet.empty,
+      mp,
+      logP,
+      tpsa,
+      lipinski,
+      smiles,
+      fo,
+      m,
+      em
+    )
 
     Mol.toDecE(
       ST.runST(new Forall[ErrNel[Throwable,Mol]]{def apply[S] = run[S].value})

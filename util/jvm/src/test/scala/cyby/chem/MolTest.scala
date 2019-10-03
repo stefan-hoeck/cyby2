@@ -21,8 +21,10 @@ class MolTest extends CyBySuite with Generators {
 
   property("structure subgraph round trip"){
     forAll{ m: Mol ⇒ 
-      val q = QueryMol.read(m.structure.v).get
-      assert(q isSubgraphOf m)
+      QueryMol.readE(m.structure.v) match {
+        case Left(es) ⇒ assert(throw new Exception(es.toString))
+        case Right(q) ⇒ assert(q isSubgraphOf m)
+      }
     }
   }
 }

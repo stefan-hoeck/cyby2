@@ -18,7 +18,7 @@ final class MolFile private(val v: String) extends AnyVal {
 }
 
 object MolFile extends RefinedStringWithLineBreaks[MolFile]("MolFile", _.v){
-  def fromString(s: String): MolFile = new MolFile(s)
+  def fromString(s: String): MolFile = new MolFile(unescape(s))
 
   def apply(s: String): Option[MolFile] = Some(fromString(s))
 

@@ -8,7 +8,7 @@ package cyby
 package dat
 
 import cyby.export._
-import cyby.query.{Comp ⇒ QComp}
+import cyby.query.{Comp ⇒ QComp, Fingerprint}
 
 /**
   * Localized name, description and error messages for a data type or field
@@ -61,6 +61,7 @@ trait Loc {
   def nostructure: String
   def exactstructure: String
   def substructure: String
+  def similarity: String
   def loggedIn(n: Alias, lvl: UserLevel): String
   def loggedOut: String
   def changelog: String
@@ -87,6 +88,8 @@ trait Loc {
   def bool(b: Boolean): String
 
   def exportFormat(f: Format): String
+
+  def fingerprint(f: Fingerprint): String
 
   def queryComp(c: QComp): String
 
@@ -269,6 +272,7 @@ trait LocEnUS extends Loc {
   val nostructure = "Structure: None"
   val exactstructure = "Structure (exact)"
   val substructure = "Sub-structure"
+  val similarity = "Similarity"
 
   val logout             = "Logout"
 
@@ -327,6 +331,12 @@ trait LocEnUS extends Loc {
     case Odf ⇒ "Open Document Format (can be read by Excel)"
   }
 
+  def fingerprint(f: Fingerprint): String = f match {
+    case Fingerprint.Default ⇒ "CDK Extended"
+    case Fingerprint.PubChem ⇒ "PubChem"
+    case Fingerprint.MACCS   ⇒ "MACCS"
+  }
+
   def queryComp(c: QComp): String = c match {
     case QComp.And ⇒ "And"
     case QComp.Or  ⇒ "Or"
@@ -343,6 +353,7 @@ trait LocEnUS extends Loc {
     case Mol.Structure      ⇒ "Structure"
     case Mol.ExactStructure ⇒ exactstructure
     case Mol.SubStructure   ⇒ substructure
+    case Mol.Similarity     ⇒ similarity
     case Mol.NoStructure    ⇒ nostructure
     case Mol.Svg            ⇒ "SVG"
     case Mol.Inchi          ⇒ "InCHi"

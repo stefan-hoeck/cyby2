@@ -1038,6 +1038,7 @@ trait TextEnv extends LocEnv {
       case Mol.Svg ⇒ nodes()
       case Mol.Inchi ⇒ nodes()
       case Mol.Smiles ⇒ nodes()
+      case Mol.Similarity ⇒ nodes()
     }
 
     /**

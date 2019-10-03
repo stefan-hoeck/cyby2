@@ -55,6 +55,9 @@ trait LoadEnv extends ServerEnv {
     if (s.isEmpty) le else le flatMap ed
   }
 
+  def ignoreLine(s: String): Boolean =
+    s.isEmpty || s.startsWith("//")
+
   /**
     * Loads all editing entries from disk (the location is determined
     * by the data type given) and applies them using the given Editor
@@ -69,7 +72,7 @@ trait LoadEnv extends ServerEnv {
     }
 
     utf8Lines(s"${dataPath}/${dt}.json")(coreSettings.contextShift)
-      .filter(_.nonEmpty)
+      .filter(s ⇒ !ignoreLine(s))
       .evalMap(s ⇒ debugLog(s"Processing: ${s take 40}") as s)
       .scan[LoadE](Right(1L -> st))(applyEdit(e,dt))
       .compile

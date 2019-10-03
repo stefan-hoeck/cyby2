@@ -12,9 +12,10 @@ import cats.implicits._
 import cyby.dat.{Mol ⇒ DMol, _}
 import cyby.chem.Mol
 
-import cyby.query.{ReadPred ⇒ RP, Pred}
+import cyby.query.{ReadPred ⇒ RP, Pred, Fingerprint}
 
 import cyby.server.export.{OfficeValueType ⇒ OVT, date}
+import scala.collection.immutable.BitSet
 
 /**
   * Utility functions and types for working with
@@ -57,6 +58,7 @@ trait fields extends ServerEnv {
                                  .setQue(_ ⇒ RP.always)
     case DMol.ExactStructure ⇒ dummy[A,B].setQue(_ ⇒ RP.cmap(exactStructureP)(h))
     case DMol.SubStructure   ⇒ dummy[A,B].setQue(_ ⇒ RP.cmap(subStructureP)(h))
+    case DMol.Similarity     ⇒ dummy[A,B].setQue(_ ⇒ RP.cmap(similarityP)(h))
     case DMol.NoStructure    ⇒ dummy[A,B].setQue(_ ⇒ _ ⇒ some(h(_).isEmpty))
     case DMol.Svg            ⇒ dummy
     case DMol.Inchi          ⇒ stringO(g(_) map (_.inchi), h(_) map (_.inchi))
@@ -70,12 +72,20 @@ trait fields extends ServerEnv {
     case DMol.Lipinski       ⇒ boolO(g(_) >>= (_.lipinski), h(_) >>= (_.lipinski))
   }
 
-  private val subStructureP: RP[Option[Mol]] = s ⇒ 
+  private lazy val subStructureP: RP[Option[Mol]] = s ⇒ 
     chem.QueryMol read s map {
       qm ⇒ (m2: Option[Mol]) ⇒ m2 exists qm.isSubgraphOf
     }
 
-  private val exactStructureP: RP[Option[Mol]] = s ⇒ 
+  private lazy val similarityP: RP[Option[Mol]] = Fingerprint similarity fpToBitset
+
+  private lazy val fpToBitset: Fingerprint ⇒ Mol ⇒ BitSet = {
+    case Fingerprint.Default ⇒ _.fingerprint
+    case Fingerprint.PubChem ⇒ _.pubChem
+    case Fingerprint.MACCS   ⇒ _.maccs
+  }
+
+  private lazy val exactStructureP: RP[Option[Mol]] = s ⇒ 
     Mol.read(s).map(m ⇒ (m2: Option[Mol]) ⇒ m2.exists(_.inchi === m.inchi))
 
 

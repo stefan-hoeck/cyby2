@@ -14,7 +14,7 @@ import cyby.dat.{Formula,FormulaEntry,MolFile,Svg}
 
 import org.openscience.cdk._
 import org.openscience.cdk.config.Isotopes
-import org.openscience.cdk.fingerprint.{Fingerprinter, ExtendedFingerprinter}
+import org.openscience.cdk.fingerprint.{Fingerprinter, ExtendedFingerprinter, IBitFingerprint, MACCSFingerprinter, PubchemFingerprinter}
 import org.openscience.cdk.inchi.InChIGeneratorFactory
 import org.openscience.cdk.io.IChemObjectReader.Mode
 import org.openscience.cdk.isomorphism.UniversalIsomorphismTester
@@ -55,6 +55,8 @@ case class MolPure(private val m: Molecule) {
 }
 
 final case class MutableMol[S](private val m: Molecule) {
+  def cloneST: ST[S,MutableMol[S]] = ST returnST MutableMol[S](cloneMol(m))
+
   def freeze: ST[S,MolPure] = ST returnST MolPure(cloneMol(m))
 
   /**
@@ -140,20 +142,40 @@ object MutableMol {
 
   def readForQuery[S](s: String): ResST[S,(MolPure, BitSet)] = for {
     mol  <- readRawMol[S](s) orElse readRawSmiles[S](s)
-    mol2 <- readRawMol[S](s) orElse readRawSmiles[S](s)
-    _    <- detectAtomTypes[S](mol2)
     _    <- detectAtomTypes[S](mol)
-    _    <- aromatize(mol2)
     _    <- aromatize(mol)
-    fp   <- calcFingerprint(mol2)
+    fp   <- EitherT.liftF(mol.cloneST).flatMap(extendedFingerprint)
     q    <- tryST(MutableMol[S](createBasicQueryContainer(mol.m)), "createBasicQueryContainer")
     qr   <- EitherT liftF q.unsafeFreeze
   } yield qr -> fp
 
-  def calcFingerprint[S](m: MutableMol[S]): ResST[S,BitSet] = {
+  /**
+    * Prerequisite: atom types detected, aromatized
+    */
+  def extendedFingerprint[S](m: MutableMol[S]): ResST[S,BitSet] = {
     val fp = new ExtendedFingerprinter(FPSize, FPDepth)
-    tryST(BitSet.fromBitMaskNoCopy(fp.getBitFingerprint(m.m).asBitSet.toLongArray), "fromBitMaskNoCopy")
+    tryST(bitSet(fp.getBitFingerprint(m.m)), "extended fingerprinter")
   }
+
+  /**
+    * Generate MACCS fingerprint
+    * Prerequisite: atom types detected, aromatized, implicit hydrogens
+    */
+  def maccs[S](m: MutableMol[S]): ResST[S,Option[BitSet]] = {
+    val fp = new MACCSFingerprinter()
+    optST(bitSet(fp.getBitFingerprint(m.m)), "maccs fingerprint")
+  }
+  /**
+    * Generate Pubchem fingerprint
+    * Prerequisite: atom types detected, aromatized, explicit hydrogens
+    */
+  def pubchem[S](m: MutableMol[S]): ResST[S,Option[BitSet]] = {
+    val fp = new PubchemFingerprinter(null)
+    optST(bitSet(fp.getBitFingerprint(m.m)), "pubchem fingerprint")
+  }
+
+  private def bitSet(fp: IBitFingerprint): BitSet =
+    BitSet.fromBitMaskNoCopy(fp.asBitSet.toLongArray)
 
   /**
     * Tries to read a string in .mol format. Afterwards,

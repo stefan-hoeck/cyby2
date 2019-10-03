@@ -336,6 +336,10 @@
     margin                   : 0 5px 0 0;
   }
 
+  .row.similarity {
+    margin                   : 0 0 5px 0;
+  }
+
   .row.explorer-sub {
     margin                   : 0;
     text-align               : center;
@@ -1170,6 +1174,11 @@
 
   .widget.select.query {
     flex                     : 1;
+  }
+
+  .widget.select.fingerprint.query {
+    flex                     : 1;
+    margin                   : 0 5px 0 0;
   }
 
   .widget.select.link {

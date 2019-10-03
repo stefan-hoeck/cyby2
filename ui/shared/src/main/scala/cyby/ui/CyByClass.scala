@@ -75,6 +75,8 @@ object CompType {
 
   case object ExportContainer extends CompType("exportcontainer")
   case object QueryDetails extends CompType("querydetails")
+  case object SimilarityQuery extends CompType("similarity-outer")
+  case object SimilarityQuerySvgDoc extends CompType("similarity-svg-doc")
 
   case object ConDetails extends ListType("container-details-block")
   case object ContainerDets extends ListType("container-details")
@@ -152,6 +154,7 @@ object CompType {
   case object QueryRow extends RowType("query")
   case object QueryDetailRow extends RowType("query-detail")
   case object QuerySubRow extends RowType("query-sub")
+  case object SimilarityRow extends RowType("similarity")
   case object SubGridRow extends RowType("sub-grid")
   case object SubstanceRow extends RowType("substance")
 }
@@ -265,6 +268,7 @@ object WidgetType {
   case object Date extends WidgetType("input date")
   case object CheckBox extends WidgetType("input checkbox")
   case object QueryName extends WidgetType("input queryname")
+  case object SimilarityCoefficient extends WidgetType("input similarity-coeff")
 
   case object BoolSel extends WidgetType("select bool")
   case object ColumnSel extends WidgetType("select column")
@@ -274,6 +278,7 @@ object WidgetType {
   case object FieldSel extends WidgetType("select field")
   case object Field2Sel extends WidgetType("select field2")
   case object Field3Sel extends WidgetType("select field3")
+  case object FingerprintSel extends WidgetType("select fingerprint")
   case object GradientSel extends WidgetType("select gradient")
   case object GridColumnsSel extends WidgetType("select grid-columns")
   case object NegatorSel extends WidgetType("select negator")
