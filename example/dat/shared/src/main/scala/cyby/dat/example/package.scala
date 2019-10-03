@@ -10,6 +10,7 @@ package dat
 import cats.implicits._
 
 import cyby.query.{ContainsCI, Query, Q, Prim, Chain, Contains, Comp, QuickSearch}
+import UserLevel.{Admin,CommonUser,Superuser,Guest}
 import Comp.{Or, And}
 
 
@@ -72,6 +73,15 @@ package object example {
     if (includeEmpty) query
     else Chain(List(And.c -> empty, And.c -> query))
   }
+
+  def isAdmin(u: UserLevel): Boolean            = u >= Admin
+
+  def isUser(u: UserLevel): Boolean             = u >= CommonUser
+
+  def isSuperUser(u: UserLevel): Boolean        = u >= Superuser
+
+  def isGuest(u: UserLevel): Boolean            = u >= Guest
+
 }
 
 // vim: set ts=2 sw=2 et:

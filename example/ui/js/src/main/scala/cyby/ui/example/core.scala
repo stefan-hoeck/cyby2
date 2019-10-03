@@ -26,11 +26,11 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
   
     def accumS(s: St, r: Option[Result]): St = r match {
       case Some(CpdRes(r)) ⇒ l.subs.modify(s)(modRoot(r)(_.id))
-      case Some(ProRes(r)) ⇒ l.pros.modify(s)(modRoot(r)(_.id))
+      case Some(ProRes(r)) ⇒ l.pros.modify(s)(modRoot(r)(_.id.v))
       case Some(StoRes(r)) ⇒ l.stos.modify(s)(modRoot(r)(_.id))
       case Some(SupRes(r)) ⇒ l.sups.modify(s)(modRoot(r)(_.id))
       case Some(MetRes(r)) ⇒ l.mets.modify(s)(modRoot(r)(_.id))
-      case Some(UseRes(r)) ⇒ l.uses.modify(s)(modRoot(r)(_.id))
+      case Some(UseRes(r)) ⇒ l.uses.modify(s)(modRoot(r)(_.id.v))
       case Some(BioStatsRes(r)) ⇒ l.bio.modify(s)(modRoot(r)(_.con.id.to))
       case _               ⇒ s
     }
@@ -99,13 +99,13 @@ trait CoreZ extends CoreEnv with DomEnv with CyByZ {
               .mapEl(_ ⇒ unit)
 
     lazy val qpro: St ⇒ WidgetDesc[Unit,String,String] =
-      qlink(Read[Project.AccId].read, pro(_).query.desc)(fpro, _.toString, _.id)
+      qlink(Read[Project.Id].read, pro(_).query.desc)(fpro, _.toString, _.id.v)
 
     lazy val qsup: St ⇒ WidgetDesc[Unit,String,String] =
       qlink(Read[Supplier.Id].read, sup(_).query.desc)(fsup, _.toString, _.id)
 
     lazy val quse: St ⇒ WidgetDesc[Unit,String,String] =
-      qlink(Read[User.Id].read, use(_).query.desc)(fuse, _.toString, _.id.to)
+      qlink(Read[User.Id].read, use(_).query.desc)(fuse, _.toString, _.id.v)
 
     lazy val qsto: St ⇒ WidgetDesc[Unit,String,String] =
       qlink(Read[Location.Id].read, sto(_).query.desc)(fsto, _.toString, _.id)

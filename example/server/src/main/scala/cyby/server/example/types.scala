@@ -8,7 +8,7 @@ package cyby
 package server
 package example
 
-import cyby.dat.example.{CpdTreeEd, Project}
+import cyby.dat.example.{CpdTreeEd, Project, HasAccess}
 
 /**
   * Some utility type aliases
@@ -31,6 +31,8 @@ trait types {
   type DataE[A] = ErrNel[Err,A]
 
   type DataV[A] = ValNel[Err,A]
+  
+  type AuthEnv = HasAccess.AuthEnv
 }
 
 // vim: set ts=2 sw=2 et:

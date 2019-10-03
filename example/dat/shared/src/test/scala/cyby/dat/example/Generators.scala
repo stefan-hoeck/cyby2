@@ -26,6 +26,9 @@ trait Generators extends DataImplicits {
   implicit lazy val conFieldArb = shapeless.the[Arbitrary[ConField]]
   implicit lazy val bioFieldArb = shapeless.the[Arbitrary[BioField]]
   implicit lazy val expFieldArb = shapeless.the[Arbitrary[ExportField]]
+
+  implicit def hasAccessArb[A](implicit A: Arbitrary[A]): Arbitrary[HasAccess[A]] =
+    Arbitrary(arb[A] map HasAccess.unsafe)
 }
 
 // vim: set ts=2 sw=2 et:

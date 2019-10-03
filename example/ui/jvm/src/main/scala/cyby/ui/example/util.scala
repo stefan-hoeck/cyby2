@@ -89,10 +89,6 @@ trait util extends DispZShared with DocEnv {
   //                      Example Data
   //----------------------------------------------------------------------
 
-  def accId[A](id: Id[A]): Id[A @@ HasAccess] = id.to
-
-  def unaccId[A](id: Id[A @@ HasAccess]): Id[A] = id.to
-
   def alias(s: String): Alias = Alias unsafe s
 
   def aliasP(s: String): Pure[Alias] = Pure(alias(s))
@@ -254,7 +250,7 @@ trait util extends DispZShared with DocEnv {
   def proL(p: Project.Cli): Pure[Link[Project.AccId]] = Pure(p.id -> p.name)
 
   lazy val pro1: Project.Cli = Project(
-    Id(1),
+    HasAccess.unsafe(Id(1)),
     nameP("Allgemeine Chemikalien"),
     useL(hock),
     usesL(jodo,pott),
@@ -264,7 +260,7 @@ trait util extends DispZShared with DocEnv {
   )
 
   lazy val pro2: Project.Cli = Project(
-    Id(2),
+    HasAccess.unsafe(Id(2)),
     nameP("MMP-13 Inhibitors"),
     useL(hock),
     usesL(jado),
@@ -379,12 +375,12 @@ trait util extends DispZShared with DocEnv {
   //                      Users
   //----------------------------------------------------------------------
 
-  def useL(u: User.Cli): Pure[Link[User.Id]] = Pure(u.id.to -> u.alias.name)
+  def useL(u: User.Cli): Pure[Link[User.Id]] = Pure(u.id.v -> u.alias.name)
 
   def usesL(us: User.Cli*): Pure[List[Link[User.Id]]] = us.toList traverse useL
 
   lazy val hock: User.Cli = User(
-    Id(1), 
+    HasAccess.unsafe(Id(1)), 
     aliasP("hock"),
     plainP("Stefan"),
     plainP("Höck"),
@@ -395,7 +391,7 @@ trait util extends DispZShared with DocEnv {
   )
 
   lazy val jodo: User.Cli = User(
-    Id(2), 
+    HasAccess.unsafe(Id(2)), 
     aliasP("jodo"),
     plainP("John"),
     plainP("Doe"),
@@ -406,7 +402,7 @@ trait util extends DispZShared with DocEnv {
   )
 
   lazy val jado: User.Cli = User(
-    Id(3), 
+    HasAccess.unsafe(Id(3)), 
     aliasP("jado"),
     plainP("Jane"),
     plainP("Doe"),
@@ -417,7 +413,7 @@ trait util extends DispZShared with DocEnv {
   )
 
   lazy val pott: User.Cli = User(
-    Id(4), 
+    HasAccess.unsafe(Id(4)), 
     aliasP("pott"),
     plainP("Harry"),
     plainP("Potter"),
@@ -514,13 +510,13 @@ trait util extends DispZShared with DocEnv {
 
   lazy val dispEnvUse: DispEnv = deExp(Set(
     UId.DataList(UseT, RootP),
-    UId.Dat(UseP(hock.id.to[User.type] :: HNil)),
+    UId.Dat(UseP(hock.id.v :: HNil)),
   ))
 
   lazy val dispEnvPro: DispEnv = deExp(Set(
     UId.DataList(ProT, RootP),
-    UId.Dat(ProP(pro2.id.to[Project.type] :: HNil)),
-    UId.DataList(MetT, ProP(pro2.id.to[Project.type] :: HNil)),
+    UId.Dat(ProP(pro2.id.v :: HNil)),
+    UId.DataList(MetT, ProP(pro2.id.v :: HNil)),
     UId.Dat(MetP(mmp10.id :: HNil)),
   ))
 

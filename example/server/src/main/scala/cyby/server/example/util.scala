@@ -10,7 +10,6 @@ package example
 
 import cats.data.Validated.fromEither, cats.implicits._
 import cyby.dat.{Mol ⇒ _, _}, example.{NotFound ⇒ _, _}
-import UserLevel.{Admin,CommonUser,Superuser,Guest}
 import org.http4s.dsl.io.{Unauthorized ⇒ _, _}
 
 /**
@@ -18,21 +17,13 @@ import org.http4s.dsl.io.{Unauthorized ⇒ _, _}
   * locations in the server code.
   */
 trait util {
-  def isAdmin(u: UserLevel): Boolean            = u >= Admin
+  def isAdmin(u: UserS.Srv): Boolean            = cyby.dat.example.isAdmin(u.level.v)
 
-  def isUser(u: UserLevel): Boolean             = u >= CommonUser
+  def isUser(u: UserS.Srv): Boolean             = cyby.dat.example.isUser(u.level.v)
 
-  def isSuperUser(u: UserLevel): Boolean        = u >= Superuser
+  def isSuperUser(u: UserS.Srv): Boolean        = cyby.dat.example.isSuperUser(u.level.v)
 
-  def isGuest(u: UserLevel): Boolean            = u >= Guest
-
-  def isAdmin(u: UserS.Srv): Boolean            = isAdmin(u.level.v)
-
-  def isUser(u: UserS.Srv): Boolean             = isUser(u.level.v)
-
-  def isSuperUser(u: UserS.Srv): Boolean        = isSuperUser(u.level.v)
-
-  def isGuest(u: UserS.Srv): Boolean            = isGuest(u.level.v)
+  def isGuest(u: UserS.Srv): Boolean            = cyby.dat.example.isGuest(u.level.v)
 
   def actual(u: UserS.Srv)(id: User.Id): Boolean = u.id === id
 
@@ -47,11 +38,11 @@ trait util {
 
   def asSuperUser(u: UserS.Srv): List[Err] = must(isSuperUser(u))(Unauthorized)
 
-  def asAdmin(u: UserLevel): List[Err] = must(isAdmin(u))(Unauthorized)
+  def asAdmin(u: UserLevel): List[Err] = must(cyby.dat.example.isAdmin(u))(Unauthorized)
 
-  def asUser(u: UserLevel): List[Err] = must(isUser(u))(Unauthorized)
+  def asUser(u: UserLevel): List[Err] = must(cyby.dat.example.isUser(u))(Unauthorized)
 
-  def asSuperUser(u: UserLevel): List[Err] = must(isSuperUser(u))(Unauthorized)
+  def asSuperUser(u: UserLevel): List[Err] = must(cyby.dat.example.isSuperUser(u))(Unauthorized)
 
   def asOwner(u: UserS.Srv, p: ProjectS.Srv): List[Err] =
     must(isOwner(u,p))(Unauthorized)
@@ -100,6 +91,10 @@ trait util {
   implicit lazy val editAsmbl: Asmbl[EditInfo,EditInfo] = Assemble.inst{
     (s,ei) ⇒ valid(adjEditInfo(s,ei))
   }
+
+  def authEnv(u: UserS.Srv, st: St): AuthEnv = HasAccess.AuthEnv(
+    u.id, u.level, accessiblePros(u, st.pros)
+  )
 }
 
 // vim: set ts=2 sw=2 et:

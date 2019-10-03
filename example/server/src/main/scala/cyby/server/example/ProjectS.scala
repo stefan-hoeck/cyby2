@@ -44,7 +44,7 @@ object ProjectS extends RootEditor {
       e.st.linkedPros,e.ei -> e.st.pros.keySet,e.ei,e.u)
   }
 
-  val link       = (s: St, i: Project.AccId) ⇒ getSrv(i.to,s.root).map(t ⇒ i -> t.name.v)
+  val link       = (s: St, i: Project.AccId) ⇒ getSrv(i.v,s.root).map(t ⇒ i -> t.name.v)
 
   lazy val asmbl    = asmblD[Acc,Project.Cli]
   lazy val dbasmbl  = dbAsmbl[Id,Acc,Project.Cli](_.sortBy(_.name.v.v))(asmbl)

@@ -16,8 +16,8 @@ import cyby.dat.example._
 trait CyByZ extends TextEnv with ZEnv {
   type St       = cyby.ui.example.St
 
-  def useId(i: User.AccId): User.Id = i.to
-  def proId(i: Project.AccId): Project.Id = i.to
+  def useId(i: User.AccId): User.Id = i.v
+  def proId(i: Project.AccId): Project.Id = i.v
 
   override def columnDesc(c: Column)       = c.desc
   override def columnPath(c: Column)       = c.toString
@@ -96,7 +96,9 @@ trait CyByZ extends TextEnv with ZEnv {
     f <- s.files find (_.id === p.head)
   } yield (f,s)
 
-  lazy val fpro: St ⇒ Project.AccId ⇒ Option[Project.Cli] = s ⇒ i ⇒ s.pros find (_.id === i)
+  lazy val fpro: St ⇒ Project.Id ⇒ Option[Project.Cli] = s ⇒ i ⇒ s.pros find (_.id.v === i)
+
+  lazy val fproAcc: St ⇒ Project.AccId ⇒ Option[Project.Cli] = s ⇒ i ⇒ fpro(s)(i.v)
 
   lazy val fsub: St ⇒ Compound.Id ⇒ Option[Compound.Cli] = s ⇒ i ⇒ s.subs find (_.id === i)
 
@@ -104,7 +106,7 @@ trait CyByZ extends TextEnv with ZEnv {
 
   lazy val fmet: St ⇒ Method.Id ⇒ Option[Method.Cli] = s ⇒ i ⇒ s.mets find (_.id === i)
 
-  lazy val fuse: St ⇒ User.Id ⇒ Option[User.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i.v)
+  lazy val fuse: St ⇒ User.Id ⇒ Option[User.Cli] = s ⇒ i ⇒ s.uses find (_.id.v === i)
 
   lazy val fsto: St ⇒ Location.Id ⇒ Option[Location.Cli] = s ⇒ i ⇒ s.stos find (_.id === i) 
 

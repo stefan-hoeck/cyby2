@@ -48,6 +48,6 @@ trait ZEnv extends CyByEnv {
   override def settingsDecoder   = implicitly
 
   override def alias(u: Use) = u.alias.v
-  override def userId(u: Use) = u.id.v
+  override def userId(u: Use) = u.id.v.v
   override def level(u: Use) = u.level.v
 }

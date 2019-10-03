@@ -49,7 +49,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
       case BioFilP(p@h::t) ⇒ proEnvB(t).filC.ed(e,CpdT,t,h,f)(bioFilJson,fbioFilE(p))
       case ConP(p@h::t)    ⇒ proEnvS(t).conC.ed(e,CpdT,t,h,f)(conJson,fconE(p))
       case ConFilP(p@h::t) ⇒ proEnvC(t).filC.ed(e,CpdT,t,h,f)(conFilJson,fconFilE(p))
-      case ProP(p@h::t)    ⇒ proC.ed(e,ProT,t,h,f)(hnilJson,fpro(_)(h.to) map proE)
+      case ProP(p@h::t)    ⇒ proC.ed(e,ProT,t,h,f)(hnilJson,fpro(_)(h) map proE)
       case MetP(p@h::t)    ⇒ metC.ed(e,MetT,t,h,f)(hnilJson,fmet(_)(h) map metE)
       case StoP(p@h::t)    ⇒ stoC.ed(e,StoT,t,h,f)(hnilJson,fsto(_)(h) map stoE)
       case CpdP(p@h::t)    ⇒ proEnv.subC.ed(e,CpdT,t,h,f)(subJson, fsub(_)(h) map subE)
@@ -141,7 +141,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     lazy val useC = Createable[UseE]
 
     case class ProEnv(p: St ⇒ Option[Project.Cli]) {
-      private lazy val proL = edLink(st ⇒ proDef(p(st))(st).desc)(fpro, _.id)
+      private lazy val proL = edLink(st ⇒ proDef(p(st))(st).desc)(fproAcc, _.id)
       implicit lazy val proE: Editable[Link[Project.AccId]] = Editable.wrapped(proL)
       implicit lazy val prosE: Editable[Nel[Link[Project.AccId]]] = Editable.nel(proL)
 
@@ -152,7 +152,7 @@ trait EditZ extends cyby.ui.editor.EditEnv with CoreZ {
     }
 
     def proEnv[B](f: St ⇒ Option[B])(ps: B ⇒ Link[Project.AccId]): ProEnv =
-      ProEnv(st ⇒ f(st) flatMap (b ⇒ fpro(st)(ps(b)._1)))
+      ProEnv(st ⇒ f(st) flatMap (b ⇒ fproAcc(st)(ps(b)._1)))
 
     def proEnvB(p: BiodataEntry.Path): ProEnv = proEnv(fbio(_)(p))(_._1.project.v)
     def proEnvC(p: Container.Path): ProEnv = proEnv(fcon(_)(p))(_._1.project.v)

@@ -8,8 +8,6 @@ package cyby
 package dat
 package example
 
-import tagInstances._
-
 import shapeless.HNil
 
 @io.circe.generic.JsonCodec case class BioStats(

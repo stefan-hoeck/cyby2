@@ -39,6 +39,8 @@ case class Project[F[_],ID,US,CR,MO](
 )
 
 object Project extends DataCmp {
+  type AccId = HasAccess[Id]
+
   /**
     * Path leading to a given project in the data tree.
     */

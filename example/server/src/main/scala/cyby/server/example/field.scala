@@ -29,8 +29,14 @@ import cyby.query.{ReadPred ⇒ RP}
   * of more readable albeit less secure code.
   */
 case class Field(coreSettings: CoreSettings) extends CyByZ with cyby.server.fields {
+  private def proLnk[A](g: A ⇒ Link[Project.AccId]): A ⇒ Link[Project.Id] = g(_) match {
+    case (i,n) ⇒ i.v -> n
+  }
+
+  private def proId[A](g: A ⇒ Project.AccId): A ⇒ Project.Id = g(_).v
+ 
   private def pro[A,B](g: A ⇒ Link[Project.AccId], h: B ⇒ Project.AccId): Act[A,B] =
-    link(g, h, _.proList)(_.name.v, _.id.to, RP.id_)
+    link(proLnk(g), proId(h), _.proList)(_.name.v, _.id, RP.id_)
 
   private def loc[A,B](g: A ⇒ Link[Location.Id], h: B ⇒ Location.Id): Act[A,B] =
     link(g, h, _.stoList)(_.name.v, _.id, RP.id_)

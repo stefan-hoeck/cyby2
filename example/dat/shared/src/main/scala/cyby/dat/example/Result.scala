@@ -8,8 +8,6 @@ package cyby
 package dat
 package example
 
-import tagInstances._
-
 /**
   * Sum type representing responses sent from the server
   * to the client.

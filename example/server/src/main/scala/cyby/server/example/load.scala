@@ -23,11 +23,11 @@ case class Loader(coreSettings: CoreSettings) extends LoadEnv with CyByZ {
     
   def loadSt: IO[St] =
     settings(logger).map(St.L.sets.set(St.empty)) >>=
-    load(UseT, _.uses, doLoad(UserS)(hnil))        >>=
-    load(SupT, _.sups, doLoad(SupplierS)(hnil))        >>=
-    load(ProT, _.pros, doLoad(ProjectS)(hnil))        >>=
-    load(StoT, _.stos, doLoad(LocationS)(hnil))        >>=
-    load(MetT, _.mets, doLoad(MethodS)(hnil))        >>=
+    load(UseT, _.uses, doLoad(UserS)(hnil))       >>=
+    load(SupT, _.sups, doLoad(SupplierS)(hnil))   >>=
+    load(ProT, _.pros, doLoad(ProjectS)(hnil))    >>=
+    load(StoT, _.stos, doLoad(LocationS)(hnil))   >>=
+    load(MetT, _.mets, doLoad(MethodS)(hnil))     >>=
     load(CpdT, _.subs, edCpd)
 
   def doLoad(e: ExampleEditor)(p: e.ParentPath)(implicit D: Decoder[e.LoadEd]): Editor =

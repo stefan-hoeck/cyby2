@@ -6,13 +6,6 @@
 
 package cyby
 
-/** 
-  * Marker trait used to make sure that users have
-  * be properly authorized before they get information
-  * from the server.
-  */
-sealed trait HasAccess
-
 /**
   * Marker trait used at the server during editing.
   */

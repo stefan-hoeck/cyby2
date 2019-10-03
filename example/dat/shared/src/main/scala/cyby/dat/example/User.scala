@@ -42,6 +42,8 @@ case class User[F[_],ID,PW,CR,MO](
 )
 
 object User extends DataCmp {
+  type AccId = HasAccess[Id]
+
   /**
     * Path leading to a given user in the data tree.
     */
