@@ -78,19 +78,80 @@ Implementation of the web front-end (together with a
 documentation page).
 
 
-Setting up the Web Server
--------------------------
+Building and Running the Application
+------------------------------------
 
-The example application is designed to be used together
-with an HTTP server like the [Apache HTTP Server](https://httpd.apache.org/).
-This web server should be set up as a 
-as a reverse proxy forwarding certain
+In order to build the application, Java 1.8 or later is required. Note, however,
+that due to a compiler bug in Scala 2.12, installation does not work
+for OpenJDK 13 at the moment. This has been fixed in Scala 2.13,
+but we'll have to wait until all dependencies are available for
+the new Scala version.
+
+
+### Build Free Standing Application
+
+The easiest way to test CyBy<sup>2</sup> is to install it
+as a free standing web application. First, create
+a directory where the data files and web page of CyBy<sup>2</sup>
+should be put and make sure you have read and write access
+to this directory:
+
+```
+  $ mkdir /path/to/web/folder/
+```
+
+Install
+[sbt](https://www.scala-sbt.org) and
+after cloning this repository from github to a local drive, run
+the build script (build_freestanding.sh) found in the project's root folder:
+
+```
+  $ ./build_freestanding.sh /path/to/web/folder/
+```
+
+If you do this for the first time, SBT will have to download all
+needed dependencies and the Scala compilers, so this will take some time.
+
+After successfully building the application, the packaged
+.jar file of the server can be found at
+
+```
+  example/server/target/scala-2.12/server.jar
+```
+
+When running it, you have to pass it the port it should
+listen on and the directory where its data is stored as
+command line arguments:
+
+```
+  $ java -jar server.jar 2555 /path/to/web/folder
+```
+
+You can now give CyBy<sup>2</sup> a try by accessing its web page
+in your browser:
+
+```
+http://localhost:2555
+```
+
+### Building Application to be used behind Apache Web Server
+
+To be used in production, the example application was designed to be used together
+with an HTTP server like [Apache HTTP Server](https://httpd.apache.org/).
+The HTTP server will be responsible for tasks like SSL encryption
+and serving the static web content.
+It should be set up as a reverse proxy forwarding certain
 calls to a locally running instance of the CyBy<sup>2</sup> server.
+
+
+#### Setting up the Web Server
+
 The principle together with the required modules is explained
 on the [Apache webpage](https://httpd.apache.org/docs/2.4/howto/reverse_proxy.html).
 
 We describe here how to install and setup the web server under Ubuntu 
 version 18.04.1 LTS assuming a user named 'paul'.
+OpenJDK 11.0.4 2019-07-16 was used to build the application.
 Installation on other derivatives of Ubuntu should be identical.
 Other Linux distributions might require sligtly different steps.
 
@@ -122,11 +183,10 @@ server.
   $ sudo systemctl restart apache2
 ```
 
-Building and Installing the Application
----------------------------------------
+#### Building the Application
 
-In order to build the application, Java 1.8 or later is required. Install
-the [simple build tool](https://www.scala-sbt.org) and
+Install
+[sbt](https://www.scala-sbt.org) and
 after cloning this repository from github to a local drive, run
 the build script (build.sh) found in the project's root folder:
 
@@ -157,8 +217,7 @@ reside, and put the example data there:
 ```
 
 
-Running CyBy<sup>2</sup>
-------------------------
+#### Running CyBy<sup>2</sup>
 
 After successfully building the application, the packaged
 .jar file of the server can be found at

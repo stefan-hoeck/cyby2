@@ -16,16 +16,19 @@ object Main extends util with DocEnv {
   import Txt.{main ⇒ txtMain, _}
   
   def main(args: Array[String]): Unit = args.toList match {
-    case path::Nil ⇒ {
-      val pp = if (path.endsWith("/")) path else s"${path}/"
-      val indexF = new java.io.FileWriter(s"${pp}index.html", false)
-      val docF = new java.io.FileWriter(s"${pp}doc_${version}.html", false)
-      try { docF.write(docHtml) }
-      finally docF.close()
-      try { indexF.write(index) }
-      finally indexF.close()
-    }
-    case _        ⇒ println("Run with java -jar </path/to/web/folder>")
+    case path::Nil ⇒ write(path,"")
+    case path::prefix::Nil ⇒ write(path,prefix)
+    case _        ⇒ println("Run with java -jar </path/to/web/folder> [url prefix]")
+  }
+
+  def write(path: String, prefix: String) = {
+    val pp = if (path.endsWith("/")) path else s"${path}/"
+    val indexF = new java.io.FileWriter(s"${pp}index.html", false)
+    val docF = new java.io.FileWriter(s"${pp}doc_${version}.html", false)
+    try { docF.write(docHtml) }
+    finally docF.close()
+    try { indexF.write(index(prefix)) }
+    finally indexF.close()
   }
 
   def docHtml = s"""
@@ -44,7 +47,7 @@ object Main extends util with DocEnv {
 </html>
   """
 
-  def index = s"""
+  def index(prefix: String) = s"""
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,7 +70,7 @@ object Main extends util with DocEnv {
 </head>
 <body>
 <div id="content"></div>
-<script>CyBy2.main("cyby-serv", document.getElementById("content"))</script>
+<script>CyBy2.main("${prefix}", document.getElementById("content"))</script>
 </body>
 </html>
 

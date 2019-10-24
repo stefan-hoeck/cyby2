@@ -23,5 +23,5 @@ fi
 
 sbt -mem 4096 uiExJS/fastOptJS
 sbt -mem 4096 uiExJS/fullOptJS
-sbt -mem 4096 "uiExJVM/run $DIR"
+sbt -mem 4096 "uiExJVM/run $DIR cyby-serv"
 sbt -mem 4096 serverEx/assembly
