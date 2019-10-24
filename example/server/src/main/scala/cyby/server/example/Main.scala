@@ -9,7 +9,7 @@ package server
 package example
 
 object Main extends MainEnv {
-  val logLevel: LogLevel = Debug
+  val logLevel: LogLevel = Info
 
   lazy val logger: Logger[IO] = Env.consoleLogger filtered logLevel
 
