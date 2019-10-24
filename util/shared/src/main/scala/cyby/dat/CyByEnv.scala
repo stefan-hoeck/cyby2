@@ -28,7 +28,7 @@ trait CyByEnv {
 
   def level(u: Use): UserLevel
 
-  def alias(u: Use): Alias
+  def alias(u: Use): Name
 
   def userId(u: Use): Long
 

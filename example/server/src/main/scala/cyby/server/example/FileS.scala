@@ -98,7 +98,7 @@ trait FilEditor extends ChildEditor {
   lazy val auth = au.auth
 
   def acc(ae: AuthEnv, s: Srv) =
-    ae.accPro(s.project) map (ps ⇒ s.copy(project = ps))
+    ae.project(s.project) map (ps ⇒ s.copy(project = ps))
 
   //----------------------------------------------------------------------
   //                         Editing

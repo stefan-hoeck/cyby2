@@ -62,7 +62,7 @@ trait Loc {
   def exactstructure: String
   def substructure: String
   def similarity: String
-  def loggedIn(n: Alias, lvl: UserLevel): String
+  def loggedIn(n: Name, lvl: UserLevel): String
   def loggedOut: String
   def changelog: String
   def explorer: String
@@ -276,7 +276,7 @@ trait LocEnUS extends Loc {
 
   val logout             = "Logout"
 
-  def loggedIn(n: Alias, l: UserLevel): String =
+  def loggedIn(n: Name, l: UserLevel): String =
     s"Logged in as $n (Level: ${dispUserLevel(l)})<br>"
 
   val substance = "Substance"

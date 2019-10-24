@@ -96,7 +96,7 @@ trait auth[Auth] extends ServerEnv {
 
     case r@(_ :? UName(n) +& Hash(h)) ⇒ auth(n, h)
 
-    case r                            ⇒ M.raiseErrors(Nel of notFound(r))
+    case r                            ⇒ M raise notFound(r)
   }
 
 

@@ -77,7 +77,7 @@ object UserS extends RootEditor {
   )
 
   def acc(ae: AuthEnv, s: Srv) =
-    ae.accUse(s.id) map (i ⇒ s.copy(id = i, password = Pure(undef)))
+    ae.user(s.id) map (i ⇒ s.copy(id = i, password = Pure(undef)))
 
   //----------------------------------------------------------------------
   //                         Editing

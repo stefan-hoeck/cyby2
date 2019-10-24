@@ -47,19 +47,19 @@ class AuthEnvTest extends EditUtil {
     }
   }
 
-  property("accPro behaves correctly") {
+  property("project behaves correctly") {
     forAll{ (ae: AuthEnv, p: Project.Id) ⇒
-      ae.accPro(p).nonEmpty shouldEq ae.canAccess(p)
+      ae.project(p).nonEmpty shouldEq ae.canAccess(p)
 
-      if (ae.accPro(p).nonEmpty) ae.accPro(p).get.v.v shouldEq p
+      if (ae.project(p).nonEmpty) ae.project(p).get.v.v shouldEq p
     }
   }
 
-  property("accUse behaves correctly") {
+  property("user behaves correctly") {
     forAll{ (ae: AuthEnv, i: User.Id) ⇒
-      if (i =-= ae.id) assert(ae.accUse(i).nonEmpty)
-      else if (ae.lvl < Superuser) assert(ae.accUse(i).isEmpty)
-      else assert(ae.accUse(i).nonEmpty)
+      if (i =-= ae.id) assert(ae.user(i).nonEmpty)
+      else if (ae.lvl < Superuser) assert(ae.user(i).isEmpty)
+      else assert(ae.user(i).nonEmpty)
     }
   }
 

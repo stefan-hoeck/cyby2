@@ -62,7 +62,7 @@ object BiodataEntryS extends ChildEditor {
   val au = ProAuth(lens[Add].project, lens[Srv].project, lens[Mod].project)
   lazy val auth = au.auth
 
-  def acc(ae: AuthEnv, s: Srv) = ae.accPro(s.project) map (
+  def acc(ae: AuthEnv, s: Srv) = ae.project(s.project) map (
     ps ⇒ s.copy(project = ps, files = BioFileS.accDB(ae, s.files))
   )
   

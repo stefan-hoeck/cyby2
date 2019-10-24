@@ -33,7 +33,7 @@ case class Export(coreSettings: CoreSettings)
   val field = Field(coreSettings)
   val M = CyByMonadIO.authEnv[Unit]
 
-  protected def path(fn: String) = Paths get s"/data/cyby/export/${fn}"
+  protected def path(fn: String) = Paths get s"${coreSettings.dataPath}/export/${fn}"
 
   def prog(r: Request): M.Prog[Result] = for {
     le  <- M.ask

@@ -682,8 +682,8 @@ trait CoreEnv extends UIJsEnv with TextEnv {
       * can more easily be combined with other signal functions
       * in the UI.
       */
-    def run(h: EventH, url: String, timeout: Long): Sink[(Logs,Option[UIEvent])] =
-      sink(h, url, timeout).contramap(_._1.loads)
+    def run(h: EventH, prefix: String, timeout: Long): Sink[(Logs,Option[UIEvent])] =
+      sink(h, prefix, timeout).contramap(_._1.loads)
 
     /**
       * Given a couple of configuration settings, this returns a
@@ -691,12 +691,14 @@ trait CoreEnv extends UIJsEnv with TextEnv {
       * to HTTP requests and sent to the server.
       *
       * @param h : Handler of HTTP events
-      * @param url : Server URL
+      * @param prefix : Prefix of Server URL
       * @param timeout : number of milliseconds until a HTTP request times out
       */
-    def sink(h: EventH, url: String, timeout: Long): Sink[Vector[Load]] = {
+    def sink(h: EventH, prefix: String, timeout: Long): Sink[Vector[Load]] = {
+      def url(p: String): String = if (prefix.isEmpty) p else s"{prefix}/p"
+
       def get(p: String, heads: (String,String)*) =
-        Eff.liftIO(h(HttpRequest(s"${url}/${p}", StringContent(""), timeout, GET, heads.toList)))
+        Eff.liftIO(h(HttpRequest(url(p), StringContent(""), timeout, GET, heads.toList)))
   
       def getCreds(p: String, c: Creds) = get(s"${p}${c.credsQ}", jsonH)
   
@@ -708,7 +710,7 @@ trait CoreEnv extends UIJsEnv with TextEnv {
           case FormContent(_)   ⇒ Nil
         }
   
-        Eff.liftIO(h(HttpRequest(s"${url}/${p}${c.credsQ}", msg, timeout, POST, hd)))
+        Eff.liftIO(h(HttpRequest(s"${url(p)}${c.credsQ}", msg, timeout, POST, hd)))
       }
   
       def load(d: DataType, c: Creds) = getCreds(s"query/${d}", c)

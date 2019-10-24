@@ -55,7 +55,7 @@ trait LocEnUS extends Loc with cyby.dat.LocEnUS {
 
   def logRes(r: Result): Vector[Log] = r match {
     case Errors(es)         ⇒ Vector(es.toList: _*) map logDataErr
-    case LoggedIn(_, u, _)  ⇒ Vector(Log debug loggedIn(u.alias, u.level))
+    case LoggedIn(_, u, _)  ⇒ Vector(Log debug loggedIn(u.alias.v.name, u.level))
     case LoggedOut          ⇒ Vector(Log debug loggedOut)
     case PasswordChanged    ⇒ Vector(Log info "password changed")
     case ProRes(r)          ⇒ Vector(Log info itemRes(proP,r))

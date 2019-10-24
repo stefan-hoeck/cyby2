@@ -55,10 +55,10 @@ object HasAccess {
       case _       ⇒ must(isUser(lvl) && accAll(ids))(Unauthorized)
     }
 
-    val accPro: Pure[Project.Id] ⇒ Option[Pure[Project.AccId]] =
+    val project: Pure[Project.Id] ⇒ Option[Pure[Project.AccId]] =
       p ⇒ if (canAccess(p.v)) Some(Pure(apply(p.v))) else None
 
-    def accUse(u: User.Id): Option[User.AccId] =
+    def user(u: User.Id): Option[User.AccId] =
       if (id === u || isSuperUser(lvl)) Some(apply(u)) else None
   }
 }

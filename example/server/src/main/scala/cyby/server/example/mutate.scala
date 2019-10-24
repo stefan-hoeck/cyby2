@@ -36,7 +36,7 @@ case class Mutate(coreSettings: CoreSettings) extends CyByZ with MutateEnv[EditE
     case _ -> _ / _ / DT(t@CpdT)   ⇒ editDec(edCpd, logCpd, t, r, delFil)
     case _ -> _ / _ / DT(FilT)     ⇒ edFile(r)
     case _ -> _ / _ / "settings"   ⇒ decoding(mutate(adjSettings)(storeSettings))(r)
-    case r                         ⇒ M.raise(NotFound(r.uri.path))
+    case r                             ⇒ M.raise(NotFound(r.uri.path))
   }
 
   val edCpd = (v: EditEnv, st: St, p: CpdTree) ⇒ p match {

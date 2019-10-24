@@ -27,7 +27,7 @@ case class LoggedInEnv(env: Env[St], u: UserS.Srv, h: String) {
   lazy val editInfo: EditInfo = EditInfo(TimeStamp mk env.timestamp, u.id.v, none)
 
   def loginRes: Result =
-    LoggedIn(h, u.copy(id = authSt.env.accUse(u.id).get, password = Pure(undef)), settings)
+    LoggedIn(h, u.copy(id = authSt.env.user(u.id).get, password = Pure(undef)), settings)
 
   def ei  = editInfo
   def as  = authSt

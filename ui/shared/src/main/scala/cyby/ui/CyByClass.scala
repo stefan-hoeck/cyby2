@@ -10,7 +10,7 @@ package ui
 /**
   * Typesafe CSS classes
   */
-sealed abstract class CyByClass(override val toString: String)
+abstract class CyByClass(override val toString: String)
 
 case class Comp(tpe: CompType) extends CyByClass(tpe.toString)
 
@@ -40,20 +40,20 @@ case class StoQuery(outer: Boolean) extends
 case class StoEdit(outer: Boolean) extends
   CyByClass(if (outer) "stoedit outer" else "stoedit inner")
 
-sealed abstract class CompType(override val toString: String) {
+abstract class CompType(override val toString: String) {
   def c: CyByClass = Comp(this)
 }
 
-sealed abstract class MainCompType(val name: String)
+abstract class MainCompType(val name: String)
   extends CompType(s"comp main ${name}")
 
-sealed abstract class ListType(val name: String)
+abstract class ListType(val name: String)
   extends CompType(s"list ${name}")
 
-sealed abstract class CellType(val name: String)
+abstract class CellType(val name: String)
   extends CompType(s"cell ${name}")
 
-sealed abstract class RowType(val name: String)
+abstract class RowType(val name: String)
   extends CompType(s"row ${name}")
 
 object CompType {
@@ -160,7 +160,7 @@ object CompType {
 }
 
 
-sealed abstract class IconType(val name: String) {
+abstract class IconType(val name: String) {
   def c: CyByClass = Icon(this)
   def cd: CyByClass = DocIcon(this)
 }
@@ -210,7 +210,7 @@ object IconType {
   case class NavSearch(m: NavSearchMode) extends IconType(s"search_$m")
 }
 
-sealed abstract class LabelType(val name: String) {
+abstract class LabelType(val name: String) {
   def c: CyByClass = Label(this)
 }
 
@@ -225,7 +225,7 @@ object LabelType {
 }
 
 
-sealed abstract class TitleType(val name: String) {
+abstract class TitleType(val name: String) {
   def c: CyByClass = Title(this)
 }
 
@@ -241,7 +241,7 @@ object TitleType {
   case object NavDetail extends TitleType("nav-detail")
 }
 
-sealed abstract class WidgetType(val name: String) {
+abstract class WidgetType(val name: String) {
   def c: CyByClass = Widget(this)
 }
 
@@ -292,7 +292,7 @@ object WidgetType {
   case object UserLevelSel extends WidgetType("select level")
 }
 
-sealed abstract class DocType(val name: String) {
+abstract class DocType(val name: String) {
   def c: CyByClass = DocElem(this)
 }
 

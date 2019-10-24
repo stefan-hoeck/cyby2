@@ -70,7 +70,7 @@ object ProjectS extends RootEditor {
     (u,_,_) ⇒ asAdmin(u),
   )
 
-  def acc(ae: AuthEnv, s: Srv) = ae.accPro(s.id) map (i ⇒ s.copy(id = i))
+  def acc(ae: AuthEnv, s: Srv) = ae.project(s.id) map (i ⇒ s.copy(id = i))
 
   //----------------------------------------------------------------------
   //                         Editing

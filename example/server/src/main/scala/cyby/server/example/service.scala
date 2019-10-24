@@ -26,6 +26,7 @@ case class Service(coreSettings: CoreSettings) extends CyByZ {
   val files  = Files(coreSettings)
   val query  = Query(coreSettings)
   val mutate = Mutate(coreSettings)
+  val page   = Page(coreSettings)
 
   val M = CyByMonadIO.env[Unit]
   val FM = CyByMonadIO.authEnv[Unit]
@@ -39,7 +40,7 @@ case class Service(coreSettings: CoreSettings) extends CyByZ {
     autPair <- statefulV(auth.prog)(Map.empty)
     (sig, mut) = mutPair
     (_,   aut) = autPair
-  } yield http(sig, r ⇒ M.chain(aut(r))(cyby(mut)(r)))
+  } yield http(sig, r ⇒ M.chain(aut(r))(cyby(mut)(r)) or fileData(r))
 
   private def cyby(mut: Request ⇒ SLProg[EditEnv,Z.Result])
     : Request ⇒ SLProg[LoggedInEnv,Response] = r ⇒
@@ -51,8 +52,15 @@ case class Service(coreSettings: CoreSettings) extends CyByZ {
       case GET  -> Root / DT(FilT) / P(p) /fn  ⇒ files.prog(p)
       case POST -> Root / "export"          ⇒ FM toResponse export.prog(r)
       case GET  -> Root / "export" / pth    ⇒ export.download(pth)
-      case r                                ⇒ FM toResponse FM.raise(Z.NotFound(r.uri.path))
+      case r                                ⇒ FM raise Z.NotFound(r.uri.path)
     }
+
+  private lazy val fileData: Request ⇒ SLProg[Env[St],Response] = {
+    case GET -> Root                ⇒ page download "index.html"
+    case GET -> Root / "index.html" ⇒ page download "index.html"
+    case GET -> r                   ⇒ page download r.toList.mkString("/")
+    case r                          ⇒ M lift NotFound()
+  }
 
   private def http(
     sig: Ref[St],
