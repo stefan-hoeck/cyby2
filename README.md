@@ -134,6 +134,9 @@ in your browser:
 http://localhost:2555
 ```
 
+An admin account with username "admin" and password "admin"
+and a user account with username "user" and password "password".
+
 ### Building Application to be used behind Apache Web Server
 
 To be used in production, the example application was designed to be used together
